@@ -1,5 +1,66 @@
 from django.db import models
 
+
+class Graph(object):
+
+    __slots__ = '_name', '_vertices'
+
+    def __init__(self, name):
+        self._name = name
+        self._vertices = []
+
+    @property
+    def vertices(self):
+        return self._vertices
+
+    @vertices.setter
+    def vertices(self, vertices):
+        self._vertices = vertices
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = name
+
+    def edges(self):
+        result = set()      
+        for vertex in self._vertices():
+            result.update(vertex.edges())    
+        return resultvenv
+
+    def degree(self, v):
+        return v.degree()
+
+    def _validate_vertex(self, v):
+        if not isinstance(v, self.Vertex):
+            raise TypeError('Object of Vertex class was excpected.')
+        if v not in self._outgoing:
+            raise ValueError("Vertex doesn't belong to this graph.")
+
+    def vertex_count(self):
+        return len(self._vertices)
+
+    def edge_count(self):
+        for edge in self.edges():
+            if edge.is_directed():
+                total_directed += 1
+            else:
+                total_undirected += 1    
+        return total_directed + total_undirected//2
+
+    def insert_vertex(self, v=None):
+        self._vertices.append(v)
+
+    def insert_edge(self, u, v, is_directed, relation, weight=None):
+        e = Edge(u, v, relation, weight, is_directed)
+        u.add_edge(e)
+        if not is_directed:
+            v.add_edge(e)
+
+
 class Vertex:
     __slots__ = '_attributes', '_id', '_edges'
 
@@ -31,6 +92,9 @@ class Vertex:
     @edges.setter
     def edges(self, edges):
         self._edges = edges
+
+    def degree(self):
+        return len(self._edges)
 
     def add_attribute(self, key, value):
         self._attributes[key] = value

@@ -29,7 +29,7 @@ class Graph(object):
         result = set()      
         for vertex in self._vertices():
             result.update(vertex.edges())    
-        return resultvenv
+        return result
 
     def degree(self, v):
         return v.degree()

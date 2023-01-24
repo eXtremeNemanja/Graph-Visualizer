@@ -105,6 +105,28 @@ class Vertex:
     def __hash__(self):
         return hash(self._id)
 
+    def __eq__(self, other) -> bool:
+        if "id" in self._attributes and "id" in other.attributes:
+            if self._attributes["id"] == other.attributes["id"]:
+                print("Imaju id")
+                return True
+        
+        if self._attributes != other.attributes:
+            return False
+        
+        if len(self._edges) != len(other.edges):
+            return False
+        
+        for edge in self._edges:
+            for e in other.edges:
+                if edge == e:
+                    break
+            else:
+                return False
+        
+        return True
+        
+
 
 class Edge:
     __slots__ = '_source', '_destination', '_relation_name', '_weight', '_is_directed'
@@ -175,3 +197,18 @@ class Edge:
         return '({0},{1},{2},{3},{4})'.format(self._source, self._destination, self._relation_name,
                                                   self._weight, self._is_directed)
 
+    def __eq__(self, other) -> bool:
+        if self._weight != other.weight:
+            return False
+        elif self._relation_name != other.relation_name:
+            return False
+        elif self._is_directed != other.is_directed:
+            return False
+        elif self._destination != other.destination:
+            return False
+
+        #TODO: how to compare sources without recursion error?
+        # elif self._source != other.source:
+        #     return False
+        
+        return True

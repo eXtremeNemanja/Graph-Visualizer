@@ -1,37 +1,58 @@
 import os
 
-from core.plugin.core.services.loader import BaseLoader
+from plugin.core.services.loader import BaseLoader
 import xml.etree.ElementTree as ET
 
-from tim05.core.plugin.core.models import Vertex, Edge, Graph
+from plugin.core.models import Vertex, Edge, Graph
 
 class XmlLoader(BaseLoader):
+    __slots__ = 'id_counter'
+
+    def __init__(self) -> None:
+        self.id_counter = 0
+
     def identifier(self):
         return "XmlLoader"
 
     def name(self):
         return "Loading data from xml document"
 
-    def load_file(self, file_name):
-        tree = ET.parse(file_name)
-        root = tree.getroot()
+    # def get_file_name(self, file_name):
+    #     return os.path.join(os.path.dirname(__file__), "..", "..", "..", "datasets", "xml", file_name)
+
+    def load_file(self, file):
+        # file_name = self.get_file_name(file_name)
+        # with open(file_name, 'r') as file:
+        tree_string = file.read()
+        root = ET.fromstring(tree_string)
         return root
 
-    def create_vertex(graph, node, id_counter):
-        id_counter
-        v = Vertex(id_counter)
+    def create_vertex(self, graph, node):
+        # print("-------------")
+        self.id_counter += 1
+        v = Vertex(self.id_counter)
         for key in node.attrib:
             v.add_attribute(key, node.attrib.get(key))
-        if node.text != "":
+        node.text = node.text.strip()
+        if node.text:
+            node.text = " ".join(node.text.split())
+            # print(node.text)
             v.add_attribute("text", node.text)
-        v.add_attribute()
-        graph.insert_vertex(v)
+        # for att in v.attributes:
+        #     print(att)
+        # id="bk101"
         for child in node:
-            c = create_vertex(graph, child, id_counter)
-            e = Edge(v, c, c.tag, 0, True)
+            c = self.create_vertex(graph, child)
+            e = Edge(v, c, child.tag, 0, True)
             v.add_edge(e)
+        for vertex in graph.vertices:
+            if v == vertex:
+                # print("Isti")
+                return vertex
+        graph.insert_vertex(v)
         return v
 
     def make_graph(self, tree, graph_name):
         g = Graph(graph_name)
-        create_vertex(g, tree, 0)
+        self.create_vertex(g, tree)
+        return g

@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from service_base import ServiceBase
+from .service_base import ServiceBase
 
 class BaseLoader(ServiceBase):
     @abstractmethod

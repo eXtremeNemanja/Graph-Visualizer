@@ -1,9 +1,9 @@
 import os
 
-from core.plugin.core.services.loader import BaseLoader
+from plugin.core.services.loader import BaseLoader
 import xml.etree.ElementTree as ET
 
-from tim05.core.plugin.core.models import Vertex, Edge, Graph
+from plugin.core.models import Vertex, Edge, Graph
 
 class XmlLoader(BaseLoader):
     __slots__ = 'id_counter'
@@ -17,13 +17,14 @@ class XmlLoader(BaseLoader):
     def name(self):
         return "Loading data from xml document"
 
-    def get_file_name(self, file_name):
-        return os.path.join(os.path.dirname(__file__), "..", "..", "..", "datasets", "xml", file_name)
+    # def get_file_name(self, file_name):
+    #     return os.path.join(os.path.dirname(__file__), "..", "..", "..", "datasets", "xml", file_name)
 
-    def load_file(self, file_name):
-        file_name = self.get_file_name(file_name)
-        tree = ET.parse(file_name)
-        root = tree.getroot()
+    def load_file(self, file):
+        # file_name = self.get_file_name(file_name)
+        # with open(file_name, 'r') as file:
+        tree_string = file.read()
+        root = ET.fromstring(tree_string)
         return root
 
     def create_vertex(self, graph, node):

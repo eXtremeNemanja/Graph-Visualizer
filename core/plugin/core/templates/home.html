@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Graph visualization application</title>
+    {% load static %}
+    <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+
+</head>
+    <body>
+
+        <div class="topnav">
+            <span id="title">Graph Visualizer</span>
+
+            <a class="left" href="#">XML Parser</a>
+            <a class="left" href="#">JSON Parser</a>
+            <a class="left" href="#">RDF Parser</a>
+
+            <a class="right" href="#">Complex View</a>
+            <a class="right" href="#">Simple View</a>
+        </div>
+
+        <div class="choose-file">
+            <form>
+                <input id="file-button" type="file">
+            </form>
+        </div>
+
+    </body>
+</html>

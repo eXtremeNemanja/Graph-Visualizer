@@ -1,0 +1,56 @@
+
+body{
+    margin: 0;
+}
+
+.page{
+    min-width: 100vw;
+    min-height: 100vh;
+}
+
+.header{
+    background-color: lightblue;
+    width:100%;
+    height: 100px;
+}
+
+.view{
+    min-width: 100vw;
+    min-height: 86.2vh;
+    background-color: rgb(230, 207, 173);
+    display: flex;
+    flex-direction: row;
+}
+  
+.left {
+    width: 25%;
+    border-right: solid black 1px;
+}
+
+.right {
+    display: flex;
+    width: 75%;
+    flex-direction: column;
+}
+
+.top{
+    width: 100%;
+    border-bottom: solid black 1px;
+    height: 70%;
+}
+
+.bottom{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    flex-direction: row;
+}
+
+.bottom-left{
+    width: 50%;
+    border-right: solid black 1px;
+}
+
+.bottom-right{
+    width: 50%;
+}

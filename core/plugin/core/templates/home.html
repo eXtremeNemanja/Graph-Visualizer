@@ -15,7 +15,7 @@
             <div class="topnav">
                 <span id="title">Graph Visualizer</span>
 
-                <a class="left-plugins" href="#">XML Parser</a>
+                <a class="left-plugins" href="javascript:{}" onclick="document.getElementById('loader').value = 'XmlLoader'; document.getElementById('loader_form').submit();">XML Parser</a>
                 <a class="left-plugins" href="#">JSON Parser</a>
                 <a class="left-plugins" href="#">RDF Parser</a>
 
@@ -24,8 +24,9 @@
             </div>
 
             <div class="choose-file">
-                <form>
-                    <input id="file-button" type="file">
+                <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
+                    <input required type="file" name="file" id="file"/>
+                    <input type="hidden" id="loader" name="loader" />
                 </form>
             </div>
         </div>

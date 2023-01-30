@@ -7,8 +7,10 @@ from .forms import UploadForm
 from django.http import HttpResponse
 
 
-def index(request):
-    return render(request, "index.html")
+def index(request, file_missing=False):
+    graph = apps.get_app_config('core').base_graph
+    print(graph)
+    return render(request, "index.html", {'graph': graph})
 
 def reset(request):
     apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
@@ -27,7 +29,7 @@ def load(request):
     # print(request.POST.get('loader', 'nema'))
     loader = request.POST.get('loader', 'nema')
     if not request.FILES:
-        print("Nesto")
+        return render(request, "index.html", {"file_missing": True})
     else:
         file = request.FILES['file']
         print(file)
@@ -40,21 +42,20 @@ def load(request):
                 apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
 
     # print(file.read())
-    # return render(request, "index.html", {"loaders": plugini, "base_graph": apps.get_app_config('core').base_graph})
     return redirect('index')
 
 def filter_search(request, *args, **kwargs):
     print(args, kwargs)
-    print(request.method);
-    print(request.GET.get('options', 'nema'))
-    option = request.GET.get('options', 'nema')
-    option_error = False
-    if (option == "filter"):
-        filter()
-    elif (option == "search"):
-        search()
-    else:
-        option_error = True
+    print(request.GET.get("query", 'nema'));
+    # print(request.GET.get('options', 'nema'))
+    # option = request.GET.get('options', 'nema')
+    # option_error = False
+    # if (option == "filter"):
+    #     filter()
+    # elif (option == "search"):
+    #     search()
+    # else:
+    #     option_error = True
     # return render(request, "index.html", {"option_error": option_error})
     return redirect('index')
 

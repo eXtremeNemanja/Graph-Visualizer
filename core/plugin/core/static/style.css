@@ -1,6 +1,7 @@
 
 body{
     margin: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
 .page{
@@ -53,4 +54,57 @@ body{
 
 .bottom-right{
     width: 50%;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color:  #BFD7ED;
+}
+
+#title {
+    font-weight: bolder;
+    float: left;
+    padding: 15px 0;
+    margin-left: 20px;
+    margin-right: 50px;
+}
+  
+.left-plugins {
+    font-size: medium !important;
+    float: left;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.right-plugins {
+    font-size: medium !important;
+    float: right;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    margin-right: 20px;
+}
+  
+.topnav a:hover {
+    background-color: whitesmoke;
+    color: black;
+}
+
+.choose-file {
+    overflow: hidden;
+    background-color:  #60A3D9;
+}
+
+::-webkit-file-upload-button {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 20px;
+    font-family: 'Poppins', sans-serif;
+    width: 120px;
+    font-weight: bolder;
 }

@@ -1,0 +1,23 @@
+{% extends "home.html" %}
+{% block index %}
+<script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
+
+<div class="view">
+    <div class="left">
+        {% include 'treeView.html' %}
+    </div>
+    <div class="right">
+        <div class="top">
+            <!--show mainView-->
+        </div>
+        <div class="bottom">
+            <div class="bottom-left">
+                {% include 'tools.html' %}
+            </div>
+            <div class="bottom-right">
+                {% include 'birdView.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

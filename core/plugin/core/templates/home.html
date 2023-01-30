@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Graph visualization application</title>
+    <title>Graph visualization</title>
     {% load static %}
     <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
     <link rel="stylesheet" href="{% static 'style.css' %}"/>
@@ -11,23 +11,26 @@
 
 </head>
     <body>
+        <div id="navbar">
+            <div class="topnav">
+                <span id="title">Graph Visualizer</span>
 
-        <div class="topnav">
-            <span id="title">Graph Visualizer</span>
+                <a class="left-plugins" href="#">XML Parser</a>
+                <a class="left-plugins" href="#">JSON Parser</a>
+                <a class="left-plugins" href="#">RDF Parser</a>
 
-            <a class="left" href="#">XML Parser</a>
-            <a class="left" href="#">JSON Parser</a>
-            <a class="left" href="#">RDF Parser</a>
+                <a class="right-plugins" href="#">Complex View</a>
+                <a class="right-plugins" href="#">Simple View</a>
+            </div>
 
-            <a class="right" href="#">Complex View</a>
-            <a class="right" href="#">Simple View</a>
+            <div class="choose-file">
+                <form>
+                    <input id="file-button" type="file">
+                </form>
+            </div>
         </div>
 
-        <div class="choose-file">
-            <form>
-                <input id="file-button" type="file">
-            </form>
-        </div>
+        {% block index %}{% endblock %}
 
     </body>
 </html>

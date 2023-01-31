@@ -7,6 +7,10 @@ setup(
     packages=find_packages(),
     namespace_packages=['plugin'],
     # TODO add entry_points
+     entry_points={
+        'loader':
+        ['rdf-loader=plugin.loader.rdf_loader:RdfLoader']
+    },
     install_requires=["core>=0.1"],
     zip_safe=True
 )

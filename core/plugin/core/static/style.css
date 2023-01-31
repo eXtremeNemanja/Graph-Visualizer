@@ -107,6 +107,12 @@ h2{
     margin-left: 35px;
 }
 
+#reset{
+    width: 100%;
+    text-align: center;
+    margin-top: 1.5vh;
+}
+
 .tools input{
     margin-top: 20px;
     margin-right: 15px;

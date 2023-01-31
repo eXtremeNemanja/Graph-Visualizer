@@ -1,0 +1,86 @@
+{
+    "people": [
+    {
+      "id": 0,
+      "name": "Sergey Prokopyev",
+      "craft": {"id": "football" },
+      "friends": [
+        {"id":  1},
+        {"id":  5},
+        {"id":  9}
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Dmitry Petelin",
+      "craft": {"id": "football" },
+      "friends": [
+        {"id":  0},
+        {"id":  5}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Frank Rubio",
+      "craft": {"id": "painting" },
+      "friends": [
+        {"id":  3}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Nicole Mann",
+      "craft": {"id": "painting" },
+      "friends": [
+        {"id":  2}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Josh Cassada",
+      "craft": {"id": "fishing" },
+      "friends": [
+        {"id":  5}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Koichi Wakata",
+      "craft": {"id": "fishing" },
+      "friends": [
+        {"id":  1},
+        {"id":  2},
+        {"id":  4}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Anna Kikina",
+      "craft": {"id": "fishing" },
+      "friends": [
+        {"id":  7}
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Fei Junlong",
+      "craft": {"id": "teaching" },
+      "friends": [
+        {"id":  6}
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Deng Qingming",
+      "craft": {"id": "teaching" },
+    },
+    {
+      "id": 9,
+      "name": "Zhang Lu",
+      "craft": {"id": "teaching" },
+      "friends": [
+        {"id":  1}
+      ]
+    }
+  ]
+}

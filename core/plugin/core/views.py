@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
 from django.apps.registry import apps
 
-from .forms import UploadForm
-
 # Create your views here.
 from django.http import HttpResponse
 
@@ -64,3 +62,12 @@ def filter():
 
 def search():
     pass
+
+def complex_visualization(request):
+    visualizers = apps.get_app_config('core').visualizers
+    for v in visualizers:
+        if v.identifier() == "ComplexVisualizer":
+            return HttpResponse(
+                v.visualize(apps.get_app_config('core').graph, request))
+
+    return redirect('index')

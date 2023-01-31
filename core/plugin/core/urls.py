@@ -9,4 +9,6 @@ urlpatterns = [
     path('load', views.load, name='load'),
     path('reset', views.reset, name='reset'),
     path('new_data', views.new_data, name='new_data'),
+    path('simple_visualizer', views.simpleVisualizer, name='simple_visualizer'),
+    path('complex_view', views.complex_visualization, name='complex_view')
 ]

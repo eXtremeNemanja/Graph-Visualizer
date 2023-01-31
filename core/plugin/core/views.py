@@ -1,9 +1,6 @@
 from django.shortcuts import render, redirect
 from django.apps.registry import apps
-
 from .models import Edge, Graph, Vertex
-
-from .forms import UploadForm
 
 # Create your views here.
 from django.http import HttpResponse
@@ -65,6 +62,14 @@ def search(request, *args, **kwargs):
         print(vertex.id)
         print(vertex.attributes)
         print(len(vertex.edges))
+    return redirect('index')
+
+def simpleVisualizer(request):
+    visualizers = apps.get_app_config('core').visualizers
+    for v in visualizers:
+        if v.identifier() == "SimpleVisualizer":
+            return HttpResponse(v.visualize(apps.get_app_config('core').graph, request))
+
     return redirect('index')
 
 def filter():
@@ -156,3 +161,13 @@ def create_graph(old_graph, graph):
                     new_graph.insert_vertex(new_vertex)
                 new_vertex.add_edge(Edge(new_vertex, destination, edge.relation_name, edge.weight, edge.is_directed))
     return new_graph
+
+
+def complex_visualization(request):
+    visualizers = apps.get_app_config('core').visualizers
+    for v in visualizers:
+        if v.identifier() == "ComplexVisualizer":
+            return HttpResponse(
+                v.visualize(apps.get_app_config('core').graph, request))
+
+    return redirect('index')

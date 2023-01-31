@@ -5,6 +5,7 @@ from django.apps import AppConfig
 class CoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     loaders = []
+    visualizers = []
     name = 'plugin.core'
     base_graph = None
     current_graph = None
@@ -13,6 +14,7 @@ class CoreConfig(AppConfig):
         # Prilikom startovanja aplikacije, ucitavamo plugine na
         # vec poznati nacin.
         self.loaders = load_plugins("loader")
+        self.visualizers = load_plugins("visualizer")
 
 
 def load_plugins(oznaka):

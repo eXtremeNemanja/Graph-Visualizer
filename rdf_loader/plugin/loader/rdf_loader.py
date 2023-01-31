@@ -9,6 +9,12 @@ class RdfLoader(BaseLoader):
         self.id_counter = 0
         self.graph = None
 
+    def identifier(self):
+        return "RDF Loader"
+
+    def name(self):
+        return "Loading data from rdf document"
+
     def create_vertex(self, node, graph):
         for vertex in graph.vertices:
             if vertex.attributes["name"] == node:
@@ -36,3 +42,5 @@ class RdfLoader(BaseLoader):
         self.graph = G(name)
         self.load_file(file_path)
         return self.graph
+
+

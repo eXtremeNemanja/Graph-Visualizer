@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="json-loader",
+    name="simple-visualizer",
     # TODO add author
     author="",
     version="0.1",

@@ -27,8 +27,8 @@ class Graph(object):
 
     def edges(self):
         result = set()      
-        for vertex in self._vertices():
-            result.update(vertex.edges())    
+        for vertex in self._vertices:
+            result.update(vertex.edges)    
         return result
 
     def degree(self, v):

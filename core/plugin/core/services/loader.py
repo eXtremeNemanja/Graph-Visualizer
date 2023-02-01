@@ -3,7 +3,7 @@ from .service_base import ServiceBase
 
 class BaseLoader(ServiceBase):
     @abstractmethod
-    def load_file(self, file_name):
+    def load_file(self, file_name, unique_key=None):
         pass
 
     @abstractmethod

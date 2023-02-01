@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <catalog>
    <book id="bk100">
-      <author>
-      <name>Gambardella, Matthew</name>
-      </author>
+      <author>Gambardella, Matthew</author>
       <title>XML Developer's Guide</title>
       <genre>Computer</genre>
       <price>44.95</price>
@@ -12,9 +10,7 @@
       with XML.</description>
    </book>
    <book id="bk101">
-      <author>
-      <name>Gambardella, Matthew</name>
-      </author>
+      <author>Gambardella, Matthew</author>
       <title>XML Developer's Guide</title>
       <genre>Computer</genre>
       <price>44.95</price>

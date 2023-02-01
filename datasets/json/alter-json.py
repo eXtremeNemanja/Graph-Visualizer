@@ -36,25 +36,27 @@ def getListAttributes(objects):
 
 
 def addIdToListAttributeChildren(objects):
-    for character in objects[TYPE]:
-        for key in character:
+    for object in objects[TYPE]:
+        for key in object:
             if key in list_attributes:
-                data = character[key]
-                character[key] = []
-                if isinstance(data, list):
-                    for item in data:
+                values = object[key]
+                object[key] = []
+                if isinstance(values, list):
+                    for item in values:
+                        if isinstance(item, dict):
+                            continue
                         if item in unique_field_values.keys():
-                            character[key].append(
+                            object[key].append(
                                 {"id": unique_field_values[item]}
                             )
                         else:
-                            character[key].append(
+                            object[key].append(
                                 {"id": item}
                             )
-                else:
-                    character[key].append(
-                                {"id": item}
-                            )
+                # else:
+                #     object[key].append(
+                #                 {"id": object}
+                #             )
 
 
 if __name__ == '__main__':
@@ -65,6 +67,7 @@ if __name__ == '__main__':
 
     # feel free to add necessary code bellow
 
-    # getListAttributes(objects)
+    getListAttributes(objects)
+    # addIdToListAttributeChildren(objects)
 
     save_file(objects)

@@ -106,12 +106,12 @@ class Vertex:
         return hash(self._id)
 
     def __eq__(self, other) -> bool:
-        if "id" in self._attributes and "id" in other.attributes:
-            if self._attributes["id"] == other.attributes["id"]:
+        if "id" in self._attributes and "id" in other.list_attributes:
+            if self._attributes["id"] == other.list_attributes["id"]:
                 print("Imaju id")
                 return True
         
-        if self._attributes != other.attributes:
+        if self._attributes != other.list_attributes:
             return False
         
         if len(self._edges) != len(other.edges):

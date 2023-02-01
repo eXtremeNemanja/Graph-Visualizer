@@ -3,7 +3,7 @@
     {
       "id": 0,
       "name": "Sergey Prokopyev",
-      "craft": {"id": "football" },
+      "hobbies": ["football", "tennis"],
       "friends": [
         {"id":  1},
         {"id":  5},
@@ -13,7 +13,7 @@
     {
       "id": 1,
       "name": "Dmitry Petelin",
-      "craft": {"id": "football" },
+      "hobbies": ["football", "bowling"],
       "friends": [
         {"id":  0},
         {"id":  5}
@@ -22,7 +22,7 @@
     {
       "id": 2,
       "name": "Frank Rubio",
-      "craft": {"id": "painting" },
+      "hobbies": ["painting", "singing"],
       "friends": [
         {"id":  3}
       ]
@@ -30,7 +30,7 @@
     {
       "id": 3,
       "name": "Nicole Mann",
-      "craft": {"id": "painting" },
+      "hobbies": ["cooking", "singing"],
       "friends": [
         {"id":  2}
       ]
@@ -38,7 +38,7 @@
     {
       "id": 4,
       "name": "Josh Cassada",
-      "craft": {"id": "fishing" },
+      "hobbies": ["fishing", "hunting"],
       "friends": [
         {"id":  5}
       ]
@@ -46,7 +46,7 @@
     {
       "id": 5,
       "name": "Koichi Wakata",
-      "craft": {"id": "fishing" },
+      "hobbies": ["fishing"],
       "friends": [
         {"id":  1},
         {"id":  2},
@@ -56,7 +56,7 @@
     {
       "id": 6,
       "name": "Anna Kikina",
-      "craft": {"id": "fishing" },
+      "hobbies": ["dancing"],
       "friends": [
         {"id":  7}
       ]
@@ -64,7 +64,7 @@
     {
       "id": 7,
       "name": "Fei Junlong",
-      "craft": {"id": "teaching" },
+      "hobbies": ["teaching", "golfing"],
       "friends": [
         {"id":  6}
       ]
@@ -72,12 +72,12 @@
     {
       "id": 8,
       "name": "Deng Qingming",
-      "craft": {"id": "teaching" },
+      "hobbies": ["dancing"]
     },
     {
       "id": 9,
       "name": "Zhang Lu",
-      "craft": {"id": "teaching" },
+      "hobbies": ["dancing", "teaching"],
       "friends": [
         {"id":  1}
       ]

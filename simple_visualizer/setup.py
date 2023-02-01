@@ -2,12 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name="simple-visualizer",
-    # TODO add author
-    author="",
+    author="Hristina Adamović",
     version="0.1",
     packages=find_packages(),
     namespace_packages=['plugin'],
-    # TODO add entry_points
+    entry_points={
+        'visualizer':
+        ['simple-visualizer=plugin.visualizer.simple_visualizer:SimpleVisualizer']
+    },
     install_requires=["core>=0.1"],
     zip_safe=True
 )

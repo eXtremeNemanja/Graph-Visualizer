@@ -113,11 +113,13 @@ class Vertex:
         return hash(self._id)
 
     def __eq__(self, other) -> bool:
-
+        if self._id == other.id:
+            return True
         if "id" in self._attributes and "id" in other.attributes:
             if self._attributes["id"] == other.attributes["id"]:
                 return True
-
+            return False
+        
         if self._attributes != other.attributes:
             return False
 

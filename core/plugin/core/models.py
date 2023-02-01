@@ -1,5 +1,3 @@
-from django.db import models
-
 
 class Graph(object):
 
@@ -26,9 +24,9 @@ class Graph(object):
         self._name = name
 
     def edges(self):
-        result = set()      
-        for vertex in self._vertices():
-            result.update(vertex.edges())    
+        result = set()
+        for vertex in self._vertices:
+            result.update(vertex.edges)
         return result
 
     def degree(self, v):
@@ -48,10 +46,13 @@ class Graph(object):
             if edge.is_directed():
                 total_directed += 1
             else:
-                total_undirected += 1    
+                total_undirected += 1
         return total_directed + total_undirected//2
 
     def insert_vertex(self, v=None):
+        already_existing = self.contains(v)
+        if already_existing:
+            self._vertices.remove(already_existing)
         self._vertices.append(v)
 
     def insert_edge(self, u, v, is_directed, relation, weight=None):
@@ -59,6 +60,12 @@ class Graph(object):
         u.add_edge(e)
         if not is_directed:
             v.add_edge(e)
+
+    def contains(self, v):
+        for vertex in self.vertices:
+            if v == vertex:
+                return vertex
+        return None
 
 
 class Vertex:
@@ -115,16 +122,17 @@ class Vertex:
         
         if self._attributes != other.attributes:
             return False
-        
+
         if len(self._edges) != len(other.edges):
             return False
-        
-        for edge in self._edges:
-            for e in other.edges:
-                if edge == e:
-                    break
-            else:
-                return False
+
+        #TODO: how to compare sources without recursion error?
+        # for edge in self._edges:
+        #     for e in other.edges:
+        #         if edge == e:
+        #             break
+        #     else:
+        #         return False
         
         return True
         

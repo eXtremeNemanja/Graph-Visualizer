@@ -1,9 +1,9 @@
-import datetime
 import numbers
 
 from plugin.core.models import Graph, Vertex, Edge
 from plugin.core.services.loader import BaseLoader
 import json
+
 
 def isPrimitive(value):
     return isinstance(value, (str, numbers.Number))
@@ -11,11 +11,13 @@ def isPrimitive(value):
 
 class JsonLoader(BaseLoader):
 
-    __slots__ = '_id_collection', '_dataset_name'
+    __slots__ = '_id_counter', '_dataset_name', '_graph'
 
     def __init__(self):
-        self._id_collection = {}
+        self._id_counter = 0
         self._dataset_name = ""
+        self._unique_key = "id"
+        self._graph = None
 
     def identifier(self):
         return "JsonLoader"
@@ -23,59 +25,77 @@ class JsonLoader(BaseLoader):
     def name(self):
         return "Loading data from json document"
 
-    def load_file(self, file_name):
+    def load_file(self, file_name, unique_key="id"):
         self._dataset_name = file_name
+        self._unique_key = unique_key
         with open(file_name, 'r') as file:
             jsonObject = json.load(file)
         return jsonObject
 
     def make_graph(self, tree):
-        g = Graph(self._dataset_name)
-        return g
+        self._graph = Graph(self._dataset_name)
+        self.create_vertex(tree)
+        return self._graph
 
+    def create_vertex(self, data, parent_vertex=None, relationship=None):
+        # TODO add weight on edges
+        # TODO non directional edge logic
+        current_vertex = Vertex(None)
+        for nested_item in data:
+            if isinstance(nested_item, dict):                                      # nested_item -> object, data -> list of objects
+                nested_vertex = self.create_vertex(nested_item, parent_vertex, relationship)
+                nested_vertex.id = self.set_vertex_id(nested_item)
+                self.update_graph(nested_vertex, parent_vertex, relationship)
+            else:                                                                  # nested_item -> primitive, data -> object
+                if not isinstance(data, list) and isPrimitive(data[nested_item]):  # nested_item -> attribute name
+                    if nested_item == self._unique_key:
+                        current_vertex.id = data[nested_item]
+                        current_vertex.add_attribute("id", data[nested_item])
+                    current_vertex.add_attribute(nested_item, data[nested_item])
+                elif isinstance(data, list):                                       # data -> list of primitive items
+                    nested_vertex = Vertex(nested_item)
+                    nested_vertex.add_attribute("id", nested_item)
+                    nested_vertex.add_attribute("value", nested_item)
+                    self.update_graph(nested_vertex, parent_vertex, relationship)
+                else:                                                              # nested_item -> object attribute
+                    current_vertex = self.create_vertex(data[nested_item], current_vertex, nested_item)
+        if not current_vertex.id:
+            return parent_vertex
+        self.alter_existing_vertex(current_vertex)
+        return current_vertex
 
-    def create_vertex(self, graph, data):
-        v = Vertex(None)
-        for nested_object in data:
-            # current item is object in data
-            if isinstance(nested_object, dict):
-                v = self.set_vertex_id(v, nested_object)
-                self.create_vertex(graph, nested_object)
-            # current item is list in data
-            elif isinstance(nested_object, list):
-                self.create_vertex(graph, nested_object)
-            # current item has primitive type
-            else:
-                # current item is primitive attribute of data object
-                if not isinstance(data, list) and isPrimitive(data[nested_object]):
-                    v.add_attribute(nested_object, data)
-                # data is list of primitive types
-                elif isinstance(data, list):
-                    nested_v = Vertex(None)
-                    nested_v = self.set_vertex_id(nested_v)
-                # current item is object attribute of data object
-                else:
-                    self.create_vertex(graph, data[nested_object])
+    def add_new_edge(self, child_vertex, parent_vertex, relationship):
+        e = Edge(parent_vertex, child_vertex, relationship, 0, True)
+        parent_vertex.add_edge(e)
 
+    def update_graph(self, nested_vertex, parent_vertex, relationship):
+        self.alter_existing_vertex(nested_vertex)
+        self.add_new_edge(nested_vertex, parent_vertex, relationship)
 
-    def set_vertex_id(self, vertex, object=None):
-        if object and "id" in object.keys():
-            id = object["id"]
+    def alter_existing_edges(self, edges, vertex):
+        for edge in edges:
+            if edge.source == vertex:
+                edge.source = vertex
+                vertex.add_edge(edge)
+            elif edge.destination == vertex:
+                edge.destination = vertex
+                vertex.add_edge(edge)
+
+    def alter_existing_vertex(self, vertex):
+        already_in_graph = self._graph.contains(vertex)
+        if already_in_graph:
+            vertex.attributes.update(already_in_graph.attributes)
+            self.alter_existing_edges(self._graph.edges(), vertex)
+        self._graph.insert_vertex(vertex)
+
+    def set_vertex_id(self, vertex_data=None):
+        if vertex_data and self._unique_key in vertex_data.keys():
+            vertex_id = vertex_data[self._unique_key]
         else:
-            id = self.next_id()
-        vertex.id = id
-        if id in self._id_collection.keys():
-            vertex = self._id_collection[id]
-        self._id_collection[vertex.id] = vertex
-        return vertex
+            vertex_id = self.next_id()
+        return vertex_id
 
     def next_id(self):
-        return max([x for x in self._id_collection.keys() if isinstance(x, numbers.Number)]) + 1
-
-
-if __name__ == '__main__':
-
-    jl = JsonLoader()
-    d = jl.load_file("../../../datasets/json/got-characters.json")
-    g = jl.make_graph(d)
-    jl.create_vertex(g, d)
+        current_id = self._id_counter
+        self._id_counter += 1
+        return current_id

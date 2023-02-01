@@ -1,6 +1,6 @@
 import json
 
-FILE_NAME = "got-characters.json"
+FILE_NAME = "got-characters-id.json"
 TYPE = "characters"
 UNIQUE_FIELD = "characterName"
 ID_ATTRIBUTE_NAME = "id"
@@ -17,7 +17,7 @@ def load_file():
 
 
 def save_file(obj):
-    with open ("got-characters.json", 'w') as file:
+    with open ("got-characters-id.json", 'w') as file:
         file.write(json.dumps(obj))
 
 

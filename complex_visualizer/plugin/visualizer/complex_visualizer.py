@@ -110,7 +110,7 @@ class ComplexVisualizer(BaseVisualizer):
                         d3.select("g#"+d.id).append('text').attr('x',duzina/2).attr('y',10)
                          .attr('text-anchor','middle')
                          .attr('font-size',textSize).attr('font-family','Poppins')
-                         .attr('fill','black').text(d.id);
+                         .attr('fill','white').text(d.id);
 
                         //Ubacivanje razdelnika
                          d3.select("g#"+d.id).append('line').
@@ -120,11 +120,11 @@ class ComplexVisualizer(BaseVisualizer):
                         // Ubacivanje teksta za kategorije
                             for(var i=0;i<attributesNum;i++)
                          {
-                             //Ubacivanje naziva prodavnice ili artikla
+                            
                              d3.select("g#"+d.id).append('text').attr('x',0).attr('y',20+i*textSize)
                             .attr('text-anchor','start')
                              .attr('font-size',textSize).attr('font-family','Poppins')
-                             .attr('fill','black').text(d.attributes[i]);
+                             .attr('fill','white').text(d.attributes[i]);
 
                             }
                         }

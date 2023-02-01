@@ -35,12 +35,10 @@ class RdfLoader(BaseLoader):
     def load_file(self, file_path):
         g = Graph()
         g.parse(file_path)
-        for row in g:
-            self.populate_graph(row)
+        return g
 
-    def make_graph(self, file_path, name):
+    def make_graph(self, data, name):
         self.graph = G(name)
-        self.load_file(file_path)
+        for row in data:
+            self.populate_graph(row)
         return self.graph
-
-

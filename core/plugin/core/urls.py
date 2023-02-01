@@ -9,5 +9,5 @@ urlpatterns = [
     path('reset', views.reset, name='reset'),
     path('new_data', views.new_data, name='new_data'),
     path('simple_visualizer', views.simple_visualization, name='simple_visualizer'),
-    path('complex_view', views.complex_visualization, name='complex_view'),
+    path('complex_visualizer', views.complex_visualization, name='complex_visualizer')
 ]

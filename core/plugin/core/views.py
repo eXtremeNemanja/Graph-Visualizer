@@ -160,7 +160,7 @@ def complex_visualization(request):
     for v in visualizers:
         if v.identifier() == "ComplexVisualizer":
             return HttpResponse(
-                v.visualize(apps.get_app_config('core').graph, request))
+                v.visualize(apps.get_app_config('core').base_graph, request))
 
     return redirect('index')
 

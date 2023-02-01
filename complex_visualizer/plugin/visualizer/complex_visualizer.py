@@ -34,7 +34,7 @@ class ComplexVisualizer(BaseVisualizer):
 
                     .node {
                     cursor: pointer;
-                    color: #3182bd;
+                    color: #003B73;
 
                     }
 
@@ -90,12 +90,17 @@ class ComplexVisualizer(BaseVisualizer):
                         d3.selectAll('.node').each(function(d){slozenPrikaz(d);});
 
                         function slozenPrikaz(d){
-                        var duzina = 150;
+                        var length = -Infinity;
+                        for(var i=0;i<d.attributes.length;i++){
+                            if(length<d.attributes[i].length) length = d.attributes[i].length
+                        }
+
                         var attributesNum = d.attributes.length;
 
-                        var textSize = 10;
-                        var visina = (attributesNum == 0) ? textSize: attributesNum*textSize;
-                        visina += textSize;
+                        var textSize = 12;
+                        var visina = 30;
+                        visina += (attributesNum == 0) ? textSize: attributesNum*textSize;
+                        var duzina = length * textSize/2;
 
                         //Ubacivanje kvadrata
                         d3.select("g#"+d.id).append('rect').
@@ -105,7 +110,7 @@ class ComplexVisualizer(BaseVisualizer):
                         d3.select("g#"+d.id).append('text').attr('x',duzina/2).attr('y',10)
                          .attr('text-anchor','middle')
                          .attr('font-size',textSize).attr('font-family','Poppins')
-                         .attr('fill','black').text(d.naziv);
+                         .attr('fill','black').text(d.id);
 
                         //Ubacivanje razdelnika
                          d3.select("g#"+d.id).append('line').
@@ -119,7 +124,7 @@ class ComplexVisualizer(BaseVisualizer):
                              d3.select("g#"+d.id).append('text').attr('x',0).attr('y',20+i*textSize)
                             .attr('text-anchor','start')
                              .attr('font-size',textSize).attr('font-family','Poppins')
-                             .attr('fill','white').text(d.attributes[i]);
+                             .attr('fill','black').text(d.attributes[i]);
 
                             }
                         }

@@ -13,7 +13,7 @@ class SimpleVisualizer(BaseVisualizer):
     def visualize(self, graph, request): 
         vertices = {}
         for v in graph.vertices:
-            vertices[v.id] = {"id": "id_" + str(v.id)} #dodati ostale atribute koje treba
+            vertices[v.id] = {"id": "ID_" + str(v.id)} 
 
         links = []
         for e in graph.edges():
@@ -28,12 +28,13 @@ class SimpleVisualizer(BaseVisualizer):
         <style>
         .node {
         cursor: pointer;
-        color: #3182bd;
+        color: #003b73;
+        text-align: center;
         }
 
         .link {
         fill: none;
-        stroke: #9ecae1;
+        stroke: #404040;
         stroke-width: 1.5px;
         }
         </style>
@@ -51,7 +52,7 @@ class SimpleVisualizer(BaseVisualizer):
         });
 
         var force = d3.layout.force() //kreiranje force layout-a
-            .size([400, 400]) //raspoloziv prostor za iscrtavanje
+            .size([500, 500]) //raspoloziv prostor za iscrtavanje
             .nodes(d3.values(vertices)) //dodaj nodove
             .links(links) //dodaj linkove
             .on("tick", tick) //sta treba da se desi kada su izracunate nove pozicija elemenata
@@ -78,22 +79,17 @@ class SimpleVisualizer(BaseVisualizer):
         d3.selectAll('.node').each(function(d){simpleView(d);});
 
         function simpleView(d){
-            var duzina=150;
-            var brKategorija= 1;
+            var width=32;
+            var textSize=15;
 
-            var textSize=10;
-            var visina=(brKategorija==0)?textSize:brKategorija*textSize;
-            visina+=textSize;
-
-            //Ubacivanje kvadrata
-            d3.select("g#"+d.id).append('rect').
-            attr('x',0).attr('y',0).attr('width',duzina).attr('height',visina)
-            .attr('fill','yellow');
+            //Ubacivanje kruga
+            d3.select("g#"+d.id).append('circle').
+            attr('cx',0).attr('cy', 0).attr('r', width).attr('fill', '#003b73');
             //Ubacivanje naziva prodavnice ili artikla
-            d3.select("g#"+d.id).append('text').attr('x',duzina/2).attr('y',10)
+            d3.select("g#"+d.id).append('text').attr('x', 0).attr('y', 4)
             .attr('text-anchor','middle')
-            .attr('font-size',textSize).attr('font-family','sans-serif')
-            .attr('fill','green').text(d.id);
+            .attr('font-size',textSize).attr('font-family','poppins')
+            .attr('fill','white').text(d.id);
         }
 
         function tick(e) {

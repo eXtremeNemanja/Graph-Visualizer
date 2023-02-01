@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.apps.registry import apps
 from .models import Edge, Graph, Vertex
+from django.template import engines
 
 # Create your views here.
 from django.http import HttpResponse
@@ -62,14 +63,6 @@ def search(request, *args, **kwargs):
         print(vertex.id)
         print(vertex.attributes)
         print(len(vertex.edges))
-    return redirect('index')
-
-def simpleVisualizer(request):
-    visualizers = apps.get_app_config('core').visualizers
-    for v in visualizers:
-        if v.identifier() == "SimpleVisualizer":
-            return HttpResponse(v.visualize(apps.get_app_config('core').graph, request))
-
     return redirect('index')
 
 def filter():
@@ -141,7 +134,6 @@ def search_vertex(graph, vertex, query):
             
             return
         
-
 def search_edge(edge, query):
     relation_name = edge.relation_name
     if relation_name.lower() == query.lower():
@@ -170,4 +162,11 @@ def complex_visualization(request):
             return HttpResponse(
                 v.visualize(apps.get_app_config('core').graph, request))
 
+    return redirect('index')
+
+def simple_visualization(request):
+    visualizers = apps.get_app_config('core').visualizers
+    for v in visualizers:
+        if v.identifier() == "SimpleVisualizer":
+            return HttpResponse(v.visualize(apps.get_app_config('core').base_graph, request))
     return redirect('index')

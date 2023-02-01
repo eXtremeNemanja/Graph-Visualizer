@@ -52,15 +52,18 @@ class SimpleVisualizer(BaseVisualizer):
         });
 
         var force = d3.layout.force() //kreiranje force layout-a
-            .size([500, 500]) //raspoloziv prostor za iscrtavanje
+            .size([800, 650]) //raspoloziv prostor za iscrtavanje
             .nodes(d3.values(vertices)) //dodaj nodove
             .links(links) //dodaj linkove
             .on("tick", tick) //sta treba da se desi kada su izracunate nove pozicija elemenata
-            .linkDistance(300) //razmak izmedju elemenata
-            .charge(-100)//koliko da se elementi odbijaju
+            .linkDistance(125) //razmak izmedju elemenata
+            .charge(-2000)//koliko da se elementi odbijaju
             .start(); //pokreni izracunavanje pozicija
+      
+        var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
+            svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+        })).append("g");
 
-        var svg=d3.select('#mainView');
         // add the links
         var link = svg.selectAll('.link')
             .data(links)

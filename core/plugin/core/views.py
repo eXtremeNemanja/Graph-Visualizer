@@ -170,3 +170,33 @@ def simple_visualization(request):
         if v.identifier() == "SimpleVisualizer":
             return HttpResponse(v.visualize(apps.get_app_config('core').base_graph, request))
     return redirect('index')
+
+# tree view
+def load_tree():
+    old_graph = apps.get_app_config('core').current_graph
+    graph = Graph(old_graph.name)
+    return graph.vertices
+
+
+def load_related_vertices(relationship, vertex):
+    vertices = []
+    for edge in vertex.edges:
+        if (edge.relation_name == relationship):
+            if (edge.is_directed):
+                vertices.append(edge.destination)
+            else: 
+                if edge.source != vertex:
+                    vertices.append(edge.source)
+                elif edge.destination != vertex:
+                    vertices.append(edge.destination)
+
+    return vertices
+
+
+def load_relationships_of_vertex(vertex):
+    relationships = []
+    for edge in vertex.edges:
+        if edge.relation_name not in relationships:
+            relationships.append(edge.relation_name)
+
+    return relationships

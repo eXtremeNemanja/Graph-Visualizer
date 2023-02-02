@@ -59,12 +59,13 @@ class ComplexVisualizer(BaseVisualizer):
                         }
 
                         var force = d3.layout.force() //kreiranje force layout-a
-                            .size([800, 650]) //raspoloziv prostor za iscrtavanje
+                            .size([1000, 450]) //raspoloziv prostor za iscrtavanje
                             .nodes(d3.values(nodesGraph)) //dodaj nodove
                             .links(linksGraph) //dodaj linkove
                             .on("tick", tick) //sta treba da se desi kada su izracunate nove pozicija elemenata
-                            .linkDistance(125) //razmak izmedju elemenata
-                            .charge(-2000)//koliko da se elementi odbijaju
+                            .linkDistance(150) //razmak izmedju elemenata
+                            .charge(-1500)//koliko da se elementi odbijaju
+                            .gravity(0.75)
                             .start(); //pokreni izracunavanje pozicija
 
                         // add pan and zoom
@@ -100,7 +101,7 @@ class ComplexVisualizer(BaseVisualizer):
                             var textSize = 12;
                             var high = 30;
                             high += (attributesNum == 0) ? textSize: attributesNum*textSize;
-                            var width = length * textSize/2;
+                            var width = length * textSize/2 + 2*textSize + 5;
 
                             // add rectangle
                             d3.select("g#"+d.id).append('rect').

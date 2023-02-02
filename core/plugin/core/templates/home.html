@@ -28,8 +28,14 @@
                     <input required type="file" name="file" id="file"/>
                     {% if file_missing %}
                         <small class="error">Upload file is required</small>
-                    {% endif %}
+                    {% else %} 
                     <input type="hidden" id="loader" name="loader" />
+                    {% endif %}
+                    {% if stepper == 1 %}
+                        <p class="stepper">1. Please choose a file and then a parser</p>
+                    {% else %}
+                        <p class="stepper">2. Please choose a view</p>
+                    {% endif %}
                 </form>
             </div>
         </div>

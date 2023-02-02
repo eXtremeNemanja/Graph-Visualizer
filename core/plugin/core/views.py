@@ -7,10 +7,10 @@ from django.template import engines
 from django.http import HttpResponse
 
 
-def index(request, file_missing=False):
+def index(request, stepper=1,  file_missing=False):
     graph = apps.get_app_config('core').base_graph
     print(graph)
-    return render(request, "index.html", {'graph': graph})
+    return render(request, "index.html", {'graph': graph, 'stepper': stepper})
 
 def reset(request):
     apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
@@ -23,13 +23,13 @@ def new_data(request):
 
 def load(request):
     plugini = apps.get_app_config('core').loaders
-    
+
     # print(request.FILES)
     # print(request.POST.get('file', 'nema'))
     # print(request.POST.get('loader', 'nema'))
     loader = request.POST.get('loader', 'nema')
     if not request.FILES:
-        return render(request, "index.html", {"file_missing": True})
+        return render(request, "index.html", {"stepper":1, "file_missing": True})
     else:
         file = request.FILES['file']
         print(file)
@@ -42,7 +42,7 @@ def load(request):
                 apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
 
     # print(file.read())
-    return redirect('index')
+    return render(request, "index.html", {'stepper': 2})
 
 def search(request, *args, **kwargs):
     # print(args, kwargs)
@@ -157,16 +157,19 @@ def create_graph(old_graph, graph):
 
 def complex_visualization(request):
     visualizers = apps.get_app_config('core').visualizers
+    graph = apps.get_app_config('core').base_graph
+    if graph is None: return render(request, "index.html", {"stepper":1, "file_missing": False})
     for v in visualizers:
         if v.identifier() == "ComplexVisualizer":
             return HttpResponse(
                 v.visualize(apps.get_app_config('core').base_graph, request))
-
-    return redirect('index')
+    return render(request, "index.html", {"stepper":1, "file_missing": False})
 
 def simple_visualization(request):
     visualizers = apps.get_app_config('core').visualizers
+    graph = apps.get_app_config('core').base_graph
+    if graph is None: return render(request, "index.html", {"stepper":1, "file_missing": False})
     for v in visualizers:
         if v.identifier() == "SimpleVisualizer":
             return HttpResponse(v.visualize(apps.get_app_config('core').base_graph, request))
-    return redirect('index')
+    return render(request, "index.html", {"stepper":1, "file_missing": False})  

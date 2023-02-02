@@ -8,6 +8,18 @@ h2{
     margin: 10px 0 0 15px;
 }
 
+.stepper{
+    float: right;
+    text-align: center;
+    margin-right: 33%;
+    font-weight: bold;
+    color: white;
+}
+
+#file{
+    float: left;
+}
+
 .view{
     min-width: 100vw;
     min-height: 85vh;
@@ -37,12 +49,12 @@ h2{
 }
 
 .bottom-left{
-    width: 50%;
+    width: 70%;
     border-right: solid black 1px;
 }
 
 .bottom-right{
-    width: 50%;
+    width: 30%;
 }
 
 #navbar{
@@ -149,4 +161,6 @@ button:hover{
 .error{
     color: rgb(145, 0, 0);
     font-weight: bold;
+    float: left;
+    margin-top: 17px;
 }

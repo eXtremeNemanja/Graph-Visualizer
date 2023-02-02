@@ -1,20 +1,19 @@
-
-body{
+body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
 }
 
-h2{
+h2 {
     margin: 10px 0 0 15px;
 }
 
-.view{
+.view {
     min-width: 100vw;
     min-height: 85vh;
     display: flex;
     flex-direction: row;
 }
-  
+
 .left {
     width: 25%;
     border-right: solid black 1px;
@@ -26,33 +25,33 @@ h2{
     flex-direction: column;
 }
 
-.top{
+.top {
     border-bottom: solid black 1px;
     height: 70%;
 }
 
-.bottom{
+.bottom {
     display: flex;
     flex-direction: row;
 }
 
-.bottom-left{
+.bottom-left {
     width: 50%;
     border-right: solid black 1px;
 }
 
-.bottom-right{
+.bottom-right {
     width: 50%;
 }
 
-#navbar{
+#navbar {
     display: flex;
     flex-direction: column;
 }
 
 .topnav {
-    height:fit-content;
-    background-color:  #BFD7ED;
+    height: fit-content;
+    background-color: #BFD7ED;
 }
 
 #title {
@@ -62,7 +61,7 @@ h2{
     margin-left: 20px;
     margin-right: 50px;
 }
-  
+
 .left-plugins {
     font-size: medium !important;
     float: left;
@@ -83,7 +82,7 @@ h2{
     font-size: 17px;
     margin-right: 20px;
 }
-  
+
 .topnav a:hover {
     background-color: whitesmoke;
     color: black;
@@ -91,7 +90,7 @@ h2{
 
 .choose-file {
     height: fit-content;
-    background-color:  #60A3D9;
+    background-color: #60A3D9;
 }
 
 ::-webkit-file-upload-button {
@@ -103,17 +102,17 @@ h2{
     font-weight: bolder;
 }
 
-.tools{
+.tools {
     margin-left: 35px;
 }
 
-#reset{
+#reset {
     width: 100%;
     text-align: center;
     margin-top: 1.5vh;
 }
 
-.tools input{
+.tools input {
     margin-top: 20px;
     margin-right: 15px;
     width: 300px;
@@ -123,11 +122,11 @@ h2{
     padding: 0 15px 0 15px;
 }
 
-.tools .disabled-btn{
+.tools .disabled-btn {
     background-color: gray;
 }
 
-.tools button{
+.tools button {
     height: 30px;
     width: 100px;
     background-color: #60A3D9;
@@ -136,17 +135,86 @@ h2{
     color: white;
 }
 
-.disabled-btn:hover{
+.disabled-btn:hover {
     cursor: auto;
     background-color: gray;
 }
 
-button:hover{
+button:hover {
     cursor: pointer;
     background-color: #4678a0;
 }
 
-.error{
+.error {
     color: rgb(145, 0, 0);
     font-weight: bold;
+}
+
+.tree {
+    overflow: scroll;
+    height: 78vh;
+    white-space: nowrap;
+    padding: 5px;
+}
+
+
+.tree-item {
+    display: block;
+    font-size: 12px;
+    padding: 7px;
+    border-radius: 7px;
+    margin-left: 12px;
+    margin-bottom: 7px;
+    margin-top: 7px;
+    width: 100%;
+}
+
+.tree-node {
+    background-color: #d0e5f8;
+    font-weight: bold;
+}
+
+.tree-edge {
+    background-color: #f1f1f1;
+}
+
+.list {
+    width: fit-content;
+}
+
+.arrow {
+    color: grey;
+    vertical-align: middle;
+    font-size: 8px;
+}
+
+.label {
+    font-size: 8px;
+    vertical-align: middle;
+    margin-left: 6px;
+    margin-right: 6px;
+    font-style: italic;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #6e90ad81;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #d0e5f8ab;
 }

@@ -61,7 +61,7 @@ class SimpleVisualizer(BaseVisualizer):
             .start(); //pokreni izracunavanje pozicija
       
         var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
-            svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+            svg.attr("transform", "scale(" + d3.event.scale + ")")
         })).append("g");
 
         // add the links

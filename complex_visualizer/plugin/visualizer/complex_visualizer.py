@@ -70,7 +70,7 @@ class ComplexVisualizer(BaseVisualizer):
 
                         // add pan and zoom
                         var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
-                                svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+                                svg.attr("transform", " scale(" + d3.event.scale + ")")
                         })).append('g');
 
                         // add the links
@@ -91,7 +91,7 @@ class ComplexVisualizer(BaseVisualizer):
                         d3.selectAll('.node').each(function(d){complexView(d);});
 
                         function complexView(d) {
-                            var length = -Infinity;
+                            var length = 10;
                             for(var i=0;i<d.attributes.length;i++) {
                                 if(length<d.attributes[i].length) length = d.attributes[i].length
                             }

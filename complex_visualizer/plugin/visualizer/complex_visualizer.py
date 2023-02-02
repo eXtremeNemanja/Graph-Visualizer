@@ -15,10 +15,9 @@ class ComplexVisualizer(BaseVisualizer):
     def visualize(self, graph, request):
         nodes = {}
         for v in graph.vertices:
-            # nodes[v.id] = {"id": "id_" + str(v.id)}
             attributes = []
             for attribute_key in v.attributes.keys():
-                attributes.append(attribute_key + ":" + str(v.attributes[attribute_key]))
+                attributes.append(attribute_key + ": " + str(v.attributes[attribute_key]))
             nodes[v.id] = {
                 "id": "id_" + str(v.id),
                 "attributes": attributes
@@ -30,8 +29,9 @@ class ComplexVisualizer(BaseVisualizer):
 
         view = """{% extends "index.html" %}
                     {% block mainView %}
-                    <style>
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+                    <style>
                     .node {
                     cursor: pointer;
                     color: #003B73;
@@ -42,9 +42,8 @@ class ComplexVisualizer(BaseVisualizer):
                     stroke: #9ecae1;
                     stroke-width: 1.5px;
                     }
-
                     </style>
-                        <svg id="mainView" width="100%" height="100%"></svg>
+
                     <script>
 
                     var nodesGraph = JSON.parse("{{nodes |escapejs}}");                
@@ -60,17 +59,18 @@ class ComplexVisualizer(BaseVisualizer):
                         }
 
                         var force = d3.layout.force() //kreiranje force layout-a
-                            .size([800, 650]) //raspoloziv prostor za iscrtavanje
+                            .size([1000, 450]) //raspoloziv prostor za iscrtavanje
                             .nodes(d3.values(nodesGraph)) //dodaj nodove
                             .links(linksGraph) //dodaj linkove
                             .on("tick", tick) //sta treba da se desi kada su izracunate nove pozicija elemenata
-                            .linkDistance(125) //razmak izmedju elemenata
-                            .charge(-2000)//koliko da se elementi odbijaju
+                            .linkDistance(150) //razmak izmedju elemenata
+                            .charge(-1500)//koliko da se elementi odbijaju
+                            .gravity(0.75)
                             .start(); //pokreni izracunavanje pozicija
 
                         // add pan and zoom
                         var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
-                                svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+                                svg.attr("transform", " scale(" + d3.event.scale + ")")
                         })).append('g');
 
                         // add the links
@@ -91,7 +91,7 @@ class ComplexVisualizer(BaseVisualizer):
                         d3.selectAll('.node').each(function(d){complexView(d);});
 
                         function complexView(d) {
-                            var length = -Infinity;
+                            var length = 10;
                             for(var i=0;i<d.attributes.length;i++) {
                                 if(length<d.attributes[i].length) length = d.attributes[i].length
                             }
@@ -101,7 +101,7 @@ class ComplexVisualizer(BaseVisualizer):
                             var textSize = 12;
                             var high = 30;
                             high += (attributesNum == 0) ? textSize: attributesNum*textSize;
-                            var width = length * textSize/2;
+                            var width = length * textSize/2 + 2*textSize + 5;
 
                             // add rectangle
                             d3.select("g#"+d.id).append('rect').
@@ -140,6 +140,8 @@ class ComplexVisualizer(BaseVisualizer):
                         }
 
                     </script>
+
+                    <script  src="static/birdView.js"></script>
                     {% endblock %}"""
 
 

@@ -8,6 +8,7 @@
     </div>
     <div class="right">
         <div class="top">
+            <svg width="100%" height="100%" id='mainView'></svg>
         {% block mainView %} {% endblock %}
         </div>
         <div class="bottom">
@@ -15,7 +16,7 @@
                 {% include 'tools.html' %}
             </div>
             <div class="bottom-right">
-                {% include 'birdView.html' %}
+                <svg height="100%" width="100%" id="birdView"></svg>
             </div>
         </div>
     </div>

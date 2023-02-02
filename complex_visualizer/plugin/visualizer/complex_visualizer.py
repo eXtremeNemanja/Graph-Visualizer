@@ -15,10 +15,9 @@ class ComplexVisualizer(BaseVisualizer):
     def visualize(self, graph, request):
         nodes = {}
         for v in graph.vertices:
-            # nodes[v.id] = {"id": "id_" + str(v.id)}
             attributes = []
             for attribute_key in v.attributes.keys():
-                attributes.append(attribute_key + ":" + str(v.attributes[attribute_key]))
+                attributes.append(attribute_key + ": " + str(v.attributes[attribute_key]))
             nodes[v.id] = {
                 "id": "id_" + str(v.id),
                 "attributes": attributes
@@ -30,8 +29,9 @@ class ComplexVisualizer(BaseVisualizer):
 
         view = """{% extends "index.html" %}
                     {% block mainView %}
-                    <style>
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+                    <style>
                     .node {
                     cursor: pointer;
                     color: #003B73;
@@ -42,9 +42,8 @@ class ComplexVisualizer(BaseVisualizer):
                     stroke: #9ecae1;
                     stroke-width: 1.5px;
                     }
-
                     </style>
-                        <svg id="mainView" width="100%" height="100%"></svg>
+
                     <script>
 
                     var nodesGraph = JSON.parse("{{nodes |escapejs}}");                
@@ -140,6 +139,8 @@ class ComplexVisualizer(BaseVisualizer):
                         }
 
                     </script>
+
+                    <script  src="static/birdView.js"></script>
                     {% endblock %}"""
 
 

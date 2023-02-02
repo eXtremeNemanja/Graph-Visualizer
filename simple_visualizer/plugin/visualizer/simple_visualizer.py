@@ -24,7 +24,8 @@ class SimpleVisualizer(BaseVisualizer):
         view = """
         {% extends "index.html" %}
         {% block mainView %}
-
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       
         <style>
         .node {
         cursor: pointer;
@@ -39,8 +40,6 @@ class SimpleVisualizer(BaseVisualizer):
         }
         </style>
 
-        <svg width="100%" height="100%" id='mainView'></svg>
-
         <script type="text/javascript">
 
         var vertices = JSON.parse("{{vertices |escapejs}}");                
@@ -52,14 +51,15 @@ class SimpleVisualizer(BaseVisualizer):
         });
 
         var force = d3.layout.force() //kreiranje force layout-a
-            .size([800, 650]) //raspoloziv prostor za iscrtavanje
+            .size([1300, 650]) //raspoloziv prostor za iscrtavanje
             .nodes(d3.values(vertices)) //dodaj nodove
             .links(links) //dodaj linkove
             .on("tick", tick) //sta treba da se desi kada su izracunate nove pozicija elemenata
-            .linkDistance(125) //razmak izmedju elemenata
-            .charge(-2000)//koliko da se elementi odbijaju
+            .linkDistance(25) //razmak izmedju elemenata
+            .charge(-1000)//koliko da se elementi odbijaju
+            .gravity(0.25)
             .start(); //pokreni izracunavanje pozicija
-      
+              
         var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
             svg.attr("transform", "scale(" + d3.event.scale + ")")
         })).append("g");
@@ -82,8 +82,8 @@ class SimpleVisualizer(BaseVisualizer):
         d3.selectAll('.node').each(function(d){simpleView(d);});
 
         function simpleView(d){
-            var width=32;
-            var textSize=15;
+            var width=14;
+            var textSize=8;
 
             //Ubacivanje kruga
             d3.select("g#"+d.id).append('circle').
@@ -109,9 +109,9 @@ class SimpleVisualizer(BaseVisualizer):
         function nodeClick(el){
             alert("ID: "+el.id);
         }
-
-
+        
         </script>
+        <script  src="static/birdView.js"></script>
         {% endblock %}
         """
 

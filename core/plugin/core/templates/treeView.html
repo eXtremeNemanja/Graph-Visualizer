@@ -1,7 +1,10 @@
-<link rel="stylesheet" href="../static/style.css">
-
 <h2>Tree view</h2>
 <div class="tree">
     <div class="list">
+        {% for vertex in graph.vertices %}
+        <a href="{% url 'alter_tree' id=vertex.id %}">
+            {% include 'treeNode.html' %}
+        </a>
+        {% endfor %}
     </div>
 </div>

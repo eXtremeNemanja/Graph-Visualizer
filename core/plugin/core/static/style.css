@@ -62,6 +62,7 @@ h2 {
     margin-right: 50px;
 }
 
+
 .left-plugins {
     font-size: medium !important;
     float: left;
@@ -158,6 +159,12 @@ button:hover {
 }
 
 
+.tree a {
+    all: unset;
+    cursor: pointer;
+}
+
+
 .tree-item {
     display: block;
     font-size: 12px;
@@ -167,6 +174,12 @@ button:hover {
     margin-bottom: 7px;
     margin-top: 7px;
     width: 100%;
+    cursor: pointer;
+}
+
+a {
+    cursor: pointer;
+    all: unset;
 }
 
 .tree-node {
@@ -174,8 +187,16 @@ button:hover {
     font-weight: bold;
 }
 
+.tree-node:hover {
+    background-color: #84b5dd;
+}
+
 .tree-edge {
     background-color: #f1f1f1;
+}
+
+.tree-edge:hover {
+    background-color: #b9d7ef;
 }
 
 .list {

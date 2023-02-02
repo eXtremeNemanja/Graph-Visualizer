@@ -1,10 +1,9 @@
 
 class Graph(object):
 
-    __slots__ = '_name', '_vertices'
+    __slots__ = '_vertices'
 
-    def __init__(self, name):
-        self._name = name
+    def __init__(self):
         self._vertices = []
 
     @property
@@ -14,14 +13,6 @@ class Graph(object):
     @vertices.setter
     def vertices(self, vertices):
         self._vertices = vertices
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        self._name = name
 
     def edges(self):
         result = set()
@@ -50,10 +41,11 @@ class Graph(object):
         return total_directed + total_undirected//2
 
     def insert_vertex(self, v=None):
-        already_existing = self.contains(v)
+        already_existing = self.contains_vertex(v)
         if already_existing:
-            self._vertices.remove(already_existing)
-        self._vertices.append(v)
+            self._vertices[self._vertices.index(already_existing)] = v
+        else:
+            self._vertices.append(v)
 
     def insert_edge(self, u, v, is_directed, relation, weight=None):
         e = Edge(u, v, relation, weight, is_directed)
@@ -61,20 +53,26 @@ class Graph(object):
         if not is_directed:
             v.add_edge(e)
 
-    def contains(self, v):
+    def contains_vertex(self, v):
         for vertex in self.vertices:
             if v == vertex:
                 return vertex
         return None
 
+    def get_vertex_by_id(self, id):
+        for vertex in self._vertices:
+            if id == str(vertex.id):
+                return vertex
+        return None
 
 class Vertex:
-    __slots__ = '_attributes', '_id', '_edges'
+    __slots__ = '_attributes', '_id', '_edges', 'open'
 
     def __init__(self, id):
         self._attributes = {}
         self._id = id
         self._edges = []
+        self.open = False
 
     @property
     def attributes(self):
@@ -106,8 +104,36 @@ class Vertex:
     def add_attribute(self, key, value):
         self._attributes[key] = value
 
-    def add_edge(self, edge):
-        self._edges.append(edge)
+    def add_edge(self, e):
+        already_existing = self.contains_edge(e)
+        if already_existing:
+            self._edges[self._edges.index(already_existing)] = e
+        else:
+            self._edges.append(e)
+
+    def contains_edge(self, e):
+        for vertex in self._edges:
+            if e == vertex:
+                return vertex
+        return None
+
+    def relations(self):
+        relations = []
+        for edge in self._edges:
+            if edge.relation_name in relations:
+                continue
+            relations.append(edge.relation_name)
+            yield edge.relation_name
+
+    def related_vertices(self, relation):
+        vertices =[]
+        for edge in self._edges:
+            if edge.relation_name == relation:
+                if edge.source == self:
+                    vertices.append(edge.destination)
+                else:
+                    vertices.append(edge.source)
+        return vertices
 
     def __hash__(self):
         return hash(self._id)

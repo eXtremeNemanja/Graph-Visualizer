@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect
 from django.apps.registry import apps
 from .models import Edge, Graph, Vertex
@@ -8,8 +9,8 @@ from django.http import HttpResponse
 
 
 def index(request, file_missing=False):
+    print("Log",  "Logging")
     graph = apps.get_app_config('core').base_graph
-    print(graph)
     return render(request, "index.html", {'graph': graph})
 
 def reset(request):
@@ -22,26 +23,16 @@ def new_data(request):
     return redirect('index')
 
 def load(request):
-    plugini = apps.get_app_config('core').loaders
-    
-    # print(request.FILES)
-    # print(request.POST.get('file', 'nema'))
-    # print(request.POST.get('loader', 'nema'))
-    loader = request.POST.get('loader', 'nema')
-    if not request.FILES:
+    if request.method == 'POST' and request.FILES['file']:
+        choosen_file = request.FILES['file']
+        unique_key = request.POST.get("key")
+    loader = apps.get_app_config('core').get_loader(request.POST.get('loader'))
+    if not choosen_file:
         return render(request, "index.html", {"file_missing": True})
     else:
-        file = request.FILES['file']
-        print(file)
-        for p in plugini:
-            if p.identifier() == loader:
-                root = p.load_file(file)
-                print(root.tag)
-                apps.get_app_config('core').base_graph = p.make_graph(root, root.tag)
-                print(apps.get_app_config('core').base_graph)
-                apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
-
-    # print(file.read())
+        root = loader.load_file(choosen_file, unique_key)
+        apps.get_app_config('core').base_graph = loader.make_graph(root)
+        apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
     return redirect('index')
 
 def search(request, *args, **kwargs):
@@ -51,7 +42,7 @@ def search(request, *args, **kwargs):
         return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph})
     
     old_graph = apps.get_app_config('core').current_graph
-    graph = Graph(old_graph.name)
+    graph = Graph()
     for vertex in old_graph.vertices:
         search_vertex(graph, vertex, query)
     
@@ -140,7 +131,7 @@ def search_edge(edge, query):
         return True
     
 def create_graph(old_graph, graph):
-    new_graph = Graph(old_graph.name)
+    new_graph = Graph()
     new_graph.vertices.extend(graph.vertices)
     for vertex in old_graph.vertices:
         for edge in vertex.edges:
@@ -171,32 +162,12 @@ def simple_visualization(request):
             return HttpResponse(v.visualize(apps.get_app_config('core').base_graph, request))
     return redirect('index')
 
-# tree view
-def load_tree():
-    old_graph = apps.get_app_config('core').current_graph
-    graph = Graph(old_graph.name)
-    return graph.vertices
-
-
-def load_related_vertices(relationship, vertex):
-    vertices = []
-    for edge in vertex.edges:
-        if (edge.relation_name == relationship):
-            if (edge.is_directed):
-                vertices.append(edge.destination)
-            else: 
-                if edge.source != vertex:
-                    vertices.append(edge.source)
-                elif edge.destination != vertex:
-                    vertices.append(edge.destination)
-
-    return vertices
-
-
-def load_relationships_of_vertex(vertex):
-    relationships = []
-    for edge in vertex.edges:
-        if edge.relation_name not in relationships:
-            relationships.append(edge.relation_name)
-
-    return relationships
+def load_relationships_of_vertex(request, id):
+    print("id", id)
+    graph = apps.get_app_config('core').base_graph
+    if (id != 'favicon.ico'):
+        vertex = graph.get_vertex_by_id(id)
+        vertex.open = not vertex.open
+        graph.insert_vertex(vertex)
+        apps.get_app_config('core').base_graph = graph
+    return redirect('index')

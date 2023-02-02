@@ -1,0 +1,23 @@
+<div class="tree-item tree-node">
+    <span class="arrow">V</span> <span class="label">Vertex</span>
+    {{ vertex.attributes }}
+    {% if vertex.open %}
+    <div class="list">
+        {% for relation in vertex.relations %}
+        <a href="">
+            <div class="tree-item tree-edge">
+                <span class="arrow">V</span> <span class="label">Edge</span>
+                {{ relation }}
+                <div class="list">
+                    {% for related in vertex|related_vertices:relation %}
+<!--                    <a href="">-->
+<!--                        {% include 'treeNode.html' %}-->
+<!--                    </a>-->
+                    {% endfor %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

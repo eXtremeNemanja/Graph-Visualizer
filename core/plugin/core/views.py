@@ -181,8 +181,8 @@ def load_tree():
 def load_related_vertices(relationship, vertex):
     vertices = []
     for edge in vertex.edges:
-        if (edge.relation_name == relationship):
-            if (edge.is_directed):
+        if edge.relation_name == relationship:
+            if edge.is_directed:
                 vertices.append(edge.destination)
             else: 
                 if edge.source != vertex:
@@ -200,3 +200,73 @@ def load_relationships_of_vertex(vertex):
             relationships.append(edge.relation_name)
 
     return relationships
+
+
+def find_subgraphs(vertices = [], graphs = []):
+    changes = True
+    if not vertices:
+        vertices = load_tree()
+
+    connected = {}
+    for vertex in vertices:
+        if len(connected) == 0:
+            connected[vertex] = True
+        else:
+            connected[vertex] = False
+
+    if list(connected.values()) == [True * len(vertices)]:
+        graphs.append(connected.keys())
+        return graphs
+
+    while changes:
+        changes = False
+        for v in vertices:
+            if connected[v]:
+                if check_as_true(v.edges, connected):
+                    changes = True
+            else:
+                if check_if_true(v, connected):
+                    connected[v] = True
+                    if check_as_true(v.edges, connected):
+                        changes = True
+
+    if list(connected.values()) == [True for i in range(len(connected.values()))]:
+        graphs.append(list(connected.keys()))
+        return graphs
+
+    removed = remove_connected_vertices(vertices, connected)
+    graphs.append(removed)
+    return find_subgraphs(vertices, graphs)
+
+
+def check_if_true(vertex, connected):
+    for edge in vertex.edges:
+        if connected[edge.source]:
+            return True
+        elif connected[edge.destination]:
+            return True
+
+    return False
+
+
+def check_as_true(edges, connected):
+    changes = False
+    for edge in edges:
+        if connected[edge.source] is False:
+            changes = True
+        elif connected[edge.destination] is False:
+            changes = True
+        connected[edge.source] = True
+        connected[edge.destination] = True
+
+    return changes
+
+
+def remove_connected_vertices(vertices, connected):
+    removed = []
+    for v in connected.keys():
+        if connected[v]:
+            vertices.remove(v)
+            removed.append(v)
+
+    return removed

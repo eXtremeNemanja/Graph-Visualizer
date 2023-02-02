@@ -248,3 +248,21 @@ class Edge:
         #     return False
         
         return True
+
+
+class TreeNode(object):
+    __slots__ = 'opened', 'attributes', 'type', 'children'
+
+    def __init__(self, opened, attributes, type, children):
+        self._opened = False
+        self._attibutes = attributes
+        self._type = type
+        self._children = []
+
+
+
+
+
+class Tree(object):
+    pass
+

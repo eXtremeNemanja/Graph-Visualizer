@@ -12,10 +12,10 @@ class XmlLoader(BaseLoader):
         self.id_counter = 0
 
     def identifier(self):
-        return "XmlLoader"
+        return "xml-loader"
 
     def name(self):
-        return "Loading data from xml document"
+        return "XML Loader"
 
     # def get_file_name(self, file_name):
     #     return os.path.join(os.path.dirname(__file__), "..", "..", "..", "datasets", "xml", file_name)
@@ -52,7 +52,7 @@ class XmlLoader(BaseLoader):
         graph.insert_vertex(v)
         return v
 
-    def make_graph(self, tree, graph_name):
-        g = Graph(graph_name)
+    def make_graph(self, tree):
+        g = Graph()
         self.create_vertex(g, tree)
         return g

@@ -44,7 +44,9 @@ h2{
 }
 
 .bottom{
+    height: fit-content;
     display: flex;
+    height: 30%;
     flex-direction: row;
 }
 
@@ -116,7 +118,7 @@ h2{
 }
 
 .tools{
-    margin-left: 35px;
+    margin-left: 125px;
 }
 
 #reset{

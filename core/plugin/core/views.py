@@ -10,8 +10,9 @@ from django.http import HttpResponse
 def index(request, stepper=1,  file_missing=False):
     graph = apps.get_app_config('core').base_graph
     print(graph)
+    if (graph is not None): stepper = 2
     return render(request, "index.html", {'graph': graph, 'stepper': stepper})
-
+ 
 def reset(request):
     apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
     return redirect('index')
@@ -41,8 +42,8 @@ def load(request):
                 print(apps.get_app_config('core').base_graph)
                 apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
 
-    # print(file.read())
-    return render(request, "index.html", {'stepper': 2})
+    # print(file.read())  
+    return redirect('index')
 
 def search(request, *args, **kwargs):
     # print(args, kwargs)

@@ -9,7 +9,6 @@ class CoreConfig(AppConfig):
     name = 'plugin.core'
     base_graph = None
     current_graph = None
-    stepper = 1
 
     def ready(self):
         # Prilikom startovanja aplikacije, ucitavamo plugine na

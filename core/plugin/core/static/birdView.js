@@ -3,11 +3,11 @@ $(document).ready(function(){
 });
 
 function init() {
-    let mainNode = d3.select("#mainView").node();
-    console.log(mainNode);
+    let main = d3.select("#mainView").node();
+
     let observer = new MutationObserver(observer_callback);
 
-    observer.observe(mainNode, {
+    observer.observe(main, {
         subtree: true,
         attributes: true,
         childList: true,
@@ -18,25 +18,25 @@ function init() {
 
 function observer_callback() {
     let main = d3.select("#mainView").html();
-    d3.select("#birdView").html(main); // smestanje html koda iz main u bird view
+    d3.select("#birdView").html(main);
 
-    let mainWidth = d3.select("#mainView").select("g").node().getBBox().width; // sirina main view-a
-    let birdWidth = $("#birdView")[0].clientWidth; // sirina bird view-a
+    let mainWidth = d3.select("#mainView").select("g").node().getBBox().width;
+    let mainHeight = d3.select("#mainView").select("g").node().getBBox().height;
 
-    let mainHeight = d3.select("#mainView").select("g").node().getBBox().height;// visina main view-a
-    let birdHeight = $("#birdView")[0].clientHeight; // visina bird view-a
+    let birdWidth = $("#birdView")[0].clientWidth;
+    let birdHeight = $("#birdView")[0].clientHeight;
 
     let scaleWidth = birdWidth / mainWidth;
     let scaleHeight = birdHeight / mainHeight;
 
-    let scale = null; // parametar skaliranja
+    let scale = 0;
     if(scaleWidth < scaleHeight){
         scale = scaleWidth;
     }else{
         scale = scaleHeight;
     }
     
-    let x = d3.select("#birdView").select("g").node().getBBox().x; // x pozicija g taga unutar svg
-    let y = d3.select("#birdView").select("g").node().getBBox().y; // y pozicija g taga unutar svg
+    let x = d3.select("#birdView").select("g").node().getBBox().x;
+    let y = d3.select("#birdView").select("g").node().getBBox().y;
     d3.select("#birdView").select('g').attr("transform", "translate ("+[-x*scale, -y*scale]+") scale("+ scale +")");
 }

@@ -30,6 +30,11 @@
                         <small class="error">Upload file is required</small>
                     {% endif %}
                     <input type="hidden" id="loader" name="loader" />
+                    {% if stepper == 1 %}
+                        <p class="stepper">1. Please choose a file and then a parser</p>
+                    {% else %}
+                        <p class="stepper">2. Please choose a view</p>
+                    {% endif %}
                 </form>
             </div>
         </div>

@@ -53,6 +53,7 @@ class ComplexVisualizer(BaseVisualizer):
                     link.source = nodesGraph[link.source];
                     link.target = nodesGraph[link.target];
                 });
+                 d3.select('.stepper').text("1. Please choose a file and then a parser");
 
                     function nodeClick(el){
                         alert("ID: "+el.id);

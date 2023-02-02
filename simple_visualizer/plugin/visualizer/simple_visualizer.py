@@ -50,6 +50,8 @@ class SimpleVisualizer(BaseVisualizer):
             link.target = vertices[link.target];
         });
 
+        d3.select('.stepper').text("1. Please choose a file and then a parser");
+
         var force = d3.layout.force() //kreiranje force layout-a
             .size([1000, 450]) //raspoloziv prostor za iscrtavanje
             .nodes(d3.values(vertices)) //dodaj nodove

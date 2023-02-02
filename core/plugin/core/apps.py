@@ -24,5 +24,5 @@ def load_plugins(oznaka):
         print("{} {}".format(ep.name, p))
         plugin = p()
         plugins.append(plugin)
-    return plugins
+    return plugins 
     

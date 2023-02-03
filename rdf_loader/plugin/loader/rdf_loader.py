@@ -7,6 +7,7 @@ from plugin.core.models import Graph as G
 class RdfLoader(BaseLoader):
     def __init__(self) -> None:
         self.id_counter = 0
+        self._unique_key = "id"
         self.graph = None
 
     def identifier(self):
@@ -32,7 +33,9 @@ class RdfLoader(BaseLoader):
         second_vertex = self.create_vertex(object, self.graph)
         self.graph.insert_edge(first_vertex, second_vertex, True, predicate)
 
-    def load_file(self, file):
+    def load_file(self, file, unique_key="id"):
+        if unique_key:
+            self._unique_key = unique_key
         g = Graph()
         g.parse(file)
         return g

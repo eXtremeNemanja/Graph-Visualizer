@@ -21,9 +21,6 @@
                 onclick="document.getElementById('loader').value = '{{ l.identifier }}'; document.getElementById('loader_form').submit();">
                 {{ l.name }}</a>
             {% endfor %}
-
-            <a class="right-plugins" href="{% url 'simple_visualizer' %}">Simple View</a>
-            <a class="right-plugins" href="{% url 'complex_visualizer' %}">Complex View</a>
         </div>
 
         <div class="choose-file">

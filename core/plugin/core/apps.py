@@ -3,6 +3,9 @@ from django.apps import AppConfig
 
 import os
 
+from core.plugin.core.models import Forest, TreeNode
+
+
 class CoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     loaders = []
@@ -10,7 +13,7 @@ class CoreConfig(AppConfig):
     name = 'plugin.core'
     base_graph = None
     current_graph = None
-    current_file = None
+    tree = None
 
     def ready(self):
         # Prilikom startovanja aplikacije, ucitavamo plugine na
@@ -26,6 +29,11 @@ class CoreConfig(AppConfig):
             if l.identifier() == id:
                 return l
         return None
+
+    def load_tree(self):
+        self.tree = Forest()
+        for vertex in self.base_graph.vertices:
+            self.tree.roots.append(TreeNode(vertex, None, "vertex"))
 
 def load_plugins(entry_point):
     plugins = []

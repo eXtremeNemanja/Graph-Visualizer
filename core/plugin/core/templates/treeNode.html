@@ -1,9 +1,9 @@
 <div class="tree-item tree-node">
     <span class="arrow">V</span> <span class="label">Vertex</span>
-    {{ vertex.attributes }}
-    {% if vertex.open %}
+    {{ node.object.attributes }}
+    {% if node.open %}
     <div class="list">
-        {% for relation in vertex.relations %}
+        {% for relation in node.object.relations %}
         <a href="">
             <div class="tree-item tree-edge">
                 <span class="arrow">V</span> <span class="label">Edge</span>

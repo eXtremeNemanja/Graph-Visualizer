@@ -11,7 +11,8 @@ from django.http import HttpResponse
 def index(request, file_missing=False):
     print("Log",  "Logging")
     graph = apps.get_app_config('core').base_graph
-    return render(request, "index.html", {'graph': graph})
+    tree = apps.get_app_config('core').tree
+    return render(request, "index.html", {'graph': graph, 'tree': tree})
 
 def reset(request):
     apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
@@ -23,9 +24,10 @@ def new_data(request):
     return redirect('index')
 
 def load(request):
+    choosen_file = None
     if request.method == 'POST' and request.FILES['file']:
         choosen_file = request.FILES['file']
-        unique_key = request.POST.get("key")
+    unique_key = request.POST.get("key")
     loader = apps.get_app_config('core').get_loader(request.POST.get('loader'))
     if not choosen_file:
         return render(request, "index.html", {"file_missing": True})
@@ -33,6 +35,7 @@ def load(request):
         root = loader.load_file(choosen_file, unique_key)
         apps.get_app_config('core').base_graph = loader.make_graph(root)
         apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
+        apps.get_app_config('core').load_tree()
     return redirect('index')
 
 def search(request, *args, **kwargs):
@@ -164,7 +167,7 @@ def simple_visualization(request):
 
 def load_relationships_of_vertex(request, id):
     print("id", id)
-    graph = apps.get_app_config('core').base_graph
+    tree = apps.get_app_config('core').tree
     if (id != 'favicon.ico'):
         vertex = graph.get_vertex_by_id(id)
         vertex.open = not vertex.open

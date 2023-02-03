@@ -66,13 +66,12 @@ class Graph(object):
         return None
 
 class Vertex:
-    __slots__ = '_attributes', '_id', '_edges', 'open'
+    __slots__ = '_attributes', '_id', '_edges'
 
     def __init__(self, id):
         self._attributes = {}
         self._id = id
         self._edges = []
-        self.open = False
 
     @property
     def attributes(self):
@@ -126,7 +125,7 @@ class Vertex:
             yield edge.relation_name
 
     def related_vertices(self, relation):
-        vertices =[]
+        vertices = []
         for edge in self._edges:
             if edge.relation_name == relation:
                 if edge.source == self:
@@ -251,18 +250,110 @@ class Edge:
 
 
 class TreeNode(object):
-    __slots__ = 'opened', 'attributes', 'type', 'children'
+    __slots__ = '_opened', '_object', '_object_type', '_children', '_id', '_parent'
 
-    def __init__(self, opened, attributes, type, children):
+    def __init__(self, object, parent, type):
         self._opened = False
-        self._attibutes = attributes
-        self._type = type
+        self._object = object
+        self._object_type = type
+        self._id = Forest.next_id()
         self._children = []
+        self._parent = parent
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def opened(self):
+        return self._opened
+
+    def open(self):
+        self._opened = True
+        if len(self._children) <= 0:
+            if self._object_type == "vertex":
+                print(self._object)
+                self.add_children(self._object.edges)
+            else:
+                self.add_children(self._parent.object.related_vertices(self._object))
+
+    def close(self):
+        self._opened = False
+        for child in self._children:
+            child.opened = False
+
+    @property
+    def object(self):
+        return self._object
+
+    @property
+    def object_type(self):
+        return self._object_type
+
+    @property
+    def children(self):
+        return self._children
+
+    @property
+    def parent(self):
+        return self._parent
+
+    def find_node(self, id):
+        if id == self._id:
+            return self
+        else:
+            for child in self._children:
+                found_node = child.find_node(id)
+                if found_node:
+                    return found_node
+
+    def add_children(self, children_objects):
+        for child in children_objects:
+            if self._object_type == "vertex":
+                child_type = "edge"
+                child_node = TreeNode(child.relation_name, self, child_type)
+                self._children.append(child_node)
+            else:
+                child_type = "vertex"
+                for related in child.related_vertices(self.object):
+                    child_node = TreeNode(related, self, child_type)
+                    self._children.append(child_node)
 
 
 
+class Forest(object):
+    __slots__ = '_roots', '__id_counter'
+
+    def __init__(self, roots=None):
+        self.__id_counter = 0
+        self._roots = roots
+        if self._roots is None:
+            self._roots = []
+
+    @property
+    def id(self):
+        next = self.__id_counter
+        self.__id_counter += 1
+        return self.__id_counter
+
+    @property
+    def roots(self):
+        return self._roots
+
+    @roots.setter
+    def roots(self, roots):
+        self._roots = roots
+
+    def find_tree_node(self, id):
+        for root_node in self._roots:
+            found_node = root_node.find_node(id)
+            if found_node:
+                return found_node
+
+    @staticmethod
+    def next_id():
+        return Forest.id
 
 
-class Tree(object):
-    pass
+
 

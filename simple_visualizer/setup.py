@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="simple-visualizer",
     author="Hristina Adamović",
-    version="0.1",
+    version="0.2",
     packages=find_packages(),
     namespace_packages=['plugin'],
     entry_points={

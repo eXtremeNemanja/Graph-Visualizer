@@ -21,6 +21,11 @@
                 onclick="document.getElementById('loader').value = '{{ l.identifier }}'; document.getElementById('loader_form').submit();">
                 {{ l.name }}</a>
             {% endfor %}
+
+            {% for v in visualizers %}
+            <a class="right-plugins" href="{% url 'visualize' type=v.identifier %}">
+                {{ v.name }}</a>
+            {% endfor %}
         </div>
 
         <div class="choose-file">

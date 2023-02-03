@@ -1,28 +1,5 @@
-import json
-from plugin.core.services.visualizer import BaseVisualizer
-from django.template import engines
 
-class SimpleVisualizer(BaseVisualizer):
-
-    def identifier(self):
-        return "simple-visualizer"
-
-    def name(self):
-        return "Simple View"
-
-    def visualize(self, graph, request): 
-        vertices = {}
-        for v in graph.vertices:
-            vertices[v.id] = {"id": "ID_" + str(v.id)} 
-
-        links = []
-        for e in graph.edges():
-            link = {"source": e.source.id, "target": e.destination.id}
-            links.append(link)
-            
-
-        view = """
-        {% block mainView %}
+        
 
         <style>
         .node {
@@ -42,8 +19,8 @@ class SimpleVisualizer(BaseVisualizer):
 
         <script type="text/javascript">
 
-        var vertices = JSON.parse("{{vertices |escapejs}}");                
-        var links= JSON.parse("{{links |escapejs}}");
+        var vertices = JSON.parse("{\u00225185\u0022: {\u0022id\u0022: \u0022ID_5185\u0022}}");                
+        var links= JSON.parse("[]");
 
         links.forEach(function(link) {
             link.source = vertices[link.source];
@@ -111,10 +88,5 @@ class SimpleVisualizer(BaseVisualizer):
 
 
         </script>
-        {% endblock %}
-        """
-
-        django_engine = engines['django']
-        view_html = django_engine.from_string(view)
-        view_html = view_html.render({"vertices": json.dumps(vertices), "links":json.dumps(links)}, request)
-        return view_html
+        
+        

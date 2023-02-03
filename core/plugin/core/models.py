@@ -450,6 +450,11 @@ class TreeNode(object):
             else:
                 self.add_children(self._parent.object.related_vertices(self._object))
 
+    def open_parents(self):
+        self.open()
+        if self._parent:
+            parent.open_parents()
+
     def close(self):
         self._opened = False
         # for child in self._children:
@@ -533,7 +538,21 @@ class Forest(object):
             if found_node:
                 return found_node
 
+    def find_node_by_vertex_id(self, id, nodes=None):
+        if not nodes:
+            nodes = roots
+        new_nodes = []
+        for node in nodes:
+            if node.object_type == "vertex":
+                if node.object.id == id:
+                    return node
+                new_nodes += node.children
+        if not new_nodes:
+            return None
+        return self.find_node_by_vertex_id(id, new_nodes)
 
 
-
-
+    def open_vertex_by_id(self, id):
+        node = self.find_vertex_by_id(id)
+        if node:
+            node.open_parents()

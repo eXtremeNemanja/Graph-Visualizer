@@ -25,7 +25,8 @@ class JsonLoader(BaseLoader):
         return "JSON Loader"
 
     def load_file(self, file, unique_key="id"):
-        self._unique_key = unique_key
+        if unique_key:
+            self._unique_key = unique_key
         json_object = json.load(file)
         return json_object
 
@@ -48,6 +49,9 @@ class JsonLoader(BaseLoader):
                     if nested_item == self._unique_key:
                         current_vertex.id = data[nested_item]
                         current_vertex.add_attribute("id", data[nested_item])
+                        self.next_id()
+                    else:
+                        current_vertex.id = self.next_id()
                     current_vertex.add_attribute(nested_item, data[nested_item])
                 elif isinstance(data, list):                                       # data -> list of primitive items
                     nested_vertex = Vertex(nested_item)

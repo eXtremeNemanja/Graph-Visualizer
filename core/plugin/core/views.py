@@ -166,7 +166,7 @@ def simple_visualization(request):
     return redirect('index')
 
 def load_relationships_of_vertex(request, id):
-    print("id", id)
+    graph = apps.get_app_config('core').current_graph
     tree = apps.get_app_config('core').tree
     if (id != 'favicon.ico'):
         node = tree.find_tree_node(int(id))
@@ -177,4 +177,4 @@ def load_relationships_of_vertex(request, id):
         else:
             node.open()
             tree.last_opened = node.id
-    return redirect('index')
+    return render(request, "index.html", {'graph': graph, 'tree': tree})

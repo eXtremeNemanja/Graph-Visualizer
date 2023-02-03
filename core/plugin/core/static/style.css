@@ -166,3 +166,7 @@ button:hover{
     float: left;
     margin-top: 17px;
 }
+
+#hidden {
+    visibility: hidden;
+}

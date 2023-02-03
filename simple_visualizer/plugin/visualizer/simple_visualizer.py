@@ -28,7 +28,6 @@ class SimpleVisualizer(BaseVisualizer):
             
 
         view = """
-        {% extends "index.html" %}
         {% block mainView %}
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
        
@@ -117,6 +116,9 @@ class SimpleVisualizer(BaseVisualizer):
 
         }
         function nodeClick(el) {
+
+            document.getElementById("hidden").innerHTML = el.id.replace("ID_", "");
+
             var text = "";
             text += "ID:" + el.id + "\\n";
             if(current != null) {

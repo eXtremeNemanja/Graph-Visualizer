@@ -152,7 +152,7 @@ class Graph(object):
                     return True
         return False
 
-    def has_cycle(self):
+    def has_cycle_undirected(self):
         self.visited = []
         for vertex in self.vertices:
             if vertex in self.visited:
@@ -161,6 +161,22 @@ class Graph(object):
             if self.depth_first_search(vertex, None):
                 return True
         return False
+
+    # finds vertices that don't have incoming edges
+    def find_root_vertices(self):
+        dict = {}
+        for vertex in self.vertices:
+            dict[vertex] = False
+
+        for edge in self.edges:
+            dict[edge.source] = True
+
+        roots = []
+        for vertex in dict.keys():
+            if dict[vertex] is False:
+                roots.append(vertex)
+
+        return roots
 
 
 class Vertex:

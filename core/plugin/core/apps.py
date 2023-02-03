@@ -35,8 +35,8 @@ class CoreConfig(AppConfig):
         return None
 
     def load_tree(self):
-        self.tree = Forest()
-        for vertex in self.base_graph.vertices:
+        self.tree = Forest(None)
+        for vertex in find_root_vertices(self.current_graph.find_subgraphs()):
             self.tree.roots.append(TreeNode(vertex, None, "vertex"))
 
 def load_plugins(entry_point):

@@ -9,6 +9,6 @@ urlpatterns = [
     path('load', views.load, name='load'),
     path('search', views.search, name='search'),
     path('<str:id>', views.load_relationships_of_vertex, name='alter_tree'),
-    path('simple_visualizer', views.simple_visualization, name='simple_visualizer'),
-    path('complex_visualizer', views.complex_visualization, name='complex_visualizer')
+    path('visualizer/simple_visualizer', views.simple_visualization, name='simple_visualizer'),
+    path('visualizer/complex_visualizer', views.complex_visualization, name='complex_visualizer')
 ]

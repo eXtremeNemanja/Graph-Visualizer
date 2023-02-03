@@ -62,7 +62,17 @@ class Graph(object):
                 return vertex
         return None
 
-    def find_subgraphs(self, vertices=[], graphs=[]):
+    def get_vertex_by_id(self, id):
+        for vertex in self._vertices:
+            if id == str(vertex.id):
+                return vertex
+        return None
+
+    def find_subgraphs(self, vertices=None, graphs=None):
+        if not vertices:
+            vertices = []
+        if not graphs:
+            graphs = []
         changes = True
         if not vertices:
             vertices = self.vertices
@@ -75,7 +85,7 @@ class Graph(object):
                 connected[vertex] = False
 
         if list(connected.values()) == [True * len(vertices)]:
-            subgraph = Graph("x")
+            subgraph = Graph()
             subgraph.vertices = list(connected.keys())
             graphs.append(subgraph)
             return graphs
@@ -93,13 +103,13 @@ class Graph(object):
                             changes = True
 
         if list(connected.values()) == [True for i in range(len(connected.values()))]:
-            subgraph = Graph("x")
+            subgraph = Graph()
             subgraph.vertices = list(connected.keys())
             graphs.append(subgraph)
             return graphs
 
         removed = self.remove_connected_vertices(vertices, connected)
-        subgraph = Graph("x")
+        subgraph = Graph()
         subgraph.vertices = removed
         graphs.append(subgraph)
         return self.find_subgraphs(vertices, graphs)
@@ -493,7 +503,13 @@ class Forest(object):
         self._roots = roots
         if self._roots is None:
             self._roots = []
+        print("ROOTS", self._roots)
         self._last_opened = 0
+
+    def empty(self):
+        self.roots = []
+        self._last_opened = 0
+        nodeId.reset()
 
     @property
     def roots(self):

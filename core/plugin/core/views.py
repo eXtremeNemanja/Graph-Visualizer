@@ -10,9 +10,10 @@ from django.http import HttpResponse
 
 def index(request, file_missing=False):
     print("Log",  "Logging")
+    tree = None
     graph = apps.get_app_config('core').base_graph
     tree = apps.get_app_config('core').tree
-    return render(request, "index.html", {'graph': graph, 'tree': tree})
+    return render(request, "index.html", {'graph': graph, 'tree': tree })
 
 def reset(request):
     apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
@@ -168,7 +169,7 @@ def simple_visualization(request):
 def load_relationships_of_vertex(request, id):
     graph = apps.get_app_config('core').current_graph
     tree = apps.get_app_config('core').tree
-    if (id != 'favicon.ico'):
+    if (id.isnumeric()):
         node = tree.find_tree_node(int(id))
         if node.opened:
             node.close()
@@ -177,4 +178,5 @@ def load_relationships_of_vertex(request, id):
         else:
             node.open()
             tree.last_opened = node.id
-    return render(request, "index.html", {'graph': graph, 'tree': tree})
+        return render(request, "index.html", {'graph': graph, 'tree': tree})
+    return redirect(id)

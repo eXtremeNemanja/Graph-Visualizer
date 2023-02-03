@@ -1,12 +1,14 @@
 
 class Graph(object):
 
-    __slots__ = '_name', '_vertices', 'visited'
+    __slots__ = '_name', '_vertices', 'visited', 'path', 'nodes_to_contour'
 
     def __init__(self, name):
         self._name = name
         self._vertices = []
         self.visited = []
+        self.path = []
+        self.nodes_to_contour = []
 
     @property
     def vertices(self):
@@ -81,7 +83,9 @@ class Graph(object):
                 connected[vertex] = False
 
         if list(connected.values()) == [True * len(vertices)]:
-            graphs.append(connected.keys())
+            subgraph = Graph("x")
+            subgraph.vertices = list(connected.keys())
+            graphs.append(subgraph)
             return graphs
 
         while changes:
@@ -97,11 +101,15 @@ class Graph(object):
                             changes = True
 
         if list(connected.values()) == [True for i in range(len(connected.values()))]:
-            graphs.append(list(connected.keys()))
+            subgraph = Graph("x")
+            subgraph.vertices = list(connected.keys())
+            graphs.append(subgraph)
             return graphs
 
         removed = self.remove_connected_vertices(vertices, connected)
-        graphs.append(removed)
+        subgraph = Graph("x")
+        subgraph.vertices = removed
+        graphs.append(subgraph)
         return self.find_subgraphs(vertices, graphs)
 
     def check_if_true(self, vertex, connected):
@@ -134,10 +142,9 @@ class Graph(object):
 
         return removed
 
-    # TODO : check if this works
     def is_graph_directed(self):
-        if len(self.graph.edges) > 0:
-            return list(self.graph.edges)[0].is_directed
+        if len(self.edges()) > 0:
+            return list(self.edges())[0].is_directed
 
     def depth_first_search(self, current, parent):
         self.visited.append(current)
@@ -162,14 +169,37 @@ class Graph(object):
                 return True
         return False
 
+    def has_cycle_directed(self, v):
+        if v in self.path:
+            if self.path[0] not in self.nodes_to_contour:
+                self.nodes_to_contour.append(self.path[0])
+            return
+        if v in self.visited:
+            return
+        self.path.append(v)
+        for edge in v.edges:
+            self.has_cycle_directed(edge.destination)
+        if v not in self.nodes_to_contour:
+            self.visited.append(v)
+
+    def find_conture_nodes(self):
+        self.nodes_to_contour = []
+        self.visited = []
+        for vertex in self.vertices:
+            if vertex not in self.nodes_to_contour:
+                self.path = []
+                self.has_cycle_directed(vertex)
+
+        return self.nodes_to_contour
+
     # finds vertices that don't have incoming edges
-    def find_root_vertices(self):
+    def find_not_destination_vertices(self):
         dict = {}
         for vertex in self.vertices:
             dict[vertex] = False
 
-        for edge in self.edges:
-            dict[edge.source] = True
+        for edge in self.edges():
+            dict[edge.destination] = True
 
         roots = []
         for vertex in dict.keys():

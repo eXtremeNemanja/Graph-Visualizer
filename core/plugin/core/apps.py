@@ -30,20 +30,31 @@ def load_plugins(oznaka):
         plugins.append(plugin)
     return plugins
 
+
 def find_root_vertices(subgraphs):
     roots = []
     for graph in subgraphs:
-        if not graph.is_graph_directed():
-            if graph.has_cycle():
+        if graph.is_graph_directed():
+            contour_nodes = graph.find_conture_nodes()
+            hanging_nodes = graph.find_not_destination_vertices()
+            roots += merge_lists_distinct(contour_nodes, hanging_nodes)
+
+        else:
+            if graph.has_cycle_undirected():
                 if len(graph.vertices) > 0:
                     roots.append(graph.vertices[0])
             else:
                 for v in graph.vertices:
-                    if v.degree <= 1:
+                    if v.degree() <= 1:
                         roots.append(v)
-        else:
-            root_vertices = graph.find_root_vertices()
-            for root in root_vertices:
-                roots.append(root)
-    
+
     return roots
+
+
+def merge_lists_distinct(first_list, second_list):
+    for i in first_list:
+        if i not in second_list:
+            second_list.append(i)
+
+    return second_list
+

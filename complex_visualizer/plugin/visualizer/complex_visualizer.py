@@ -34,7 +34,6 @@ class ComplexVisualizer(BaseVisualizer):
                     <style>
                     .node {
                     cursor: pointer;
-                    color: #003B73;
                     }
 
                     .link {
@@ -45,6 +44,7 @@ class ComplexVisualizer(BaseVisualizer):
                     </style>
 
                     <script>
+                    var current = null;
 
                     var nodesGraph = JSON.parse("{{nodes |escapejs}}");                
                     var linksGraph = JSON.parse("{{links |escapejs}}");
@@ -55,9 +55,20 @@ class ComplexVisualizer(BaseVisualizer):
                 });
                  d3.select('.stepper').text("1. Please choose a file and then a parser");
 
-                    function nodeClick(el){
-                        alert("ID: "+el.id);
+                    function nodeClick(el) {
+                        var text = "";
+                        text += "ID:" + el.id + "\\n";
+                        if(current != null) {
+                            complexView(nodesGraph[parseInt(current.id.replace("id_", ""))], '#003B73')
                         }
+                        current = el;
+                        var node = nodesGraph[parseInt(el.id.replace("id_", ""))];
+                        complexView(node, "red")
+                        for(var i=0;i<node.attributes.length;i++) {
+                            text += node.attributes[i] + "\\n";
+                        }
+                        alert(text);
+                    }
 
                         var force = d3.layout.force() //kreiranje force layout-a
                             .size([1000, 450]) //raspoloziv prostor za iscrtavanje
@@ -89,9 +100,9 @@ class ComplexVisualizer(BaseVisualizer):
                             .on('click',function(){
                             nodeClick(this);
                             });
-                        d3.selectAll('.node').each(function(d){complexView(d);});
+                        d3.selectAll('.node').each(function(d){complexView(d, '#003B73');});
 
-                        function complexView(d) {
+                        function complexView(d, color) {
                             var length = 10;
                             for(var i=0;i<d.attributes.length;i++) {
                                 if(length<d.attributes[i].length) length = d.attributes[i].length
@@ -107,7 +118,7 @@ class ComplexVisualizer(BaseVisualizer):
                             // add rectangle
                             d3.select("g#"+d.id).append('rect').
                                 attr('x',0).attr('y',0).attr('width',width).attr('height',high)
-                                .attr('fill','#003B73');
+                                .attr('fill', color);
 
                             // add id
                             d3.select("g#"+d.id).append('text').attr('x',width/2).attr('y',10)

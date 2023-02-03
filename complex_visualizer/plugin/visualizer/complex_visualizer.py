@@ -64,7 +64,6 @@ class ComplexVisualizer(BaseVisualizer):
                         current = el;
                         var node = nodesGraph[parseInt(el.id.replace("id_", ""))];
                         complexView(node, "red")
-                        console.log(el.attributes)
                         for(var i=0;i<node.attributes.length;i++) {
                             text += node.attributes[i] + "\\n";
                         }

@@ -13,7 +13,13 @@ class SimpleVisualizer(BaseVisualizer):
     def visualize(self, graph, request): 
         vertices = {}
         for v in graph.vertices:
-            vertices[v.id] = {"id": "ID_" + str(v.id)} 
+            attributes = []
+            for attribute_key in v.attributes.keys():
+                attributes.append(attribute_key + ": " + str(v.attributes[attribute_key]))
+            vertices[v.id] = {
+                "id": "ID_" + str(v.id),
+                "attributes": attributes
+        }
 
         links = []
         for e in graph.edges():
@@ -41,6 +47,8 @@ class SimpleVisualizer(BaseVisualizer):
         </style>
 
         <script type="text/javascript">
+
+        var current = null;
 
         var vertices = JSON.parse("{{vertices |escapejs}}");                
         var links= JSON.parse("{{links |escapejs}}");
@@ -81,15 +89,15 @@ class SimpleVisualizer(BaseVisualizer):
             .on('click',function(){
             nodeClick(this);
             });
-        d3.selectAll('.node').each(function(d){simpleView(d);});
+        d3.selectAll('.node').each(function(d){simpleView(d, '#003B73');});
 
-        function simpleView(d){
+        function simpleView(d, color){
             var width=12;
             var textSize=6;
 
             //Ubacivanje kruga
             d3.select("g#"+d.id).append('circle').
-            attr('cx',0).attr('cy', 0).attr('r', width).attr('fill', '#003b73');
+            attr('cx',0).attr('cy', 0).attr('r', width).attr('fill', color);
             //Ubacivanje naziva prodavnice ili artikla
             d3.select("g#"+d.id).append('text').attr('x', 0).attr('y', 4)
             .attr('text-anchor','middle')
@@ -108,8 +116,19 @@ class SimpleVisualizer(BaseVisualizer):
                 .attr('y2', function(d) { return d.target.y; });
 
         }
-        function nodeClick(el){
-            alert("ID: "+el.id);
+        function nodeClick(el) {
+            var text = "";
+            text += "ID:" + el.id + "\\n";
+            if(current != null) {
+                simpleView(vertices[parseInt(current.id.replace("ID_", ""))], '#003B73')
+            }
+            current = el;
+            var node = vertices[parseInt(el.id.replace("ID_", ""))];
+            simpleView(node, "red")
+            for(var i=0;i<node.attributes.length;i++) {
+                text += node.attributes[i] + "\\n";
+            }
+            alert(text);
         }
 
         </script>

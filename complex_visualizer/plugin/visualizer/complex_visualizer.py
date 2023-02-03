@@ -27,7 +27,7 @@ class ComplexVisualizer(BaseVisualizer):
             link = {"source": l.source.id, "target": l.destination.id}
             links.append(link)
 
-        view = """{% extends "index.html" %}
+        view = """
                     {% block mainView %}
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -56,11 +56,15 @@ class ComplexVisualizer(BaseVisualizer):
                  d3.select('.stepper').text("1. Please choose a file and then a parser");
 
                     function nodeClick(el) {
+                        
+                        document.getElementById("hidden").innerHTML = el.id.replace("ID_", "");
+
                         var text = "";
                         text += "ID:" + el.id + "\\n";
                         if(current != null) {
-                            complexView(nodesGraph[parseInt(current.id.replace("ID_", ""))], '#003B73')
+                            complexView(nodesGraph[parseInt(current.id.replace("ID_", ""))], '#003B73');
                         }
+
                         current = el;
                         var node = nodesGraph[parseInt(el.id.replace("ID_", ""))];
                         complexView(node, "red")

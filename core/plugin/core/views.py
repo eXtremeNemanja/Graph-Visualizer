@@ -19,6 +19,7 @@ def index(request, file_missing=False):
     loaders = []
     for l in apps.get_app_config('core').loaders:
         loaders.append({"name": l.name(), "identifier": l.identifier()})
+    stepper = 1
     if (graph is not None): stepper = 2
     return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders, 'stepper': stepper})
 
@@ -304,29 +305,20 @@ def create_graph(old_graph, graph):
     return new_graph
 
 
+def complex_visualization(request):
+    visualizers = apps.get_app_config('core').visualizers
+    for v in visualizers:
+        if v.identifier() == "ComplexVisualizer":
+            return HttpResponse(
+                v.visualize(apps.get_app_config('core').base_graph, request))
+    return redirect('index')
 
-
-# def complex_visualization(request):
-#     visualizers = apps.get_app_config('core').visualizers
-#     graph = apps.get_app_config('core').current_graph
-#     if graph is None: return render(request, "index.html", {"stepper":1, "file_missing": False})
-#     for v in visualizers:
-#         if v.identifier() == "ComplexVisualizer":
-#             apps.get_app_config('core').current_visualizer = v.identifier()
-#             return HttpResponse(
-#                 v.visualize(graph, request))
-#     return render(request, "index.html", {"stepper":1, "file_missing": False})
-#
-# def simple_visualization(request):
-#     visualizers = apps.get_app_config('core').visualizers
-#     graph = apps.get_app_config('core').current_graph
-#     if graph is None:
-#         return render(request, "index.html", {"stepper":1, "file_missing": False})
-#     for v in visualizers:
-#         if v.identifier() == "SimpleVisualizer":
-# <<<<<<< HEAD
-#             return HttpResponse(v.visualize(apps.get_app_config('core').base_graph, request))
-#     return redirect('index')
+def simple_visualization(request):
+    visualizers = apps.get_app_config('core').visualizers
+    for v in visualizers:
+        if v.identifier() == "SimpleVisualizer":
+            return HttpResponse(v.visualize(apps.get_app_config('core').base_graph, request))
+    return redirect('index')
 
 def load_relationships_of_vertex(request, id):
     graph = apps.get_app_config('core').current_graph
@@ -349,6 +341,11 @@ def load_relationships_of_vertex(request, id):
         for l in apps.get_app_config('core').loaders:
             loaders.append({"name": l.name(), "identifier": l.identifier()})
         return render(request, "index.html", {"stepper":1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+    print(id)
+    if id == "simple_visualizer":
+        return redirect("simple_visualizer")
+    if id == "complex_visualizer":
+        return redirect("complex_visualizer")
     return redirect(id)
 # =======
 #             apps.get_app_config('core').current_visualizer = v.identifier()

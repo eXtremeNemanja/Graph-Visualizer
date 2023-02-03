@@ -22,7 +22,6 @@ class SimpleVisualizer(BaseVisualizer):
             
 
         view = """
-        {% extends "index.html" %}
         {% block mainView %}
 
         <style>

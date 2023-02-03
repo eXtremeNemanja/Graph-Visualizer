@@ -22,8 +22,10 @@
                 {{ l.name }}</a>
             {% endfor %}
 
-            <a class="right-plugins" href="{% url 'simple_visualizer' %}">Simple View</a>
-            <a class="right-plugins" href="{% url 'complex_visualizer' %}">Complex View</a>
+            {% for v in visualizers %}
+            <a class="right-plugins" href="{% url 'visualize' type=v.identifier %}">
+                {{ v.name }}</a>
+            {% endfor %}
         </div>
 
         <div class="choose-file">

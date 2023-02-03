@@ -3,8 +3,7 @@ class Graph(object):
 
     __slots__ = '_name', '_vertices', 'visited', 'path', 'nodes_to_contour'
 
-    def __init__(self, name):
-        self._name = name
+    def __init__(self):
         self._vertices = []
         self.visited = []
         self.path = []
@@ -17,14 +16,6 @@ class Graph(object):
     @vertices.setter
     def vertices(self, vertices):
         self._vertices = vertices
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        self._name = name
 
     def edges(self):
         result = set()
@@ -53,10 +44,11 @@ class Graph(object):
         return total_directed + total_undirected//2
 
     def insert_vertex(self, v=None):
-        already_existing = self.contains(v)
+        already_existing = self.contains_vertex(v)
         if already_existing:
-            self._vertices.remove(already_existing)
-        self._vertices.append(v)
+            self._vertices[self._vertices.index(already_existing)] = v
+        else:
+            self._vertices.append(v)
 
     def insert_edge(self, u, v, is_directed, relation, weight=None):
         e = Edge(u, v, relation, weight, is_directed)
@@ -64,7 +56,7 @@ class Graph(object):
         if not is_directed:
             v.add_edge(e)
 
-    def contains(self, v):
+    def contains_vertex(self, v):
         for vertex in self.vertices:
             if v == vertex:
                 return vertex
@@ -247,8 +239,34 @@ class Vertex:
     def add_attribute(self, key, value):
         self._attributes[key] = value
 
-    def add_edge(self, edge):
-        self._edges.append(edge)
+    def add_edge(self, e):
+        already_existing = self.contains_edge(e)
+        if already_existing:
+            self._edges[self._edges.index(already_existing)] = e
+        else:
+            self._edges.append(e)
+
+    def contains_edge(self, e):
+        for vertex in self._edges:
+            if e == vertex:
+                return vertex
+        return None
+
+    def relations(self):
+        relations = []
+        for edge in self._edges:
+            if edge.relation_name in relations:
+                continue
+            relations.append(edge.relation_name)
+        return relations
+
+    def related_vertices(self, relation):
+        vertices = []
+        for edge in self._edges:
+            if edge.relation_name == relation:
+                if edge.source == self:
+                    vertices.append(edge.destination)
+        return vertices
 
     def is_related(self, vertex):
         for edge in self.edges:
@@ -373,3 +391,133 @@ class Edge:
         #     return False
         
         return True
+
+
+class NodeIdGenerator:
+
+    def __init__(self):
+        self.__current_id = 0
+
+    def next(self):
+        self.__current_id += 1
+        return self.__current_id - 1
+
+    def reset(self):
+        self.__current_id = 0
+
+
+nodeId = NodeIdGenerator()
+
+
+class TreeNode(object):
+    __slots__ = '_opened', '_object', '_object_type', '_children', '_id', '_parent'
+
+    def __init__(self, object, parent, type):
+        self._opened = False
+        self._object = object
+        self._object_type = type
+        self._id = nodeId.next()
+        self._children = []
+        self._parent = parent
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def opened(self):
+        return self._opened
+
+    @opened.setter
+    def opened(self, value):
+        self._opened=value
+
+    def open(self):
+        self._opened = True
+        if len(self._children) <= 0:
+            if self._object_type == "vertex":
+                self.add_children(self._object.relations())
+            else:
+                self.add_children(self._parent.object.related_vertices(self._object))
+
+    def close(self):
+        self._opened = False
+        # for child in self._children:
+        #     child.opened = False
+
+    @property
+    def object(self):
+        return self._object
+
+    @property
+    def object_type(self):
+        return self._object_type
+
+    @property
+    def children(self):
+        return self._children
+
+    @property
+    def parent(self):
+        return self._parent
+
+    def find_node(self, id):
+        if id == self._id:
+            return self
+        else:
+            for child in self._children:
+                found_node = child.find_node(id)
+                if found_node:
+                    return found_node
+
+    def add_children(self, children_objects):
+        for child in children_objects:
+            if self._object_type == "vertex":
+                child_type = "edge"
+                child_node = TreeNode(child, self, child_type)
+                # child_node.opened = True
+                self._children.append(child_node)
+            else:
+                child_type = "vertex"
+                # for related in self.parent.object.related_vertices(self.object):
+                child_node = TreeNode(child, self, child_type)
+                self._children.append(child_node)
+
+
+
+class Forest(object):
+    __slots__ = '_roots', '_last_opened'
+
+    def __init__(self, roots=None):
+        nodeId.reset()
+        self._roots = roots
+        if self._roots is None:
+            self._roots = []
+        self._last_opened = 0
+
+    @property
+    def roots(self):
+        return self._roots
+
+    @roots.setter
+    def roots(self, roots):
+        self._roots = roots
+
+    @property
+    def last_opened(self):
+        return self._last_opened
+
+    @last_opened.setter
+    def last_opened(self, last_opened):
+        self._last_opened = last_opened
+
+    def find_tree_node(self, id):
+        for root_node in self._roots:
+            found_node = root_node.find_node(id)
+            if found_node:
+                return found_node
+
+
+
+
+

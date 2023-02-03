@@ -10,10 +10,10 @@ class RdfLoader(BaseLoader):
         self.graph = None
 
     def identifier(self):
-        return "RDF Loader"
+        return "rdf-loader"
 
     def name(self):
-        return "Loading data from rdf document"
+        return "RDF Loader"
 
     def create_vertex(self, node, graph):
         for vertex in graph.vertices:
@@ -37,8 +37,8 @@ class RdfLoader(BaseLoader):
         g.parse(file_path)
         return g
 
-    def make_graph(self, data, name):
-        self.graph = G(name)
+    def make_graph(self, data):
+        self.graph = G()
         for row in data:
             self.populate_graph(row)
         return self.graph

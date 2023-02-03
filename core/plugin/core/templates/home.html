@@ -1,40 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Graph visualization</title>
     {% load static %}
     <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
-    <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
 
 </head>
-    <body>
-        <div id="navbar">
-            <div class="topnav">
-                <span id="title">Graph Visualizer</span>
 
-                <a class="left-plugins" href="javascript:{}" onclick="document.getElementById('loader').value = 'XmlLoader'; document.getElementById('loader_form').submit();">XML Parser</a>
-                <a class="left-plugins" href="#">JSON Parser</a>
-                <a class="left-plugins" href="#">RDF Parser</a>
+<body>
+    <div id="navbar">
+        <div class="topnav">
+            <span id="title">Graph Visualizer</span>
 
-                <a class="right-plugins" href="{% url 'simple_visualizer' %}">Simple View</a>
-                <a class="right-plugins" href="{% url 'complex_visualizer' %}">Complex View</a>
-            </div>
+            <a class="left-plugins" role="button"
+                onclick="document.getElementById('loader').value = 'xml-loader'; document.getElementById('loader_form').submit();">
+                XML
+                Parser</a>
+            <a class="left-plugins" role="button"
+                onclick="document.getElementById('loader').value = 'json-loader'; document.getElementById('loader_form').submit();">
+                JSON Parser</a>
+            <a class="left-plugins" role="button"
+                onclick="document.getElementById('loader').value = 'rdf-loader'; document.getElementById('loader_form').submit();">
+                RDF Parser</a>
 
-            <div class="choose-file">
-                <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
-                    <input required type="file" name="file" id="file"/>
-                    {% if file_missing %}
-                        <small class="error">Upload file is required</small>
-                    {% endif %}
-                    <input type="hidden" id="loader" name="loader" />
-                </form>
-            </div>
+            <a class="right-plugins" href="{% url 'simple_visualizer' %}">Simple View</a>
+            <a class="right-plugins" href="{% url 'complex_visualizer' %}">Complex View</a>
         </div>
 
-        {% block index %}{% endblock %}
+        <div class="choose-file">
+            <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
+                <input required type="file" name="file" id="file" />
+                {% if file_missing %}
+                <small class="error">Upload file is required</small>
+                {% endif %}
+                <input id="key" name="unique_key" placeholder="custom unique key (default: id)" />
+                <input type="hidden" id="loader" name="loader" />
+            </form>
 
-    </body>
+        </div>
+    </div>
+
+    {% block index %}{% endblock %}
+
+</body>
+
+<script>
+    function scrollIfNeeded(element, container) {
+        if (element.offsetTop < container.scrollTop) {
+            container.scrollTop = element.offsetTop;
+         }
+        else {
+            const offsetBottom = element.offsetTop + element.offsetHeight;
+            const scrollBottom = container.scrollTop + container.offsetHeight;
+            if (offsetBottom > scrollBottom) {
+              container.scrollTop = offsetBottom - container.offsetHeight;
+            }
+        }
+        container.scrollLeft = element.offsetLeft - 10;
+    }
+    lastOpenedNode = document.getElementById('last-opened-node').innerHTML;
+    scrollIfNeeded(document.getElementById(lastOpenedNode), document.getElementById('tree'));
+    document.getElementById(lastOpenedNode).classList.add("selected-item");
+</script>
+
 </html>

@@ -3,7 +3,7 @@ from django.apps import AppConfig
 
 import os
 
-from core.plugin.core.models import Forest, TreeNode
+from plugin.core.models import Forest, TreeNode
 
 
 class CoreConfig(AppConfig):

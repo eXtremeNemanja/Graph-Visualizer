@@ -169,8 +169,12 @@ def load_relationships_of_vertex(request, id):
     print("id", id)
     tree = apps.get_app_config('core').tree
     if (id != 'favicon.ico'):
-        vertex = graph.get_vertex_by_id(id)
-        vertex.open = not vertex.open
-        graph.insert_vertex(vertex)
-        apps.get_app_config('core').base_graph = graph
+        node = tree.find_tree_node(int(id))
+        if node.opened:
+            node.close()
+            if (node.parent):
+                tree.last_opened = node.parent.id
+        else:
+            node.open()
+            tree.last_opened = node.id
     return redirect('index')

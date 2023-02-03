@@ -17,6 +17,10 @@ h2 {
 .left {
     width: 25%;
     border-right: solid black 1px;
+    overflow: scroll;
+    resize: horizontal;
+    z-index: 5;
+    background-color: white;
 }
 
 .right {
@@ -152,7 +156,6 @@ button:hover {
 }
 
 .tree {
-    overflow: scroll;
     height: 78vh;
     white-space: nowrap;
     padding: 5px;
@@ -175,6 +178,11 @@ button:hover {
     margin-top: 7px;
     width: 100%;
     cursor: pointer;
+    color: black;
+}
+
+.tree-item:hover {
+    color: black;
 }
 
 a {
@@ -188,15 +196,26 @@ a {
 }
 
 .tree-node:hover {
-    background-color: #84b5dd;
+    background-color: #c5e0fa;
 }
 
 .tree-edge {
-    background-color: #f1f1f1;
+    background-color: #ededed;
 }
 
 .tree-edge:hover {
-    background-color: #b9d7ef;
+    background-color: #ffffff;
+}
+
+.selected-node {
+    background-color: black;
+    color: white;
+}
+
+.selected-item,
+.selected-item:hover {
+    background-color: black;
+    color: white;
 }
 
 .list {

@@ -1,23 +1,35 @@
-<div class="tree-item tree-node">
-    <span class="arrow">V</span> <span class="label">Vertex</span>
+<div id="{{ node.id }}" class="tree-item tree-node">
+    {% if node.opened %}
+    <span class="arrow">➖</span>
+    {% else %}
+    <span class="arrow">➕</span>
+    {% endif %}
+    <span class="label">Vertex</span>
     {{ node.object.attributes }}
-    {% if node.open %}
-    <div class="list">
-        {% for relation in node.object.relations %}
-        <a href="">
-            <div class="tree-item tree-edge">
-                <span class="arrow">V</span> <span class="label">Edge</span>
-                {{ relation }}
-                <div class="list">
-                    {% for related in vertex|related_vertices:relation %}
-<!--                    <a href="">-->
-<!--                        {% include 'treeNode.html' %}-->
-<!--                    </a>-->
-                    {% endfor %}
+    {% if node.opened %}
+        {% for relation in node.children %}
+            <a href="{% url 'alter_tree' id=relation.id %}">
+        <div class="list">
+               <div id="{{ relation.id }}" class="tree-item tree-edge">
+                   {% if relation.opened %}
+                    <span class="arrow">➖</span>
+                    {% else %}
+                    <span class="arrow">➕</span>
+                    {% endif %}
+                       <span class="label">Edge</span>
+                    {{ relation.object }}
+                    {% if relation.opened %}
+                        {% for node in relation.children %}
+                        <div class="list">
+                            <a href="{% url 'alter_tree' id=node.id %}">
+                               {% include 'treeNode.html' %}
+                            </a>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
         {% endfor %}
-    </div>
     {% endif %}
 </div>

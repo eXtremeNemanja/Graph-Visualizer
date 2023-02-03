@@ -6,10 +6,11 @@ import xml.etree.ElementTree as ET
 from plugin.core.models import Vertex, Edge, Graph
 
 class XmlLoader(BaseLoader):
-    __slots__ = 'id_counter'
+    __slots__ = 'id_counter', 'unique_key'
 
     def __init__(self) -> None:
         self.id_counter = 0
+        self.unique_key = "id"
 
     def identifier(self):
         return "xml-loader"
@@ -20,7 +21,8 @@ class XmlLoader(BaseLoader):
     # def get_file_name(self, file_name):
     #     return os.path.join(os.path.dirname(__file__), "..", "..", "..", "datasets", "xml", file_name)
 
-    def load_file(self, file):
+    def load_file(self, file, unique_key="id"):
+        self.unique_key = unique_key
         # file_name = self.get_file_name(file_name)
         # with open(file_name, 'r') as file:
         tree_string = file.read()

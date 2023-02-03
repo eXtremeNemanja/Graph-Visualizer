@@ -11,8 +11,10 @@
         </form>
     </div>
     <div id="filter">
-        <input type="text" placeholder="Filter here...">
-            <button type="submit">Filter</button>
+        <form action="{% url 'filter' %}" id="filter_form">
+            <input type="text" name="query" placeholder="Filter here...">
+                <button type="submit">Filter</button>
+        </form>
     </div>
         <div id="reset">
             <a href="{% url 'reset' %}">Reset</a> 

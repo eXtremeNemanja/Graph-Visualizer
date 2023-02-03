@@ -1,3 +1,4 @@
+from datetime import datetime, date
 from django.shortcuts import render, redirect
 from django.apps.registry import apps
 from .models import Edge, Graph, Vertex
@@ -67,14 +68,8 @@ def search(request, *args, **kwargs):
     for vertex in old_graph.vertices:
         search_vertex(graph, vertex, query)
     
-    print(graph)
-
     apps.get_app_config('core').current_graph = create_graph(old_graph, graph)
 
-    for vertex in apps.get_app_config('core').current_graph.vertices:
-        print(vertex.id)
-        print(vertex.attributes)
-        print(len(vertex.edges))
     current_visualizer = apps.get_app_config('core').current_visualizer
     if (current_visualizer == "SimpleVisualizer"):
         return simple_visualization(request)
@@ -83,14 +78,109 @@ def search(request, *args, **kwargs):
 
 def filter(request):
     #todo implement filter
+    query = request.GET.get("query", "");
+    attribute, operator, value = parse_query(query)
+    print(attribute, operator, type(value))
+    
+    old_graph = apps.get_app_config('core').current_graph
+    graph = Graph(old_graph.name)
+    for vertex in old_graph.vertices:
+        filter_vertex(graph, vertex, attribute, operator, value)
 
+    apps.get_app_config('core').current_graph = create_graph(old_graph, graph)
     current_visualizer = apps.get_app_config('core').current_visualizer
     if (current_visualizer == "SimpleVisualizer"):
-        simple_visualization(request)
+        return simple_visualization(request)
     elif (current_visualizer == "ComplexVisualizer"):
-        complex_visualization(request)
+        return complex_visualization(request)
     else:
         return redirect('index')
+
+def add_vertex(graph, vertex):
+    new_vertex = Vertex(vertex.id)
+            
+    new_vertex_found = find_vertex_in_graph(graph, new_vertex)
+    if not new_vertex_found:
+        new_vertex.attributes.update(vertex.attributes)
+    else:
+        new_vertex = new_vertex_found
+    
+    for e in vertex.edges:
+        destination = Vertex(e.destination.id)
+    
+        destination_found = find_vertex_in_graph(graph, destination)
+        if not destination_found:
+            destination.attributes.update(e.destination.attributes)
+            graph.insert_vertex(destination)
+        else:
+            destination = destination_found
+
+        new_vertex.add_edge(Edge(new_vertex, destination, e.relation_name, e.weight, e.is_directed))
+    
+    # add if it isn't already added
+    if not new_vertex_found:
+        graph.insert_vertex(new_vertex)
+
+
+def filter_vertex(graph, vertex, attribute, operator, value):
+    for attr in vertex.attributes:
+        if attr == attribute:
+            attribute_value = vertex.attributes[attr]
+            if isinstance(value, date):
+                try:
+                    attribute_value = datetime.strptime(attribute_value, '%Y-%m-%d').date()
+                except ValueError:
+                    continue
+            elif isinstance(value, float):
+                try:
+                    attribute_value = float(attribute_value)
+                except ValueError:
+                    continue
+            
+            if operator == "=" and value == attribute_value:
+                add_vertex(graph, vertex)
+                return
+            elif operator == ">" and value < attribute_value:
+                add_vertex(graph, vertex)
+                return
+            elif operator == "<" and value > attribute_value:
+                add_vertex(graph, vertex)
+                return
+            elif operator == ">=" and value <= attribute_value:
+                add_vertex(graph, vertex)
+                return
+            elif operator == "<=" and value >= attribute_value:
+                add_vertex(graph, vertex)
+                return
+
+def parse_query(query):
+    attribute = ""
+    operator = ""
+    value = ""
+    operator_list = ["<", ">", "="]
+    for c in query:
+        if not operator and c not in operator_list:
+            attribute += c;
+        elif c in operator_list:
+            operator += c
+        else:
+            value += c
+    
+    attribute = attribute.strip()
+    operator = operator.strip()
+    new_value = value.strip()
+
+    try:
+        new_value = float(value)
+    except ValueError:
+        pass
+    
+    try:
+        new_value = datetime.strptime(value, '%Y-%m-%d').date()
+    except ValueError:
+        pass
+
+    return attribute, operator, new_value
 
 def find_vertex_in_graph(graph, vertex):
     for v in graph.vertices:
@@ -103,7 +193,7 @@ def search_vertex(graph, vertex, query):
         # print(attr)
         value = vertex.attributes[attr]
         # print(value)
-        if (query.lower() in attr.lower()) or (query.lower() in value.lower()):
+        if (query.lower() in attr.lower()) or (query.lower() in str(value).lower()):
             new_vertex = Vertex(vertex.id)
             
             new_vertex_found = find_vertex_in_graph(graph, new_vertex)

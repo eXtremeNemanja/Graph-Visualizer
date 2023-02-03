@@ -1,11 +1,12 @@
 
 class Graph(object):
 
-    __slots__ = '_name', '_vertices'
+    __slots__ = '_name', '_vertices', 'visited'
 
     def __init__(self, name):
         self._name = name
         self._vertices = []
+        self.visited = []
 
     @property
     def vertices(self):
@@ -67,6 +68,100 @@ class Graph(object):
                 return vertex
         return None
 
+    def find_subgraphs(self, vertices=[], graphs=[]):
+        changes = True
+        if not vertices:
+            vertices = self.vertices
+
+        connected = {}
+        for vertex in vertices:
+            if len(connected) == 0:
+                connected[vertex] = True
+            else:
+                connected[vertex] = False
+
+        if list(connected.values()) == [True * len(vertices)]:
+            graphs.append(connected.keys())
+            return graphs
+
+        while changes:
+            changes = False
+            for v in vertices:
+                if connected[v]:
+                    if self.check_as_true(v.edges, connected):
+                        changes = True
+                else:
+                    if self.check_if_true(v, connected):
+                        connected[v] = True
+                        if self.check_as_true(v.edges, connected):
+                            changes = True
+
+        if list(connected.values()) == [True for i in range(len(connected.values()))]:
+            graphs.append(list(connected.keys()))
+            return graphs
+
+        removed = self.remove_connected_vertices(vertices, connected)
+        graphs.append(removed)
+        return self.find_subgraphs(vertices, graphs)
+
+    def check_if_true(self, vertex, connected):
+        for edge in vertex.edges:
+            if connected[edge.source]:
+                return True
+            elif connected[edge.destination]:
+                return True
+
+        return False
+
+    def check_as_true(self, edges, connected):
+        changes = False
+        for edge in edges:
+            if connected[edge.source] is False:
+                changes = True
+            elif connected[edge.destination] is False:
+                changes = True
+            connected[edge.source] = True
+            connected[edge.destination] = True
+
+        return changes
+
+    def remove_connected_vertices(self, vertices, connected):
+        removed = []
+        for v in connected.keys():
+            if connected[v]:
+                vertices.remove(v)
+                removed.append(v)
+
+        return removed
+
+    # TODO : check if this works
+    def is_graph_directed(self):
+        if len(self.graph.edges) > 0:
+            return list(self.graph.edges)[0].is_directed
+
+    def depth_first_search(self, current, parent):
+        self.visited.append(current)
+        for vertex in self.vertices:
+            if current.is_related(vertex):
+                if parent and vertex == parent:
+                    continue
+                if vertex in self.visited:
+                    if vertex != self.visited[-1]:
+                        return True
+                elif self.depth_first_search(vertex, current):
+                    return True
+        return False
+
+    def has_cycle(self):
+        self.visited = []
+        for vertex in self.vertices:
+            if vertex in self.visited:
+                if vertex != self.visited[-1]:
+                    continue
+            if self.depth_first_search(vertex, None):
+                return True
+        return False
+
 
 class Vertex:
     __slots__ = '_attributes', '_id', '_edges'
@@ -108,6 +203,16 @@ class Vertex:
 
     def add_edge(self, edge):
         self._edges.append(edge)
+
+    def is_related(self, vertex):
+        for edge in self.edges:
+            if edge.source == self:
+                if edge.destination == vertex:
+                    return True
+            elif edge.destination == self:
+                if edge.source == vertex:
+                    return True
+        return False
 
     def __hash__(self):
         return hash(self._id)

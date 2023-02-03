@@ -171,11 +171,13 @@ def simple_visualization(request):
             return HttpResponse(v.visualize(apps.get_app_config('core').base_graph, request))
     return redirect('index')
 
+def load_graph():
+    old_graph = apps.get_app_config('core').current_graph
+    return Graph(old_graph.name)
+
 # tree view
 def load_tree():
-    old_graph = apps.get_app_config('core').current_graph
-    graph = Graph(old_graph.name)
-    return graph.vertices
+    return load_graph().vertices
 
 
 def load_related_vertices(relationship, vertex):
@@ -200,73 +202,3 @@ def load_relationships_of_vertex(vertex):
             relationships.append(edge.relation_name)
 
     return relationships
-
-
-def find_subgraphs(vertices = [], graphs = []):
-    changes = True
-    if not vertices:
-        vertices = load_tree()
-
-    connected = {}
-    for vertex in vertices:
-        if len(connected) == 0:
-            connected[vertex] = True
-        else:
-            connected[vertex] = False
-
-    if list(connected.values()) == [True * len(vertices)]:
-        graphs.append(connected.keys())
-        return graphs
-
-    while changes:
-        changes = False
-        for v in vertices:
-            if connected[v]:
-                if check_as_true(v.edges, connected):
-                    changes = True
-            else:
-                if check_if_true(v, connected):
-                    connected[v] = True
-                    if check_as_true(v.edges, connected):
-                        changes = True
-
-    if list(connected.values()) == [True for i in range(len(connected.values()))]:
-        graphs.append(list(connected.keys()))
-        return graphs
-
-    removed = remove_connected_vertices(vertices, connected)
-    graphs.append(removed)
-    return find_subgraphs(vertices, graphs)
-
-
-def check_if_true(vertex, connected):
-    for edge in vertex.edges:
-        if connected[edge.source]:
-            return True
-        elif connected[edge.destination]:
-            return True
-
-    return False
-
-
-def check_as_true(edges, connected):
-    changes = False
-    for edge in edges:
-        if connected[edge.source] is False:
-            changes = True
-        elif connected[edge.destination] is False:
-            changes = True
-        connected[edge.source] = True
-        connected[edge.destination] = True
-
-    return changes
-
-
-def remove_connected_vertices(vertices, connected):
-    removed = []
-    for v in connected.keys():
-        if connected[v]:
-            vertices.remove(v)
-            removed.append(v)
-
-    return removed

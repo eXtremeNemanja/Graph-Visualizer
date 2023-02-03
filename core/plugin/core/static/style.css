@@ -236,6 +236,12 @@ a {
     font-style: italic;
 }
 
+.unique-key {
+    height: 15.5px;
+    width: 200px;
+    padding: 5px;
+}
+
 
 /* width */
 ::-webkit-scrollbar {

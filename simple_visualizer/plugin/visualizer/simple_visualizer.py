@@ -5,10 +5,10 @@ from django.template import engines
 class SimpleVisualizer(BaseVisualizer):
 
     def identifier(self):
-        return "SimpleVisualizer"
+        return "simple-visualizer"
 
     def name(self):
-        return "Show graph with simple view"
+        return "Simple View"
 
     def visualize(self, graph, request): 
         vertices = {}

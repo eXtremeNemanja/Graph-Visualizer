@@ -32,9 +32,9 @@ class RdfLoader(BaseLoader):
         second_vertex = self.create_vertex(object, self.graph)
         self.graph.insert_edge(first_vertex, second_vertex, True, predicate)
 
-    def load_file(self, file_path):
+    def load_file(self, file):
         g = Graph()
-        g.parse(file_path)
+        g.parse(file)
         return g
 
     def make_graph(self, data):

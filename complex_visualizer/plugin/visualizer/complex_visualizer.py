@@ -7,10 +7,10 @@ from django.template import engines
 
 class ComplexVisualizer(BaseVisualizer):
     def identifier(self):
-        return "ComplexVisualizer"
+        return "complex-visualizer"
 
     def name(self):
-        return "Show graph with complex view"
+        return "Complex View"
 
     def visualize(self, graph, request):
         nodes = {}

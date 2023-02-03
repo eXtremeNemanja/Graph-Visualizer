@@ -34,6 +34,14 @@ class CoreConfig(AppConfig):
                 return l
         return None
 
+    def get_visualizer(self, id):
+        print(id)
+        for v in self.visualizers:
+            print(v.identifier())
+            if v.identifier() == id:
+                return v
+        return None
+
     def load_tree(self):
         self.tree = Forest(None)
         for vertex in find_root_vertices(self.current_graph.find_subgraphs()):

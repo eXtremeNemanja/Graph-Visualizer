@@ -13,7 +13,13 @@ def index(request, file_missing=False):
     tree = None
     graph = apps.get_app_config('core').base_graph
     tree = apps.get_app_config('core').tree
-    return render(request, "index.html", {'graph': graph, 'tree': tree })
+    visualizers = []
+    for v in apps.get_app_config('core').visualizers:
+        visualizers.append({"name": v.name(), "identifier": v.identifier()})
+    loaders = []
+    for l in apps.get_app_config('core').loaders:
+        loaders.append({"name": l.name(), "identifier": l.identifier()})
+    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
 
 def reset(request):
     apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
@@ -38,6 +44,13 @@ def load(request):
         apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
         apps.get_app_config('core').load_tree()
     return redirect('index')
+
+def visualize(request, type):
+    visualizer = apps.get_app_config('core').get_visualizer(type)
+    visualizer.visualize(apps.get_app_config('core').base_graph, request)
+    return HttpResponse(
+                visualizer.visualize(apps.get_app_config('core').base_graph, request))
+            
 
 def search(request, *args, **kwargs):
     # print(args, kwargs)
@@ -148,6 +161,8 @@ def create_graph(old_graph, graph):
                     new_graph.insert_vertex(new_vertex)
                 new_vertex.add_edge(Edge(new_vertex, destination, edge.relation_name, edge.weight, edge.is_directed))
     return new_graph
+
+
 
 
 def complex_visualization(request):

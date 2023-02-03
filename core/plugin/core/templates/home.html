@@ -16,17 +16,11 @@
     <div id="navbar">
         <div class="topnav">
             <span id="title">Graph Visualizer</span>
-
+            {% for l in loaders %}
             <a class="left-plugins" role="button"
-                onclick="document.getElementById('loader').value = 'xml-loader'; document.getElementById('loader_form').submit();">
-                XML
-                Parser</a>
-            <a class="left-plugins" role="button"
-                onclick="document.getElementById('loader').value = 'json-loader'; document.getElementById('loader_form').submit();">
-                JSON Parser</a>
-            <a class="left-plugins" role="button"
-                onclick="document.getElementById('loader').value = 'rdf-loader'; document.getElementById('loader_form').submit();">
-                RDF Parser</a>
+                onclick="document.getElementById('loader').value = '{{ l.identifier }}'; document.getElementById('loader_form').submit();">
+                {{ l.name }}</a>
+            {% endfor %}
 
             <a class="right-plugins" href="{% url 'simple_visualizer' %}">Simple View</a>
             <a class="right-plugins" href="{% url 'complex_visualizer' %}">Complex View</a>

@@ -3,28 +3,20 @@
     <div id="search">
         <form action="{% url 'search' %}" id="search_form">
             <input type="text" name="query" placeholder="Search here...">
-            {% if not graph %}
-                <button class="disabled-btn" type="submit" disabled>Search</button>
-            {% else %}
                 <button type="submit">Search</button>
-            {% endif %}
             <br>
             {% if search_error %}
-                <small class="error">Input query</small>
+                <small class="error">No graph</small>
             {% endif %}
         </form>
     </div>
     <div id="filter">
-        <input type="text" placeholder="Filter here...">
-        {% if not graph %}
-            <button class="disabled-btn" type="submit" disabled>Filter</button>
-        {% else %}
-            <button type="submit">Filter</button>
-        {% endif %}
+        <form action="{% url 'filter' %}" id="filter_form">
+            <input type="text" name="query" placeholder="Filter here...">
+                <button type="submit">Filter</button>
+        </form>
     </div>
-    {% if graph %}
         <div id="reset">
-            <a href="{% url 'reset' %}"">Reset</a>
+            <a href="{% url 'reset' %}">Reset</a> 
         </div>
-    {% endif %}
 </div>

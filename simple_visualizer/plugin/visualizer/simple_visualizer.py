@@ -13,7 +13,13 @@ class SimpleVisualizer(BaseVisualizer):
     def visualize(self, graph, request): 
         vertices = {}
         for v in graph.vertices:
-            vertices[v.id] = {"id": "ID_" + str(v.id)} 
+            attributes = []
+            for attribute_key in v.attributes.keys():
+                attributes.append(attribute_key + ": " + str(v.attributes[attribute_key]))
+            vertices[v.id] = {
+                "id": "ID_" + str(v.id),
+                "attributes": attributes
+        }
 
         links = []
         for e in graph.edges():
@@ -23,7 +29,8 @@ class SimpleVisualizer(BaseVisualizer):
 
         view = """
         {% block mainView %}
-
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       
         <style>
         .node {
         cursor: pointer;
@@ -38,9 +45,9 @@ class SimpleVisualizer(BaseVisualizer):
         }
         </style>
 
-        <svg width="100%" height="100%" id='mainView'></svg>
-
         <script type="text/javascript">
+
+        var current = null;
 
         var vertices = JSON.parse("{{vertices |escapejs}}");                
         var links= JSON.parse("{{links |escapejs}}");
@@ -50,17 +57,20 @@ class SimpleVisualizer(BaseVisualizer):
             link.target = vertices[link.target];
         });
 
+        d3.select('.stepper').text("1. Please choose a file and then a parser");
+
         var force = d3.layout.force() //kreiranje force layout-a
-            .size([800, 650]) //raspoloziv prostor za iscrtavanje
+            .size([1000, 450]) //raspoloziv prostor za iscrtavanje
             .nodes(d3.values(vertices)) //dodaj nodove
             .links(links) //dodaj linkove
             .on("tick", tick) //sta treba da se desi kada su izracunate nove pozicija elemenata
-            .linkDistance(125) //razmak izmedju elemenata
-            .charge(-2000)//koliko da se elementi odbijaju
+            .linkDistance(25) //razmak izmedju elemenata
+            .charge(-450)//koliko da se elementi odbijaju
+            .gravity(1)
             .start(); //pokreni izracunavanje pozicija
-      
+              
         var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
-            svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+            svg.attr("transform", "scale(" + d3.event.scale + ")")
         })).append("g");
 
         // add the links
@@ -78,15 +88,15 @@ class SimpleVisualizer(BaseVisualizer):
             .on('click',function(){
             nodeClick(this);
             });
-        d3.selectAll('.node').each(function(d){simpleView(d);});
+        d3.selectAll('.node').each(function(d){simpleView(d, '#003B73');});
 
-        function simpleView(d){
-            var width=32;
-            var textSize=15;
+        function simpleView(d, color){
+            var width=12;
+            var textSize=6;
 
             //Ubacivanje kruga
             d3.select("g#"+d.id).append('circle').
-            attr('cx',0).attr('cy', 0).attr('r', width).attr('fill', '#003b73');
+            attr('cx',0).attr('cy', 0).attr('r', width).attr('fill', color);
             //Ubacivanje naziva prodavnice ili artikla
             d3.select("g#"+d.id).append('text').attr('x', 0).attr('y', 4)
             .attr('text-anchor','middle')
@@ -105,12 +115,23 @@ class SimpleVisualizer(BaseVisualizer):
                 .attr('y2', function(d) { return d.target.y; });
 
         }
-        function nodeClick(el){
-            alert("ID: "+el.id);
+        function nodeClick(el) {
+            var text = "";
+            text += "ID:" + el.id + "\\n";
+            if(current != null) {
+                simpleView(vertices[parseInt(current.id.replace("ID_", ""))], '#003B73')
+            }
+            current = el;
+            var node = vertices[parseInt(el.id.replace("ID_", ""))];
+            simpleView(node, "red")
+            for(var i=0;i<node.attributes.length;i++) {
+                text += node.attributes[i] + "\\n";
+            }
+            alert(text);
         }
 
-
         </script>
+        <script  src="static/birdView.js"></script>
         {% endblock %}
         """
 

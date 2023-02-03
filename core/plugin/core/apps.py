@@ -14,6 +14,7 @@ class CoreConfig(AppConfig):
     base_graph = None
     current_graph = None
     tree = None
+    current_visualizer = None
 
     def ready(self):
         # Prilikom startovanja aplikacije, ucitavamo plugine na

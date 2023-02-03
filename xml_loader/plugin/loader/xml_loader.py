@@ -39,7 +39,7 @@ class XmlLoader(BaseLoader):
         if node.text:
             node.text = " ".join(node.text.split())
             # print(node.text)
-            v.add_attribute("text", node.text)
+            v.add_attribute(node.tag, node.text)
         # for att in v.attributes:
         #     print(att)
         # id="bk101"

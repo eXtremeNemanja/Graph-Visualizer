@@ -7,7 +7,19 @@ h2 {
     margin: 10px 0 0 15px;
 }
 
-.view {
+.stepper{
+    float: right;
+    text-align: center;
+    margin-right: 33%;
+    font-weight: bold;
+    color: white;
+}
+
+#file{
+    float: left;
+}
+
+.view{
     min-width: 100vw;
     min-height: 85vh;
     display: flex;
@@ -34,18 +46,20 @@ h2 {
     height: 70%;
 }
 
-.bottom {
+.bottom{
+    height: fit-content;
     display: flex;
+    height: 30%;
     flex-direction: row;
 }
 
-.bottom-left {
-    width: 50%;
+.bottom-left{
+    width: 70%;
     border-right: solid black 1px;
 }
 
-.bottom-right {
-    width: 50%;
+.bottom-right{
+    width: 30%;
 }
 
 #navbar {
@@ -107,8 +121,8 @@ h2 {
     font-weight: bolder;
 }
 
-.tools {
-    margin-left: 35px;
+.tools{
+    margin-left: 125px;
 }
 
 #reset {
@@ -153,6 +167,8 @@ button:hover {
 .error {
     color: rgb(145, 0, 0);
     font-weight: bold;
+    float: left;
+    margin-top: 17px;
 }
 
 .tree {

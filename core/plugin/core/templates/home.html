@@ -21,11 +21,25 @@
                 onclick="document.getElementById('loader').value = '{{ l.identifier }}'; document.getElementById('loader_form').submit();">
                 {{ l.name }}</a>
             {% endfor %}
-
             {% for v in visualizers %}
             <a class="right-plugins" href="{% url 'visualize' type=v.identifier %}">
                 {{ v.name }}</a>
             {% endfor %}
+
+            <div class="choose-file">
+                <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
+                    <input required type="file" name="file" id="file"/>
+                    {% if file_missing %}
+                        <small class="error">Upload file is required</small>
+                    {% endif %}
+                    <input type="hidden" id="loader" name="loader" />
+                    {% if stepper == 1 %}
+                        <p class="stepper">1. Please choose a file and then a parser</p>
+                    {% else %}
+                        <p class="stepper">2. Please choose a view</p>
+                    {% endif %}
+                </form>
+            </div>
         </div>
 
         <div class="choose-file">

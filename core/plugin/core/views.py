@@ -140,16 +140,16 @@ def filter_vertex(graph, vertex, attribute, operator, value):
             if operator == "=" and value == attribute_value:
                 add_vertex(graph, vertex)
                 return
-            elif operator == ">" and value > attribute_value:
+            elif operator == ">" and value < attribute_value:
                 add_vertex(graph, vertex)
                 return
-            elif operator == "<" and value < attribute_value:
+            elif operator == "<" and value > attribute_value:
                 add_vertex(graph, vertex)
                 return
-            elif operator == ">=" and value >= attribute_value:
+            elif operator == ">=" and value <= attribute_value:
                 add_vertex(graph, vertex)
                 return
-            elif operator == "<=" and value <= attribute_value:
+            elif operator == "<=" and value >= attribute_value:
                 add_vertex(graph, vertex)
                 return
 
@@ -166,7 +166,9 @@ def parse_query(query):
         else:
             value += c
     
-    new_value = value
+    attribute = attribute.strip()
+    operator = operator.strip()
+    new_value = value.strip()
 
     try:
         new_value = float(value)

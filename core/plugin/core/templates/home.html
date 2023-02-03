@@ -49,4 +49,23 @@
 
 </body>
 
+<script>
+    function scrollIfNeeded(element, container) {
+        if (element.offsetTop < container.scrollTop) {
+            container.scrollTop = element.offsetTop;
+         }
+        else {
+            const offsetBottom = element.offsetTop + element.offsetHeight;
+            const scrollBottom = container.scrollTop + container.offsetHeight;
+            if (offsetBottom > scrollBottom) {
+              container.scrollTop = offsetBottom - container.offsetHeight;
+            }
+        }
+        container.scrollLeft = element.offsetLeft - 10;
+    }
+    lastOpenedNode = document.getElementById('last-opened-node').innerHTML;
+    scrollIfNeeded(document.getElementById(lastOpenedNode), document.getElementById('tree'));
+    document.getElementById(lastOpenedNode).classList.add("selected-item");
+</script>
+
 </html>

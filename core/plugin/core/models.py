@@ -1,10 +1,13 @@
 
 class Graph(object):
 
-    __slots__ = '_vertices'
+    __slots__ = '_name', '_vertices', 'visited', 'path', 'nodes_to_contour'
 
     def __init__(self):
         self._vertices = []
+        self.visited = []
+        self.path = []
+        self.nodes_to_contour = []
 
     @property
     def vertices(self):
@@ -59,11 +62,144 @@ class Graph(object):
                 return vertex
         return None
 
-    def get_vertex_by_id(self, id):
-        for vertex in self._vertices:
-            if id == str(vertex.id):
-                return vertex
-        return None
+    def find_subgraphs(self, vertices=[], graphs=[]):
+        changes = True
+        if not vertices:
+            vertices = self.vertices
+
+        connected = {}
+        for vertex in vertices:
+            if len(connected) == 0:
+                connected[vertex] = True
+            else:
+                connected[vertex] = False
+
+        if list(connected.values()) == [True * len(vertices)]:
+            subgraph = Graph("x")
+            subgraph.vertices = list(connected.keys())
+            graphs.append(subgraph)
+            return graphs
+
+        while changes:
+            changes = False
+            for v in vertices:
+                if connected[v]:
+                    if self.check_as_true(v.edges, connected):
+                        changes = True
+                else:
+                    if self.check_if_true(v, connected):
+                        connected[v] = True
+                        if self.check_as_true(v.edges, connected):
+                            changes = True
+
+        if list(connected.values()) == [True for i in range(len(connected.values()))]:
+            subgraph = Graph("x")
+            subgraph.vertices = list(connected.keys())
+            graphs.append(subgraph)
+            return graphs
+
+        removed = self.remove_connected_vertices(vertices, connected)
+        subgraph = Graph("x")
+        subgraph.vertices = removed
+        graphs.append(subgraph)
+        return self.find_subgraphs(vertices, graphs)
+
+    def check_if_true(self, vertex, connected):
+        for edge in vertex.edges:
+            if connected[edge.source]:
+                return True
+            elif connected[edge.destination]:
+                return True
+
+        return False
+
+    def check_as_true(self, edges, connected):
+        changes = False
+        for edge in edges:
+            if connected[edge.source] is False:
+                changes = True
+            elif connected[edge.destination] is False:
+                changes = True
+            connected[edge.source] = True
+            connected[edge.destination] = True
+
+        return changes
+
+    def remove_connected_vertices(self, vertices, connected):
+        removed = []
+        for v in connected.keys():
+            if connected[v]:
+                vertices.remove(v)
+                removed.append(v)
+
+        return removed
+
+    def is_graph_directed(self):
+        if len(self.edges()) > 0:
+            return list(self.edges())[0].is_directed
+
+    def depth_first_search(self, current, parent):
+        self.visited.append(current)
+        for vertex in self.vertices:
+            if current.is_related(vertex):
+                if parent and vertex == parent:
+                    continue
+                if vertex in self.visited:
+                    if vertex != self.visited[-1]:
+                        return True
+                elif self.depth_first_search(vertex, current):
+                    return True
+        return False
+
+    def has_cycle_undirected(self):
+        self.visited = []
+        for vertex in self.vertices:
+            if vertex in self.visited:
+                if vertex != self.visited[-1]:
+                    continue
+            if self.depth_first_search(vertex, None):
+                return True
+        return False
+
+    def has_cycle_directed(self, v):
+        if v in self.path:
+            if self.path[0] not in self.nodes_to_contour:
+                self.nodes_to_contour.append(self.path[0])
+            return
+        if v in self.visited:
+            return
+        self.path.append(v)
+        for edge in v.edges:
+            self.has_cycle_directed(edge.destination)
+        if v not in self.nodes_to_contour:
+            self.visited.append(v)
+
+    def find_conture_nodes(self):
+        self.nodes_to_contour = []
+        self.visited = []
+        for vertex in self.vertices:
+            if vertex not in self.nodes_to_contour:
+                self.path = []
+                self.has_cycle_directed(vertex)
+
+        return self.nodes_to_contour
+
+    # finds vertices that don't have incoming edges
+    def find_not_destination_vertices(self):
+        dict = {}
+        for vertex in self.vertices:
+            dict[vertex] = False
+
+        for edge in self.edges():
+            dict[edge.destination] = True
+
+        roots = []
+        for vertex in dict.keys():
+            if dict[vertex] is False:
+                roots.append(vertex)
+
+        return roots
+
 
 class Vertex:
     __slots__ = '_attributes', '_id', '_edges'
@@ -131,6 +267,16 @@ class Vertex:
                 if edge.source == self:
                     vertices.append(edge.destination)
         return vertices
+
+    def is_related(self, vertex):
+        for edge in self.edges:
+            if edge.source == self:
+                if edge.destination == vertex:
+                    return True
+            elif edge.destination == self:
+                if edge.source == vertex:
+                    return True
+        return False
 
     def __hash__(self):
         return hash(self._id)

@@ -1,3 +1,4 @@
+import copy
 
 class Graph(object):
 
@@ -75,7 +76,7 @@ class Graph(object):
             graphs = []
         changes = True
         if not vertices:
-            vertices = self.vertices
+            vertices = copy.deepcopy(self._vertices)
 
         connected = {}
         for vertex in vertices:

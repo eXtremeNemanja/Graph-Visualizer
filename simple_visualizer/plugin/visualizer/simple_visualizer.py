@@ -27,8 +27,7 @@ class SimpleVisualizer(BaseVisualizer):
             links.append(link)
             
 
-        view = """{% extends "index.html" %}
-        {% block mainView %}
+        view = """
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
        
         <style>
@@ -70,8 +69,8 @@ class SimpleVisualizer(BaseVisualizer):
             .start(); //pokreni izracunavanje pozicija
               
         var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
-            svg.attr("transform", "scale(" + d3.event.scale + ")")
-        })).append("g");
+                                svg.attr("transform", " translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+                        })).append('g');
 
         // add the links
         var link = svg.selectAll('.link')
@@ -116,8 +115,6 @@ class SimpleVisualizer(BaseVisualizer):
 
         }
         function nodeClick(el) {
-
-            document.getElementById("hidden").innerHTML = el.id.replace("ID_", "");
 
             var text = "";
             text += "ID:" + el.id + "\\n";
@@ -175,7 +172,6 @@ class SimpleVisualizer(BaseVisualizer):
         }
 
         </script>
-        {% endblock %}
         """
 
         django_engine = engines['django']

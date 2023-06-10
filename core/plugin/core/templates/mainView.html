@@ -1,147 +1,129 @@
 
-        
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-       
-        <style>
-        .node {
-        cursor: pointer;
-        color: #003b73;
-        text-align: center;
-        }
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        .link {
-        fill: none;
-        stroke: #404040;
-        stroke-width: 1.5px;
-        }
-        </style>
+                    <style>
+                    .node {
+                    cursor: pointer;
+                    }
 
-        <script type="text/javascript">
+                    .link {
+                    fill: none;
+                    stroke: #9ecae1;
+                    stroke-width: 1.5px;
+                    }
+                    </style>
 
-        var current = null;
+                    <script>
+                    var current = null;
 
-        var vertices = JSON.parse("{\u00223\u0022: {\u0022id\u0022: \u0022ID_3\u0022, \u0022attributes\u0022: [\u0022author: Gambardella, Matthew\u0022]}, \u00224\u0022: {\u0022id\u0022: \u0022ID_4\u0022, \u0022attributes\u0022: [\u0022title: XML Developer\u0027s Guide\u0022]}, \u00225\u0022: {\u0022id\u0022: \u0022ID_5\u0022, \u0022attributes\u0022: [\u0022genre: Computer\u0022]}, \u00226\u0022: {\u0022id\u0022: \u0022ID_6\u0022, \u0022attributes\u0022: [\u0022price: 44.95\u0022]}, \u00227\u0022: {\u0022id\u0022: \u0022ID_7\u0022, \u0022attributes\u0022: [\u0022publish_date: 2000\u002D10\u002D01\u0022]}, \u00228\u0022: {\u0022id\u0022: \u0022ID_8\u0022, \u0022attributes\u0022: [\u0022description: An in\u002Ddepth look at creating applications with XML.\u0022]}, \u00222\u0022: {\u0022id\u0022: \u0022ID_2\u0022, \u0022attributes\u0022: [\u0022id: bk100\u0022]}, \u00229\u0022: {\u0022id\u0022: \u0022ID_9\u0022, \u0022attributes\u0022: [\u0022id: bk101\u0022]}, \u002217\u0022: {\u0022id\u0022: \u0022ID_17\u0022, \u0022attributes\u0022: [\u0022author: Ralls, Kim\u0022]}, \u002218\u0022: {\u0022id\u0022: \u0022ID_18\u0022, \u0022attributes\u0022: [\u0022title: Midnight Rain\u0022]}, \u002219\u0022: {\u0022id\u0022: \u0022ID_19\u0022, \u0022attributes\u0022: [\u0022genre: Fantasy\u0022]}, \u002220\u0022: {\u0022id\u0022: \u0022ID_20\u0022, \u0022attributes\u0022: [\u0022price: 5.95\u0022]}, \u002221\u0022: {\u0022id\u0022: \u0022ID_21\u0022, \u0022attributes\u0022: [\u0022publish_date: 2000\u002D12\u002D16\u0022]}, \u002222\u0022: {\u0022id\u0022: \u0022ID_22\u0022, \u0022attributes\u0022: [\u0022description: A former architect battles corporate zombies, an evil sorceress, and her own childhood to become queen of the world.\u0022]}, \u002216\u0022: {\u0022id\u0022: \u0022ID_16\u0022, \u0022attributes\u0022: [\u0022id: bk102\u0022]}, \u002224\u0022: {\u0022id\u0022: \u0022ID_24\u0022, \u0022attributes\u0022: [\u0022author: Corets, Eva\u0022]}, \u002225\u0022: {\u0022id\u0022: \u0022ID_25\u0022, \u0022attributes\u0022: [\u0022title: Maeve Ascendant\u0022]}, \u002228\u0022: {\u0022id\u0022: \u0022ID_28\u0022, \u0022attributes\u0022: [\u0022publish_date: 2000\u002D11\u002D17\u0022]}, \u002229\u0022: {\u0022id\u0022: \u0022ID_29\u0022, \u0022attributes\u0022: [\u0022description: After the collapse of a nanotechnology society in England, the young survivors lay the foundation for a new society.\u0022]}, \u002223\u0022: {\u0022id\u0022: \u0022ID_23\u0022, \u0022attributes\u0022: [\u0022id: bk103\u0022]}, \u002232\u0022: {\u0022id\u0022: \u0022ID_32\u0022, \u0022attributes\u0022: [\u0022title: Oberon\u0027s Legacy\u0022]}, \u002235\u0022: {\u0022id\u0022: \u0022ID_35\u0022, \u0022attributes\u0022: [\u0022publish_date: 2001\u002D03\u002D10\u0022]}, \u002236\u0022: {\u0022id\u0022: \u0022ID_36\u0022, \u0022attributes\u0022: [\u0022description: In post\u002Dapocalypse England, the mysterious agent known only as Oberon helps to create a new life for the inhabitants of London. Sequel to Maeve Ascendant.\u0022]}, \u002230\u0022: {\u0022id\u0022: \u0022ID_30\u0022, \u0022attributes\u0022: [\u0022id: bk104\u0022]}, \u002239\u0022: {\u0022id\u0022: \u0022ID_39\u0022, \u0022attributes\u0022: [\u0022title: The Sundered Grail\u0022]}, \u002242\u0022: {\u0022id\u0022: \u0022ID_42\u0022, \u0022attributes\u0022: [\u0022publish_date: 2001\u002D09\u002D10\u0022]}, \u002243\u0022: {\u0022id\u0022: \u0022ID_43\u0022, \u0022attributes\u0022: [\u0022description: The two daughters of Maeve, half\u002Dsisters, battle one another for control of England. Sequel to Oberon\u0027s Legacy.\u0022]}, \u002237\u0022: {\u0022id\u0022: \u0022ID_37\u0022, \u0022attributes\u0022: [\u0022id: bk105\u0022]}, \u002245\u0022: {\u0022id\u0022: \u0022ID_45\u0022, \u0022attributes\u0022: [\u0022author: Randall, Cynthia\u0022]}, \u002246\u0022: {\u0022id\u0022: \u0022ID_46\u0022, \u0022attributes\u0022: [\u0022title: Lover Birds\u0022]}, \u002247\u0022: {\u0022id\u0022: \u0022ID_47\u0022, \u0022attributes\u0022: [\u0022genre: Romance\u0022]}, \u002248\u0022: {\u0022id\u0022: \u0022ID_48\u0022, \u0022attributes\u0022: [\u0022price: 4.95\u0022]}, \u002249\u0022: {\u0022id\u0022: \u0022ID_49\u0022, \u0022attributes\u0022: [\u0022publish_date: 2000\u002D09\u002D02\u0022]}, \u002250\u0022: {\u0022id\u0022: \u0022ID_50\u0022, \u0022attributes\u0022: [\u0022description: When Carla meets Paul at an ornithology conference, tempers fly as feathers get ruffled.\u0022]}, \u002244\u0022: {\u0022id\u0022: \u0022ID_44\u0022, \u0022attributes\u0022: [\u0022id: bk106\u0022]}, \u002252\u0022: {\u0022id\u0022: \u0022ID_52\u0022, \u0022attributes\u0022: [\u0022author: Thurman, Paula\u0022]}, \u002253\u0022: {\u0022id\u0022: \u0022ID_53\u0022, \u0022attributes\u0022: [\u0022title: Splish Splash\u0022]}, \u002256\u0022: {\u0022id\u0022: \u0022ID_56\u0022, \u0022attributes\u0022: [\u0022publish_date: 2000\u002D11\u002D02\u0022]}, \u002257\u0022: {\u0022id\u0022: \u0022ID_57\u0022, \u0022attributes\u0022: [\u0022description: A deep sea diver finds true love twenty thousand leagues beneath the sea.\u0022]}, \u002251\u0022: {\u0022id\u0022: \u0022ID_51\u0022, \u0022attributes\u0022: [\u0022id: bk107\u0022]}, \u002259\u0022: {\u0022id\u0022: \u0022ID_59\u0022, \u0022attributes\u0022: [\u0022author: Knorr, Stefan\u0022]}, \u002260\u0022: {\u0022id\u0022: \u0022ID_60\u0022, \u0022attributes\u0022: [\u0022title: Creepy Crawlies\u0022]}, \u002261\u0022: {\u0022id\u0022: \u0022ID_61\u0022, \u0022attributes\u0022: [\u0022genre: Horror\u0022]}, \u002263\u0022: {\u0022id\u0022: \u0022ID_63\u0022, \u0022attributes\u0022: [\u0022publish_date: 2000\u002D12\u002D06\u0022]}, \u002264\u0022: {\u0022id\u0022: \u0022ID_64\u0022, \u0022attributes\u0022: [\u0022description: An anthology of horror stories about roaches, centipedes, scorpions and other insects.\u0022]}, \u002258\u0022: {\u0022id\u0022: \u0022ID_58\u0022, \u0022attributes\u0022: [\u0022id: bk108\u0022]}, \u002266\u0022: {\u0022id\u0022: \u0022ID_66\u0022, \u0022attributes\u0022: [\u0022author: Kress, Peter\u0022]}, \u002267\u0022: {\u0022id\u0022: \u0022ID_67\u0022, \u0022attributes\u0022: [\u0022title: Paradox Lost\u0022]}, \u002268\u0022: {\u0022id\u0022: \u0022ID_68\u0022, \u0022attributes\u0022: [\u0022genre: Science Fiction\u0022]}, \u002269\u0022: {\u0022id\u0022: \u0022ID_69\u0022, \u0022attributes\u0022: [\u0022price: 6.95\u0022]}, \u002271\u0022: {\u0022id\u0022: \u0022ID_71\u0022, \u0022attributes\u0022: [\u0022description: After an inadvertant trip through a Heisenberg Uncertainty Device, James Salway discovers the problems of being quantum.\u0022]}, \u002265\u0022: {\u0022id\u0022: \u0022ID_65\u0022, \u0022attributes\u0022: [\u0022id: bk109\u0022]}, \u002273\u0022: {\u0022id\u0022: \u0022ID_73\u0022, \u0022attributes\u0022: [\u0022author: O\u0027Brien, Tim\u0022]}, \u002274\u0022: {\u0022id\u0022: \u0022ID_74\u0022, \u0022attributes\u0022: [\u0022title: Microsoft .NET: The Programming Bible\u0022]}, \u002276\u0022: {\u0022id\u0022: \u0022ID_76\u0022, \u0022attributes\u0022: [\u0022price: 36.95\u0022]}, \u002277\u0022: {\u0022id\u0022: \u0022ID_77\u0022, \u0022attributes\u0022: [\u0022publish_date: 2000\u002D12\u002D09\u0022]}, \u002278\u0022: {\u0022id\u0022: \u0022ID_78\u0022, \u0022attributes\u0022: [\u0022description: Microsoft\u0027s .NET initiative is explored in detail in this deep programmer\u0027s reference.\u0022]}, \u002272\u0022: {\u0022id\u0022: \u0022ID_72\u0022, \u0022attributes\u0022: [\u0022id: bk110\u0022]}, \u002281\u0022: {\u0022id\u0022: \u0022ID_81\u0022, \u0022attributes\u0022: [\u0022title: MSXML3: A Comprehensive Guide\u0022]}, \u002284\u0022: {\u0022id\u0022: \u0022ID_84\u0022, \u0022attributes\u0022: [\u0022publish_date: 2000\u002D12\u002D01\u0022]}, \u002285\u0022: {\u0022id\u0022: \u0022ID_85\u0022, \u0022attributes\u0022: [\u0022description: The Microsoft MSXML3 parser is covered in detail, with attention to XML DOM interfaces, XSLT processing, SAX and more.\u0022]}, \u002279\u0022: {\u0022id\u0022: \u0022ID_79\u0022, \u0022attributes\u0022: [\u0022id: bk111\u0022]}, \u002287\u0022: {\u0022id\u0022: \u0022ID_87\u0022, \u0022attributes\u0022: [\u0022author: Galos, Mike\u0022]}, \u002288\u0022: {\u0022id\u0022: \u0022ID_88\u0022, \u0022attributes\u0022: [\u0022title: Visual Studio 7: A Comprehensive Guide\u0022]}, \u002290\u0022: {\u0022id\u0022: \u0022ID_90\u0022, \u0022attributes\u0022: [\u0022price: 49.95\u0022]}, \u002291\u0022: {\u0022id\u0022: \u0022ID_91\u0022, \u0022attributes\u0022: [\u0022publish_date: 2001\u002D04\u002D16\u0022]}, \u002292\u0022: {\u0022id\u0022: \u0022ID_92\u0022, \u0022attributes\u0022: [\u0022description: Microsoft Visual Studio 7 is explored in depth, looking at how Visual Basic, Visual C++, C#, and ASP+ are integrated into a comprehensive development environment.\u0022]}, \u002286\u0022: {\u0022id\u0022: \u0022ID_86\u0022, \u0022attributes\u0022: [\u0022id: bk112\u0022]}, \u00221\u0022: {\u0022id\u0022: \u0022ID_1\u0022, \u0022attributes\u0022: []}}");                
-        var links= JSON.parse("[{\u0022source\u0022: 72, \u0022target\u0022: 73}, {\u0022source\u0022: 16, \u0022target\u0022: 20}, {\u0022source\u0022: 1, \u0022target\u0022: 86}, {\u0022source\u0022: 44, \u0022target\u0022: 45}, {\u0022source\u0022: 1, \u0022target\u0022: 58}, {\u0022source\u0022: 9, \u0022target\u0022: 8}, {\u0022source\u0022: 23, \u0022target\u0022: 25}, {\u0022source\u0022: 37, \u0022target\u0022: 24}, {\u0022source\u0022: 37, \u0022target\u0022: 42}, {\u0022source\u0022: 1, \u0022target\u0022: 79}, {\u0022source\u0022: 79, \u0022target\u0022: 81}, {\u0022source\u0022: 16, \u0022target\u0022: 22}, {\u0022source\u0022: 44, \u0022target\u0022: 47}, {\u0022source\u0022: 1, \u0022target\u0022: 51}, {\u0022source\u0022: 2, \u0022target\u0022: 4}, {\u0022source\u0022: 1, \u0022target\u0022: 72}, {\u0022source\u0022: 72, \u0022target\u0022: 77}, {\u0022source\u0022: 44, \u0022target\u0022: 49}, {\u0022source\u0022: 1, \u0022target\u0022: 44}, {\u0022source\u0022: 51, \u0022target\u0022: 57}, {\u0022source\u0022: 65, \u0022target\u0022: 56}, {\u0022source\u0022: 9, \u0022target\u0022: 3}, {\u0022source\u0022: 23, \u0022target\u0022: 20}, {\u0022source\u0022: 37, \u0022target\u0022: 19}, {\u0022source\u0022: 86, \u0022target\u0022: 88}, {\u0022source\u0022: 23, \u0022target\u0022: 29}, {\u0022source\u0022: 79, \u0022target\u0022: 76}, {\u0022source\u0022: 16, \u0022target\u0022: 17}, {\u0022source\u0022: 79, \u0022target\u0022: 85}, {\u0022source\u0022: 1, \u0022target\u0022: 37}, {\u0022source\u0022: 9, \u0022target\u0022: 5}, {\u0022source\u0022: 86, \u0022target\u0022: 90}, {\u0022source\u0022: 65, \u0022target\u0022: 67}, {\u0022source\u0022: 79, \u0022target\u0022: 5}, {\u0022source\u0022: 16, \u0022target\u0022: 19}, {\u0022source\u0022: 30, \u0022target\u0022: 36}, {\u0022source\u0022: 1, \u0022target\u0022: 30}, {\u0022source\u0022: 51, \u0022target\u0022: 52}, {\u0022source\u0022: 23, \u0022target\u0022: 24}, {\u0022source\u0022: 9, \u0022target\u0022: 7}, {\u0022source\u0022: 86, \u0022target\u0022: 92}, {\u0022source\u0022: 30, \u0022target\u0022: 20}, {\u0022source\u0022: 1, \u0022target\u0022: 23}, {\u0022source\u0022: 72, \u0022target\u0022: 74}, {\u0022source\u0022: 16, \u0022target\u0022: 21}, {\u0022source\u0022: 58, \u0022target\u0022: 60}, {\u0022source\u0022: 2, \u0022target\u0022: 6}, {\u0022source\u0022: 79, \u0022target\u0022: 73}, {\u0022source\u0022: 1, \u0022target\u0022: 16}, {\u0022source\u0022: 86, \u0022target\u0022: 5}, {\u0022source\u0022: 51, \u0022target\u0022: 47}, {\u0022source\u0022: 51, \u0022target\u0022: 56}, {\u0022source\u0022: 23, \u0022target\u0022: 19}, {\u0022source\u0022: 86, \u0022target\u0022: 87}, {\u0022source\u0022: 23, \u0022target\u0022: 28}, {\u0022source\u0022: 1, \u0022target\u0022: 9}, {\u0022source\u0022: 2, \u0022target\u0022: 8}, {\u0022source\u0022: 30, \u0022target\u0022: 24}, {\u0022source\u0022: 37, \u0022target\u0022: 39}, {\u0022source\u0022: 79, \u0022target\u0022: 84}, {\u0022source\u0022: 58, \u0022target\u0022: 64}, {\u0022source\u0022: 1, \u0022target\u0022: 2}, {\u0022source\u0022: 65, \u0022target\u0022: 69}, {\u0022source\u0022: 30, \u0022target\u0022: 35}, {\u0022source\u0022: 58, \u0022target\u0022: 48}, {\u0022source\u0022: 44, \u0022target\u0022: 46}, {\u0022source\u0022: 86, \u0022target\u0022: 91}, {\u0022source\u0022: 2, \u0022target\u0022: 3}, {\u0022source\u0022: 30, \u0022target\u0022: 19}, {\u0022source\u0022: 65, \u0022target\u0022: 71}, {\u0022source\u0022: 37, \u0022target\u0022: 43}, {\u0022source\u0022: 58, \u0022target\u0022: 59}, {\u0022source\u0022: 72, \u0022target\u0022: 76}, {\u0022source\u0022: 51, \u0022target\u0022: 53}, {\u0022source\u0022: 44, \u0022target\u0022: 48}, {\u0022source\u0022: 2, \u0022target\u0022: 5}, {\u0022source\u0022: 72, \u0022target\u0022: 5}, {\u0022source\u0022: 58, \u0022target\u0022: 61}, {\u0022source\u0022: 72, \u0022target\u0022: 78}, {\u0022source\u0022: 44, \u0022target\u0022: 50}, {\u0022source\u0022: 9, \u0022target\u0022: 4}, {\u0022source\u0022: 37, \u0022target\u0022: 20}, {\u0022source\u0022: 65, \u0022target\u0022: 66}, {\u0022source\u0022: 2, \u0022target\u0022: 7}, {\u0022source\u0022: 30, \u0022target\u0022: 32}, {\u0022source\u0022: 16, \u0022target\u0022: 18}, {\u0022source\u0022: 51, \u0022target\u0022: 48}, {\u0022source\u0022: 58, \u0022target\u0022: 63}, {\u0022source\u0022: 9, \u0022target\u0022: 6}, {\u0022source\u0022: 1, \u0022target\u0022: 65}, {\u0022source\u0022: 65, \u0022target\u0022: 68}]");
+                    var nodesGraph = JSON.parse("{\u00225890\u0022: {\u0022id\u0022: \u0022ID_5890\u0022, \u0022attributes\u0022: [\u0022name: http://www.ftn.uns.ac.rs/rdf/examples/person/Jack_Smith\u0022]}, \u00225891\u0022: {\u0022id\u0022: \u0022ID_5891\u0022, \u0022attributes\u0022: [\u0022name: Glasgow\u0022]}, \u00225892\u0022: {\u0022id\u0022: \u0022ID_5892\u0022, \u0022attributes\u0022: [\u0022name: programmer\u0022]}, \u00225896\u0022: {\u0022id\u0022: \u0022ID_5896\u0022, \u0022attributes\u0022: [\u0022name: skydiving\u0022]}, \u00225898\u0022: {\u0022id\u0022: \u0022ID_5898\u0022, \u0022attributes\u0022: [\u0022name: 1983\u002D01\u002D31\u0022]}}");
+                    var linksGraph = JSON.parse("[{\u0022source\u0022: 5890, \u0022target\u0022: 5896}, {\u0022source\u0022: 5890, \u0022target\u0022: 5891}, {\u0022source\u0022: 5890, \u0022target\u0022: 5892}, {\u0022source\u0022: 5890, \u0022target\u0022: 5898}]");
 
-        links.forEach(function(link) {
-            link.source = vertices[link.source];
-            link.target = vertices[link.target];
-        });
+                    linksGraph.forEach(function(link) {
+                    link.source = nodesGraph[link.source];
+                    link.target = nodesGraph[link.target];
+                });
+                 d3.select('.stepper').text("1. Please choose a file and then a parser");
 
-        d3.select('.stepper').text("1. Please choose a file and then a parser");
+                    function nodeClick(el) {
 
-        var force = d3.layout.force() //kreiranje force layout-a
-            .size([1000, 450]) //raspoloziv prostor za iscrtavanje
-            .nodes(d3.values(vertices)) //dodaj nodove
-            .links(links) //dodaj linkove
-            .on("tick", tick) //sta treba da se desi kada su izracunate nove pozicija elemenata
-            .linkDistance(25) //razmak izmedju elemenata
-            .charge(-450)//koliko da se elementi odbijaju
-            .gravity(1)
-            .start(); //pokreni izracunavanje pozicija
-              
-        var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
-            svg.attr("transform", "scale(" + d3.event.scale + ")")
-        })).append("g");
+                        var text = "";
+                        text += "ID:" + el.id + "\n";
+                        if(current != null) {
+                            complexView(nodesGraph[parseInt(current.id.replace("ID_", ""))], '#003B73');
+                        }
+                        
+                        current = el;
+                        var node = nodesGraph[parseInt(el.id.replace("ID_", ""))];
+                        complexView(node, "red");
+                        for(var i=0;i<node.attributes.length;i++) {
+                            text += node.attributes[i] + "\n";
+                        }
+                        alert(text);
+                    }
 
-        // add the links
-        var link = svg.selectAll('.link')
-            .data(links)
-            .enter().append('line')
-            .attr('class', 'link');
+                        var force = d3.layout.force() //kreiranje force layout-a
+                            .size([1000, 450]) //raspoloziv prostor za iscrtavanje
+                            .nodes(d3.values(nodesGraph)) //dodaj nodove
+                            .links(linksGraph) //dodaj linkove
+                            .on("tick", tick) //sta treba da se desi kada su izracunate nove pozicija elemenata
+                            .linkDistance(150) //razmak izmedju elemenata
+                            .charge(-1500)//koliko da se elementi odbijaju
+                            .gravity(0.75)
+                            .start(); //pokreni izracunavanje pozicija
 
-        // add the nodes
-        var node = svg.selectAll('.node')
-            .data(force.nodes()) //add
-            .enter().append('g')
-            .attr('class', 'node')
-            .attr('id', function(d){return d.id;})
-            .on('click',function(){
-            nodeClick(this);
-            });
-        d3.selectAll('.node').each(function(d){simpleView(d, '#003B73');});
+                        // add pan and zoom
+                        var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
+                                svg.attr("transform", " translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+                        })).append('g');
 
-        function simpleView(d, color){
-            var width=12;
-            var textSize=6;
+                        // add the links
+                        var link = svg.selectAll('.link')
+                            .data(linksGraph)
+                            .enter().append('line')
+                            .attr('class', 'link');
 
-            //Ubacivanje kruga
-            d3.select("g#"+d.id).append('circle').
-            attr('cx',0).attr('cy', 0).attr('r', width).attr('fill', color);
-            //Ubacivanje naziva prodavnice ili artikla
-            d3.select("g#"+d.id).append('text').attr('x', 0).attr('y', 4)
-            .attr('text-anchor','middle')
-            .attr('font-size',textSize).attr('font-family','poppins')
-            .attr('fill','white').text(d.id);
-        }
+                        // add the nodes
+                        var node = svg.selectAll('.node')
+                            .data(force.nodes()) //add
+                            .enter().append('g')
+                            .attr('class', 'node')
+                            .attr('id', function(d){return d.id;})
+                            .on('click',function(){
+                            nodeClick(this);
+                            });
+                        d3.selectAll('.node').each(function(d){complexView(d, '#003B73');});
 
-        function tick(e) {
+                        function complexView(d, color) {
+                            var length = 10;
+                            for(var i=0;i<d.attributes.length;i++) {
+                                if(length<d.attributes[i].length) length = d.attributes[i].length
+                            }
 
-            node.attr("transform", function(d) {return "translate(" + d.x + "," + d.y + ")";})
-                .call(force.drag);
+                            var attributesNum = d.attributes.length;
 
-            link.attr('x1', function(d) { return d.source.x; })
-                .attr('y1', function(d) { return d.source.y; })
-                .attr('x2', function(d) { return d.target.x; })
-                .attr('y2', function(d) { return d.target.y; });
+                            var textSize = 12;
+                            var high = 30;
+                            high += (attributesNum == 0) ? textSize: attributesNum*textSize;
+                            var width = length * textSize/2 + 2*textSize + 5;
 
-        }
-        function nodeClick(el) {
-            var text = "";
-            text += "ID:" + el.id + "\n";
-            if(current != null) {
-                simpleView(vertices[parseInt(current.id.replace("ID_", ""))], '#003B73')
-            }
-            current = el;
-            var node = vertices[parseInt(el.id.replace("ID_", ""))];
-            simpleView(node, "red")
-            for(var i=0;i<node.attributes.length;i++) {
-                text += node.attributes[i] + "\n";
-            }
-            alert(text);
-        }
+                            // add rectangle
+                            d3.select("g#"+d.id).append('rect').
+                                attr('x',0).attr('y',0).attr('width',width).attr('height',high)
+                                .attr('fill', color);
 
-        init();
-                
-        function init() {
-            let main = d3.select("#mainView").node();
+                            // add id
+                            d3.select("g#"+d.id).append('text').attr('x',width/2).attr('y',10)
+                            .attr('text-anchor','middle')
+                            .attr('font-size',textSize).attr('font-family','Poppins')
+                            .attr('fill','white').text(d.id);
 
-            let observer = new MutationObserver(observer_callback);
+                            // add divider
+                            d3.select("g#"+d.id).append('line').
+                            attr('x1',0).attr('y1',textSize).attr('x2',width).attr('y2',textSize)
+                            .attr('stroke','gray').attr('stroke-width',2);
 
-            observer.observe(main, {
-                subtree: true,
-                attributes: true,
-                childList: true,
-                characterData: true
-            });
-        }
+                            // add attributes
+                            for(var i=0;i<attributesNum;i++)
+                            {
+                                d3.select("g#"+d.id).append('text').attr('x',0).attr('y',20+i*textSize)
+                                .attr('text-anchor','start')
+                                .attr('font-size',textSize).attr('font-family','Poppins')
+                                .attr('fill','white').text(d.attributes[i]);
+                            }
+                        }
 
+                        function tick(e) {
+                            node.attr("transform", function(d) {return "translate(" + d.x + "," + d.y + ")";})
+                                .call(force.drag);
 
-        function observer_callback() {
-            let main = d3.select("#mainView").html();
-            d3.select("#birdView").html(main);
+                            link.attr('x1', function(d) { return d.source.x; })
+                                .attr('y1', function(d) { return d.source.y; })
+                                .attr('x2', function(d) { return d.target.x; })
+                                .attr('y2', function(d) { return d.target.y; });
+                        }
 
-            let mainWidth = d3.select("#mainView").select("g").node().getBBox().width;
-            let mainHeight = d3.select("#mainView").select("g").node().getBBox().height;
+                    </script>
 
-            let birdWidth = $("#birdView")[0].clientWidth;
-            let birdHeight = $("#birdView")[0].clientHeight;
-
-            let scaleWidth = birdWidth / mainWidth;
-            let scaleHeight = birdHeight / mainHeight;
-
-            let scale = 0;
-            if(scaleWidth < scaleHeight){
-                scale = scaleWidth;
-            }else{
-                scale = scaleHeight;
-            }
-            
-            let x = d3.select("#birdView").select("g").node().getBBox().x;
-            let y = d3.select("#birdView").select("g").node().getBBox().y;
-            d3.select("#birdView").select('g').attr("transform", "translate ("+[-x*scale, -y*scale]+") scale("+ scale +")");
-        }
-
-        </script>
-        
-        
+                    <script  src="static/birdView.js"></script>
+                    

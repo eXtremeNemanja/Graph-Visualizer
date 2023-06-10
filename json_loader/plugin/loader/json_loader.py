@@ -19,7 +19,7 @@ class JsonLoader(BaseLoader):
         self._graph = None
 
     def identifier(self):
-        return "json-loader"
+        return "JsonLoader"
 
     def name(self):
         return "JSON Loader"

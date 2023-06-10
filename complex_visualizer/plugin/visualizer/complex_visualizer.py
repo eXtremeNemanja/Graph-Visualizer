@@ -27,8 +27,7 @@ class ComplexVisualizer(BaseVisualizer):
             link = {"source": l.source.id, "target": l.destination.id}
             links.append(link)
 
-        view = """{% extends "index.html" %}
-                    {% block mainView %}
+        view = """
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
                     <style>
@@ -46,7 +45,7 @@ class ComplexVisualizer(BaseVisualizer):
                     <script>
                     var current = null;
 
-                    var nodesGraph = JSON.parse("{{nodes |escapejs}}");                
+                    var nodesGraph = JSON.parse("{{nodes |escapejs}}");
                     var linksGraph = JSON.parse("{{links |escapejs}}");
 
                     linksGraph.forEach(function(link) {
@@ -56,18 +55,16 @@ class ComplexVisualizer(BaseVisualizer):
                  d3.select('.stepper').text("1. Please choose a file and then a parser");
 
                     function nodeClick(el) {
-                        
-                        document.getElementById("hidden").innerHTML = el.id.replace("ID_", "");
 
                         var text = "";
                         text += "ID:" + el.id + "\\n";
                         if(current != null) {
                             complexView(nodesGraph[parseInt(current.id.replace("ID_", ""))], '#003B73');
                         }
-
+                        
                         current = el;
                         var node = nodesGraph[parseInt(el.id.replace("ID_", ""))];
-                        complexView(node, "red")
+                        complexView(node, "red");
                         for(var i=0;i<node.attributes.length;i++) {
                             text += node.attributes[i] + "\\n";
                         }
@@ -86,7 +83,7 @@ class ComplexVisualizer(BaseVisualizer):
 
                         // add pan and zoom
                         var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
-                                svg.attr("transform", " scale(" + d3.event.scale + ")")
+                                svg.attr("transform", " translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
                         })).append('g');
 
                         // add the links
@@ -158,7 +155,7 @@ class ComplexVisualizer(BaseVisualizer):
                     </script>
 
                     <script  src="static/birdView.js"></script>
-                    {% endblock %}"""
+                    """
 
 
         django_engine = engines['django']

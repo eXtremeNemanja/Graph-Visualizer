@@ -13,7 +13,7 @@ class XmlLoader(BaseLoader):
         self.unique_key = "id"
 
     def identifier(self):
-        return "xml-loader"
+        return "XmlLoader"
 
     def name(self):
         return "XML Loader"

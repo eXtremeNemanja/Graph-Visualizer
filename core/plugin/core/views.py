@@ -28,6 +28,7 @@ def index(request, file_missing=False):
 def reset(request):
     apps.get_app_config('core').current_graph = apps.get_app_config(
         'core').base_graph
+    apps.get_app_config('core').load_tree()
     current_visualizer = apps.get_app_config('core').current_visualizer
     if (current_visualizer == "SimpleVisualizer"):
         return simple_visualization(request)
@@ -115,6 +116,7 @@ def search(request, *args, **kwargs):
         search_vertex(graph, vertex, query)
 
     apps.get_app_config('core').current_graph = create_graph(old_graph, graph)
+    apps.get_app_config('core').load_tree()
 
     current_visualizer = apps.get_app_config('core').current_visualizer
     if (current_visualizer == "SimpleVisualizer"):
@@ -124,17 +126,17 @@ def search(request, *args, **kwargs):
 
 
 def filter(request):
-    # todo implement filter
     query = request.GET.get("query", "")
     attribute, operator, value = parse_query(query)
     print(attribute, operator, type(value))
 
     old_graph = apps.get_app_config('core').current_graph
-    graph = Graph(old_graph.name)
+    graph = Graph()
     for vertex in old_graph.vertices:
         filter_vertex(graph, vertex, attribute, operator, value)
 
     apps.get_app_config('core').current_graph = create_graph(old_graph, graph)
+    apps.get_app_config('core').load_tree()
     current_visualizer = apps.get_app_config('core').current_visualizer
     if (current_visualizer == "SimpleVisualizer"):
         return simple_visualization(request)
@@ -336,6 +338,7 @@ def complex_visualization(request):
 
     for v in visualizers:
         if v.identifier() == "complex-visualizer":
+            apps.get_app_config('core').current_visualizer = "ComplexVisualizer"
             with open(path, 'w') as file:
                 file.write(v.visualize(graph, request))
 
@@ -347,8 +350,7 @@ def simple_visualization(request):
     graph = apps.get_app_config('core').current_graph
     for v in visualizers:
         if v.identifier() == "simple-visualizer":
-            # print(v.identifier())
-            # return HttpResponse(v.visualize(apps.get_app_config('core').base_graph, request))
+            apps.get_app_config('core').current_visualizer = "SimpleVisualizer"
 
             path = os.path.abspath(os.path.join(
                 os.path.dirname(__file__), "templates", "mainView.html"))

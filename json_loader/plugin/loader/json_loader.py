@@ -11,11 +11,10 @@ def isPrimitive(value):
 
 class JsonLoader(BaseLoader):
 
-    __slots__ = '_id_counter', '_dataset_name', '_graph'
+    __slots__ = '_id_counter', '_graph'
 
     def __init__(self):
         self._id_counter = 0
-        self._dataset_name = ""
         self._unique_key = "id"
         self._graph = None
 
@@ -23,17 +22,16 @@ class JsonLoader(BaseLoader):
         return "JsonLoader"
 
     def name(self):
-        return "Loading data from json document"
+        return "JSON Loader"
 
-    def load_file(self, file_name, unique_key="id"):
-        self._dataset_name = file_name
-        self._unique_key = unique_key
-        with open(file_name, 'r') as file:
-            jsonObject = json.load(file)
-        return jsonObject
+    def load_file(self, file, unique_key="id"):
+        if unique_key:
+            self._unique_key = unique_key
+        json_object = json.load(file)
+        return json_object
 
     def make_graph(self, tree):
-        self._graph = Graph(self._dataset_name)
+        self._graph = Graph()
         self.create_vertex(tree)
         return self._graph
 
@@ -51,6 +49,9 @@ class JsonLoader(BaseLoader):
                     if nested_item == self._unique_key:
                         current_vertex.id = data[nested_item]
                         current_vertex.add_attribute("id", data[nested_item])
+                        self.next_id()
+                    else:
+                        current_vertex.id = self.next_id()
                     current_vertex.add_attribute(nested_item, data[nested_item])
                 elif isinstance(data, list):                                       # data -> list of primitive items
                     nested_vertex = Vertex(nested_item)
@@ -79,10 +80,10 @@ class JsonLoader(BaseLoader):
                 vertex.add_edge(edge)
             elif edge.destination == vertex:
                 edge.destination = vertex
-                vertex.add_edge(edge)
+                edge.source.add_edge(edge)
 
     def alter_existing_vertex(self, vertex):
-        already_in_graph = self._graph.contains(vertex)
+        already_in_graph = self._graph.contains_vertex(vertex)
         if already_in_graph:
             vertex.attributes.update(already_in_graph.attributes)
             self.alter_existing_edges(self._graph.edges(), vertex)
@@ -99,3 +100,12 @@ class JsonLoader(BaseLoader):
         current_id = self._id_counter
         self._id_counter += 1
         return current_id
+
+
+if __name__ == '__main__':
+
+    pl = JsonLoader()
+    with open("../../../datasets/json/people.json") as file:
+        data=pl.load_file(file)
+    g = pl.make_graph(data)
+    print("a")

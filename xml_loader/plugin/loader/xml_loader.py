@@ -52,7 +52,7 @@ class XmlLoader(BaseLoader):
         graph.insert_vertex(v)
         return v
 
-    def make_graph(self, tree, graph_name):
-        g = Graph(graph_name)
+    def make_graph(self, tree):
+        g = Graph()
         self.create_vertex(g, tree)
         return g

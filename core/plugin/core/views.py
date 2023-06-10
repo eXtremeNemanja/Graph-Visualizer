@@ -45,10 +45,12 @@ def load(request):
         file = request.FILES['file']
         print(file)
         for p in plugini:
+            print(p.identifier())
+            print(loader)
             if p.identifier() == loader:
                 root = p.load_file(file)
-                print(root.tag)
-                apps.get_app_config('core').base_graph = p.make_graph(root, root.tag)
+                print(root)
+                apps.get_app_config('core').base_graph = p.make_graph(root)
                 print(apps.get_app_config('core').base_graph)
                 apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
 

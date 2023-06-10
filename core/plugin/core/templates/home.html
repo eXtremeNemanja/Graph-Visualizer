@@ -16,8 +16,8 @@
                 <span id="title">Graph Visualizer</span>
 
                 <a class="left-plugins" href="javascript:{}" onclick="document.getElementById('loader').value = 'XmlLoader'; document.getElementById('loader_form').submit();">XML Parser</a>
-                <a class="left-plugins" href="#">JSON Parser</a>
-                <a class="left-plugins" href="#">RDF Parser</a>
+                <a class="left-plugins" href="javascript:{}" onclick="document.getElementById('loader').value = 'JsonLoader'; document.getElementById('loader_form').submit();">JSON Parser</a>
+                <a class="left-plugins" href="javascript:{}" onclick="document.getElementById('loader').value = 'RDFLoader'; document.getElementById('loader_form').submit();">RDF Parser</a>
 
                 <a class="right-plugins" href="{% url 'simple_visualizer' %}">Simple View</a>
                 <a class="right-plugins" href="{% url 'complex_visualizer' %}">Complex View</a>

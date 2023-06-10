@@ -5,7 +5,7 @@ setup(
     author="Milica Sladakovic",
     version="0.4",
     packages=find_packages(),
-    namespace_packages=['plugin'],
+    namespace_packages=["plugin", "plugin.loader"],
     entry_points={
         "loader": 
         ["json-loader=plugin.loader.json_loader:JsonLoader"]

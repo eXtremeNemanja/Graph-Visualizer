@@ -280,3 +280,6 @@ a {
 ::-webkit-scrollbar-thumb:hover {
     background: #d0e5f8ab;
 }
+#hidden {
+    visibility: hidden;
+}

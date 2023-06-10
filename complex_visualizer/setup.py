@@ -5,7 +5,7 @@ setup(
     author="Anastasija Savic",
     version="0.1",
     packages=find_packages(),
-    namespace_packages=['plugin'],
+    namespace_packages=["plugin", "plugin.visualizer"],
     entry_points={
         'visualizer':
         ['complex-visualizer=plugin.visualizer.complex_visualizer:ComplexVisualizer']

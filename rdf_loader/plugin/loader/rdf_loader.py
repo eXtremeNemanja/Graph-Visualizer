@@ -11,7 +11,7 @@ class RdfLoader(BaseLoader):
         self.graph = None
 
     def identifier(self):
-        return "rdf-loader"
+        return "RDFLoader"
 
     def name(self):
         return "RDF Loader"

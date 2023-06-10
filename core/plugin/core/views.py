@@ -51,13 +51,18 @@ def load(request):
     loader = apps.get_app_config('core').get_loader(request.POST.get('loader'))
     if not choosen_file:
         return render(request, "index.html", {"stepper":1, "file_missing": True})
-
     else:
-        root = loader.load_file(choosen_file, unique_key)
-        apps.get_app_config('core').base_graph = loader.make_graph(root)
-        apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
-        apps.get_app_config('core').load_tree()
-
+        file = request.FILES['file']
+        print(file)
+        for p in plugini:
+            print(p.identifier())
+            print(loader)
+            if p.identifier() == loader:
+                root = p.load_file(file)
+                print(root)
+                apps.get_app_config('core').base_graph = p.make_graph(root)
+                print(apps.get_app_config('core').base_graph)
+                apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
 
     graph = apps.get_app_config('core').base_graph
     tree = apps.get_app_config('core').tree

@@ -20,14 +20,12 @@ def index(request, file_missing=False):
     for l in apps.get_app_config('core').loaders:
         loaders.append({"name": l.name(), "identifier": l.identifier()})
     stepper = 1
-    if (graph is not None):
-        stepper = 2
+    if (graph is not None): stepper = 2
     return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders, 'stepper': stepper})
 
 
 def reset(request):
-    apps.get_app_config('core').current_graph = apps.get_app_config(
-        'core').base_graph
+    apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
     current_visualizer = apps.get_app_config('core').current_visualizer
     if (current_visualizer == "SimpleVisualizer"):
         return simple_visualization(request)
@@ -35,17 +33,15 @@ def reset(request):
         return complex_visualization(request)
     else:
         if (apps.get_app_config('core').base_graph is None):
-            return render(request, "index.html", {"stepper": 1})
+            return render(request, "index.html", {"stepper":1})
         else:
-            return render(request, "index.html", {"stepper": 2})
-
+            return render(request, "index.html", {"stepper":2})
 
 def new_data(request):
     apps.get_app_config('core').base_graph = None
     apps.get_app_config('core').current_graph = None
     apps.get_app_config('core').current_visualizer = None
     return redirect('index')
-
 
 def load(request):
     plugini = apps.get_app_config('core').loaders
@@ -57,7 +53,7 @@ def load(request):
     unique_key = request.POST.get("key")
     # loader = apps.get_app_config('core').get_loader(request.POST.get('loader'))
     if not chosen_file:
-        return render(request, "index.html", {"stepper": 1, "file_missing": True})
+        return render(request, "index.html", {"stepper":1, "file_missing": True})
     else:
         # file = request.FILES['file']
         print(chosen_file)
@@ -69,8 +65,7 @@ def load(request):
                 print(root)
                 apps.get_app_config('core').base_graph = p.make_graph(root)
                 print(apps.get_app_config('core').base_graph)
-                apps.get_app_config('core').current_graph = apps.get_app_config(
-                    'core').base_graph
+                apps.get_app_config('core').current_graph = apps.get_app_config('core').base_graph
                 apps.get_app_config('core').load_tree()
 
     # graph = apps.get_app_config('core').base_graph
@@ -81,17 +76,10 @@ def load(request):
 
 
 def visualize(request, type):
-    print("visualize")
     visualizer = apps.get_app_config('core').get_visualizer(type)
-    path = os.path.abspath(os.path.join(
-        os.path.dirname(__file__), "templates", "mainView.html"))
-    print(path)
-
+    path = os.path.abspath(os.path.dirname(__file__)) + "\\templates\\mainView.html"
     with open(path, 'w+') as file:
-        print(os.path.abspath(os.path.join(os.path.dirname(
-            __file__), "templates", "mainView.html")))
-        file.write(visualizer.visualize(
-            apps.get_app_config('core').base_graph, request))
+        file.write(visualizer.visualize(apps.get_app_config('core').base_graph, request))
 
     graph = apps.get_app_config('core').base_graph
     tree = apps.get_app_config('core').tree
@@ -101,24 +89,23 @@ def visualize(request, type):
     loaders = []
     for l in apps.get_app_config('core').loaders:
         loaders.append({"name": l.name(), "identifier": l.identifier()})
-    return render(request, "index.html", {"stepper": 1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+    return render(request, "index.html", {"stepper":1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
 
     return redirect('index')
-
 
 def search(request, *args, **kwargs):
     # print(args, kwargs)
     query = request.GET.get("query", 'nema')
     if not apps.get_app_config('core').current_visualizer:
         if apps.get_app_config('core').base_graph is None:
-            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph, 'stepper': 1})
+            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph, 'stepper':1})
         else:
-            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph, 'stepper': 2})
+            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph, 'stepper':2})
     old_graph = apps.get_app_config('core').current_graph
     graph = Graph()
     for vertex in old_graph.vertices:
         search_vertex(graph, vertex, query)
-
+    
     apps.get_app_config('core').current_graph = create_graph(old_graph, graph)
 
     current_visualizer = apps.get_app_config('core').current_visualizer
@@ -127,13 +114,12 @@ def search(request, *args, **kwargs):
     elif (current_visualizer == "ComplexVisualizer"):
         return complex_visualization(request)
 
-
 def filter(request):
-    # todo implement filter
-    query = request.GET.get("query", "")
+    #todo implement filter
+    query = request.GET.get("query", "");
     attribute, operator, value = parse_query(query)
     print(attribute, operator, type(value))
-
+    
     old_graph = apps.get_app_config('core').current_graph
     graph = Graph(old_graph.name)
     for vertex in old_graph.vertices:
@@ -148,19 +134,18 @@ def filter(request):
     else:
         return redirect('index')
 
-
 def add_vertex(graph, vertex):
     new_vertex = Vertex(vertex.id)
-
+            
     new_vertex_found = find_vertex_in_graph(graph, new_vertex)
     if not new_vertex_found:
         new_vertex.attributes.update(vertex.attributes)
     else:
         new_vertex = new_vertex_found
-
+    
     for e in vertex.edges:
         destination = Vertex(e.destination.id)
-
+    
         destination_found = find_vertex_in_graph(graph, destination)
         if not destination_found:
             destination.attributes.update(e.destination.attributes)
@@ -168,9 +153,8 @@ def add_vertex(graph, vertex):
         else:
             destination = destination_found
 
-        new_vertex.add_edge(Edge(new_vertex, destination,
-                            e.relation_name, e.weight, e.is_directed))
-
+        new_vertex.add_edge(Edge(new_vertex, destination, e.relation_name, e.weight, e.is_directed))
+    
     # add if it isn't already added
     if not new_vertex_found:
         graph.insert_vertex(new_vertex)
@@ -182,8 +166,7 @@ def filter_vertex(graph, vertex, attribute, operator, value):
             attribute_value = vertex.attributes[attr]
             if isinstance(value, date):
                 try:
-                    attribute_value = datetime.strptime(
-                        attribute_value, '%Y-%m-%d').date()
+                    attribute_value = datetime.strptime(attribute_value, '%Y-%m-%d').date()
                 except ValueError:
                     continue
             elif isinstance(value, float):
@@ -191,7 +174,7 @@ def filter_vertex(graph, vertex, attribute, operator, value):
                     attribute_value = float(attribute_value)
                 except ValueError:
                     continue
-
+            
             if operator == "=" and value == attribute_value:
                 add_vertex(graph, vertex)
                 return
@@ -208,7 +191,6 @@ def filter_vertex(graph, vertex, attribute, operator, value):
                 add_vertex(graph, vertex)
                 return
 
-
 def parse_query(query):
     attribute = ""
     operator = ""
@@ -216,12 +198,12 @@ def parse_query(query):
     operator_list = ["<", ">", "="]
     for c in query:
         if not operator and c not in operator_list:
-            attribute += c
+            attribute += c;
         elif c in operator_list:
             operator += c
         else:
             value += c
-
+    
     attribute = attribute.strip()
     operator = operator.strip()
     new_value = value.strip()
@@ -230,7 +212,7 @@ def parse_query(query):
         new_value = float(value)
     except ValueError:
         pass
-
+    
     try:
         new_value = datetime.strptime(value, '%Y-%m-%d').date()
     except ValueError:
@@ -238,13 +220,11 @@ def parse_query(query):
 
     return attribute, operator, new_value
 
-
 def find_vertex_in_graph(graph, vertex):
     for v in graph.vertices:
         if v.id == vertex.id:
             return v
     return None
-
 
 def search_vertex(graph, vertex, query):
     for attr in vertex.attributes:
@@ -253,16 +233,16 @@ def search_vertex(graph, vertex, query):
         # print(value)
         if (query.lower() in attr.lower()) or (query.lower() in str(value).lower()):
             new_vertex = Vertex(vertex.id)
-
+            
             new_vertex_found = find_vertex_in_graph(graph, new_vertex)
             if not new_vertex_found:
                 new_vertex.attributes.update(vertex.attributes)
             else:
                 new_vertex = new_vertex_found
-
+            
             for e in vertex.edges:
                 destination = Vertex(e.destination.id)
-
+            
                 destination_found = find_vertex_in_graph(graph, destination)
                 if not destination_found:
                     destination.attributes.update(e.destination.attributes)
@@ -270,9 +250,8 @@ def search_vertex(graph, vertex, query):
                 else:
                     destination = destination_found
 
-                new_vertex.add_edge(
-                    Edge(new_vertex, destination, e.relation_name, e.weight, e.is_directed))
-
+                new_vertex.add_edge(Edge(new_vertex, destination, e.relation_name, e.weight, e.is_directed))
+            
             # add if it isn't already added
             if not new_vertex_found:
                 graph.insert_vertex(new_vertex)
@@ -282,16 +261,16 @@ def search_vertex(graph, vertex, query):
     for edge in vertex.edges:
         if search_edge(edge, query):
             new_vertex = Vertex(vertex.id)
-
+            
             new_vertex_found = find_vertex_in_graph(graph, new_vertex)
             if not new_vertex_found:
                 new_vertex.attributes.update(vertex.attributes)
             else:
                 new_vertex = new_vertex_found
-
+            
             for e in vertex.edges:
                 destination = Vertex(e.destination.id)
-
+            
                 destination_found = find_vertex_in_graph(graph, destination)
                 if not destination_found:
                     destination.attributes.update(e.destination.attributes)
@@ -299,22 +278,19 @@ def search_vertex(graph, vertex, query):
                 else:
                     destination = destination_found
 
-                new_vertex.add_edge(
-                    Edge(new_vertex, destination, e.relation_name, e.weight, e.is_directed))
-
+                new_vertex.add_edge(Edge(new_vertex, destination, e.relation_name, e.weight, e.is_directed))
+            
             # add if it isn't already added
             if not new_vertex_found:
                 graph.insert_vertex(new_vertex)
-
+            
             return
-
-
+        
 def search_edge(edge, query):
     relation_name = edge.relation_name
     if relation_name.lower() == query.lower():
         return True
-
-
+    
 def create_graph(old_graph, graph):
     new_graph = Graph()
     new_graph.vertices.extend(graph.vertices)
@@ -327,16 +303,14 @@ def create_graph(old_graph, graph):
                     new_vertex = Vertex(vertex.id)
                     new_vertex.attributes.update(vertex.attributes)
                     new_graph.insert_vertex(new_vertex)
-                new_vertex.add_edge(
-                    Edge(new_vertex, destination, edge.relation_name, edge.weight, edge.is_directed))
+                new_vertex.add_edge(Edge(new_vertex, destination, edge.relation_name, edge.weight, edge.is_directed))
     return new_graph
 
 
 def complex_visualization(request):
     visualizers = apps.get_app_config('core').visualizers
     graph = apps.get_app_config('core').current_graph
-    path = os.path.abspath(os.path.join(
-        os.path.dirname(__file__), "templates", "mainView.html"))
+    path = os.path.abspath(os.path.dirname(__file__)) + "\\templates\\mainView.html"
 
     for v in visualizers:
         if v.identifier() == "complex-visualizer":
@@ -345,7 +319,6 @@ def complex_visualization(request):
 
     return redirect('index')
 
-
 def simple_visualization(request):
     visualizers = apps.get_app_config('core').visualizers
     graph = apps.get_app_config('core').current_graph
@@ -353,9 +326,8 @@ def simple_visualization(request):
         if v.identifier() == "simple-visualizer":
             # print(v.identifier())
             # return HttpResponse(v.visualize(apps.get_app_config('core').base_graph, request))
-
-            path = os.path.abspath(os.path.join(
-                os.path.dirname(__file__), "templates", "mainView.html"))
+            
+            path = os.path.abspath(os.path.dirname(__file__)) + "\\templates\\mainView.html"
             with open(path, 'w') as file:
                 file.write(v.visualize(graph, request))
 
@@ -363,15 +335,12 @@ def simple_visualization(request):
                 tree = apps.get_app_config('core').tree
                 visualizers = []
                 for v in apps.get_app_config('core').visualizers:
-                    visualizers.append(
-                        {"name": v.name(), "identifier": v.identifier()})
+                    visualizers.append({"name": v.name(), "identifier": v.identifier()})
                 loaders = []
                 for l in apps.get_app_config('core').loaders:
-                    loaders.append(
-                        {"name": l.name(), "identifier": l.identifier()})
+                    loaders.append({"name": l.name(), "identifier": l.identifier()})
                 return redirect("index")
                 # return render(request, "index.html", {"stepper":1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
-
 
 def load_relationships_of_vertex(request, id):
     graph = apps.get_app_config('core').current_graph
@@ -389,15 +358,16 @@ def load_relationships_of_vertex(request, id):
         tree = apps.get_app_config('core').tree
         visualizers = []
         for v in apps.get_app_config('core').visualizers:
-            visualizers.append(
-                {"name": v.name(), "identifier": v.identifier()})
+            visualizers.append({"name": v.name(), "identifier": v.identifier()})
         loaders = []
         for l in apps.get_app_config('core').loaders:
             loaders.append({"name": l.name(), "identifier": l.identifier()})
-        return render(request, "index.html", {"stepper": 1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+        return render(request, "index.html", {"stepper":1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
     # print(id)
     # if id == "simple_visualizer":
     #     return redirect("simple_visualizer")
     # if id == "complex_visualizer":
     #     return redirect("complex_visualizer")
     return redirect(id)
+
+

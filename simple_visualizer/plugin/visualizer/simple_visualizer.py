@@ -119,10 +119,10 @@ class SimpleVisualizer(BaseVisualizer):
             var text = "";
             text += "ID:" + el.id + "\\n";
             if(current != null) {
-                simpleView(vertices[current.id.replace("ID_", "")], '#003B73')
+                simpleView(vertices[parseInt(current.id.replace("ID_", ""))], '#003B73')
             }
             current = el;
-            var node = vertices[el.id.replace("ID_", "")];
+            var node = vertices[parseInt(el.id.replace("ID_", ""))];
             simpleView(node, "red")
             for(var i=0;i<node.attributes.length;i++) {
                 text += node.attributes[i] + "\\n";

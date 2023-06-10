@@ -59,11 +59,11 @@ class ComplexVisualizer(BaseVisualizer):
                         var text = "";
                         text += "ID:" + el.id + "\\n";
                         if(current != null) {
-                            complexView(nodesGraph[current.id.replace("ID_", "")], '#003B73');
+                            complexView(nodesGraph[parseInt(current.id.replace("ID_", ""))], '#003B73');
                         }
                         
                         current = el;
-                        var node = nodesGraph[el.id.replace("ID_", "")];
+                        var node = nodesGraph[parseInt(el.id.replace("ID_", ""))];
                         complexView(node, "red");
                         for(var i=0;i<node.attributes.length;i++) {
                             text += node.attributes[i] + "\\n";

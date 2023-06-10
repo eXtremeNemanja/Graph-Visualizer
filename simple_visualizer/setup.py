@@ -5,7 +5,7 @@ setup(
     author="Hristina Adamović",
     version="0.1",
     packages=find_packages(),
-    namespace_packages=['plugin'],
+    namespace_packages=["plugin", "plugin.visualizer"],
     entry_points={
         'visualizer':
         ['simple-visualizer=plugin.visualizer.simple_visualizer:SimpleVisualizer']

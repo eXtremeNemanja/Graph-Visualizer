@@ -27,7 +27,7 @@ class SimpleVisualizer(BaseVisualizer):
             links.append(link)
             
 
-        view = """
+        view = """{% extends "index.html" %}
         {% block mainView %}
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
        

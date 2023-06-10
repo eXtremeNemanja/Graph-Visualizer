@@ -23,24 +23,24 @@
             {% endfor %}
             <a class="right-plugins" href="{% url 'simple_visualizer' %}">Simple View</a>
             <a class="right-plugins" href="{% url 'complex_visualizer' %}">Complex View</a>
-    </div>
-    <div class="choose-file">
-        <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
-            <input required type="file" name="file" id="file"/>
-            {% if file_missing %}
+        </div>
+        <div class="choose-file">
+            <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
+                <input required type="file" name="file" id="file" />
+                {% if file_missing %}
                 <small class="error">Upload file is required</small>
-            {% endif %}
-            <input id="key" class="unique-key" name="unique_key" placeholder="custom unique key (default: id)" />
-            <input type="hidden" id="loader" name="loader" />
-            {% if stepper == 1 %}
+                {% endif %}
+                <input id="key" class="unique-key" name="unique_key" placeholder="custom unique key (default: id)" />
+                <input type="hidden" id="loader" name="loader" />
+                {% if stepper == 1 %}
                 <p class="stepper">1. Please choose a file and then a parser</p>
-            {% else %}
+                {% else %}
                 <p class="stepper">2. Please choose a view</p>
-            {% endif %}
-        </form>
-    </div>
+                {% endif %}
+            </form>
+        </div>
 
-    
+
     </div>
 
     {% block index %}{% endblock %}
@@ -49,21 +49,28 @@
 
 <script>
     function scrollIfNeeded(element, container) {
+        if (element == null)
+            return
         if (element.offsetTop < container.scrollTop) {
             container.scrollTop = element.offsetTop;
-         }
+        }
         else {
             const offsetBottom = element.offsetTop + element.offsetHeight;
             const scrollBottom = container.scrollTop + container.offsetHeight;
             if (offsetBottom > scrollBottom) {
-              container.scrollTop = offsetBottom - container.offsetHeight;
+                container.scrollTop = offsetBottom - container.offsetHeight;
             }
         }
         container.scrollLeft = element.offsetLeft - 10;
     }
-    lastOpenedNode = document.getElementById('last-opened-node').innerHTML;
-    scrollIfNeeded(document.getElementById(lastOpenedNode), document.getElementById('tree'));
-    document.getElementById(lastOpenedNode).classList.add("selected-item");
+    if (document.getElementById('last-opened-node') != null) {
+        lastOpenedNode = document.getElementById('last-opened-node').innerHTML;
+        element = document.getElementById(lastOpenedNode);
+        if (element) {
+            scrollIfNeeded(element, document.getElementById('tree'));
+            element.classList.add("selected-item");
+        }
+    }
 </script>
 
 </html>

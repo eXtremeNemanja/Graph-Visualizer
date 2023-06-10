@@ -1,0 +1,282 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+h2 {
+    margin: 10px 0 0 15px;
+}
+
+.stepper{
+    float: right;
+    text-align: center;
+    margin-right: 33%;
+    font-weight: bold;
+    color: white;
+}
+
+#file{
+    float: left;
+}
+
+.view{
+    min-width: 100vw;
+    min-height: 85vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.left {
+    width: 25%;
+    border-right: solid black 1px;
+    overflow: scroll;
+    resize: horizontal;
+    z-index: 5;
+    background-color: white;
+}
+
+.right {
+    display: flex;
+    width: 75%;
+    flex-direction: column;
+}
+
+.top {
+    border-bottom: solid black 1px;
+    height: 70%;
+}
+
+.bottom{
+    height: fit-content;
+    display: flex;
+    height: 30%;
+    flex-direction: row;
+}
+
+.bottom-left{
+    width: 70%;
+    border-right: solid black 1px;
+}
+
+.bottom-right{
+    width: 30%;
+}
+
+#navbar {
+    display: flex;
+    flex-direction: column;
+}
+
+.topnav {
+    height: fit-content;
+    background-color: #BFD7ED;
+}
+
+#title {
+    font-weight: bolder;
+    float: left;
+    padding: 15px 0;
+    margin-left: 20px;
+    margin-right: 50px;
+}
+
+
+.left-plugins {
+    font-size: medium !important;
+    float: left;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.right-plugins {
+    font-size: medium !important;
+    float: right;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    margin-right: 20px;
+}
+
+.topnav a:hover {
+    background-color: whitesmoke;
+    color: black;
+}
+
+.choose-file {
+    height: fit-content;
+    background-color: #60A3D9;
+}
+
+::-webkit-file-upload-button {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 20px;
+    font-family: 'Poppins', sans-serif;
+    width: 120px;
+    font-weight: bolder;
+}
+
+.tools{
+    margin-left: 125px;
+}
+
+#reset {
+    width: 100%;
+    text-align: center;
+    margin-top: 1.5vh;
+}
+
+.tools input {
+    margin-top: 20px;
+    margin-right: 15px;
+    width: 300px;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid;
+    padding: 0 15px 0 15px;
+}
+
+.tools .disabled-btn {
+    background-color: gray;
+}
+
+.tools button {
+    height: 30px;
+    width: 100px;
+    background-color: #60A3D9;
+    border-radius: 4px;
+    border: 1px white;
+    color: white;
+}
+
+.disabled-btn:hover {
+    cursor: auto;
+    background-color: gray;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: #4678a0;
+}
+
+.error {
+    color: rgb(145, 0, 0);
+    font-weight: bold;
+    float: left;
+    margin-top: 17px;
+}
+
+.tree {
+    height: 78vh;
+    white-space: nowrap;
+    padding: 5px;
+}
+
+
+.tree a {
+    all: unset;
+    cursor: pointer;
+}
+
+
+.tree-item {
+    display: block;
+    font-size: 12px;
+    padding: 7px;
+    border-radius: 7px;
+    margin-left: 12px;
+    margin-bottom: 7px;
+    margin-top: 7px;
+    width: 100%;
+    cursor: pointer;
+    color: black;
+}
+
+.tree-item:hover {
+    color: black;
+}
+
+a {
+    cursor: pointer;
+    all: unset;
+}
+
+.tree-node {
+    background-color: #d0e5f8;
+    font-weight: bold;
+}
+
+.tree-node:hover {
+    background-color: #c5e0fa;
+}
+
+.tree-edge {
+    background-color: #ededed;
+}
+
+.tree-edge:hover {
+    background-color: #ffffff;
+}
+
+.selected-node {
+    background-color: black;
+    color: white;
+}
+
+.selected-item,
+.selected-item:hover {
+    background-color: black;
+    color: white;
+}
+
+.list {
+    width: fit-content;
+}
+
+.arrow {
+    color: grey;
+    vertical-align: middle;
+    font-size: 8px;
+}
+
+.label {
+    font-size: 8px;
+    vertical-align: middle;
+    margin-left: 6px;
+    margin-right: 6px;
+    font-style: italic;
+}
+
+.unique-key {
+    height: 15.5px;
+    width: 200px;
+    padding: 5px;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #6e90ad81;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #d0e5f8ab;
+}

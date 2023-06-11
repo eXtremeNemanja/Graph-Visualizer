@@ -94,11 +94,10 @@
         const dynamicTreeContainer = document.getElementById('dynamic-tree');
 
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', `/${nodeId}`, true);
+        xhr.open('GET', `/${nodeId};open`, true);
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                console.log(xhr.responseText)
                 dynamicTreeContainer.innerHTML = xhr.responseText;
 
                 const newToggles = dynamicTreeContainer.querySelectorAll('.node-toggle');

@@ -127,9 +127,35 @@ class SimpleVisualizer(BaseVisualizer):
             for(var i=0;i<node.attributes.length;i++) {
                 text += node.attributes[i] + "\\n";
             }
-            var url = "{% url 'select_tree_node' id=123 %}";
-                        var id = el.id.replace("ID_", "");
-                        document.location.href = url.replace('123', id);
+            id = el.id.replace("ID_", "");
+            const dynamicTreeContainer = document.getElementById('dynamic-tree');
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `/${id};select`, true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    dynamicTreeContainer.innerHTML = xhr.responseText;
+
+                    const newToggles = dynamicTreeContainer.querySelectorAll('.node-toggle');
+                    newToggles.forEach(toggle => {
+                        toggle.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            const newNode = this.parentNode;
+                            toggleNode(newNode);
+                        });
+                    });
+                    if (document.getElementById('last-opened-node') != null) {
+                        const lastOpenedNode = document.getElementById('last-opened-node').innerHTML;
+                        element = document.getElementById(lastOpenedNode);
+                        if (element) {
+                            scrollIfNeeded(element, document.getElementById('tree'));
+                            element.classList.add("selected-item");
+                        }
+                    }
+                }
+            };
+            xhr.send();
+
             alert(text);
         }
 

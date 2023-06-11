@@ -1,4 +1,5 @@
 <div id="dynamic-tree" class="tree">
+    <div hidden id="last-opened-node">{{ tree.last_opened }}</div>
     <div class="list">
         {% for node in tree.roots %}
         <a href="{% url 'alter_tree' id=node.id %}">

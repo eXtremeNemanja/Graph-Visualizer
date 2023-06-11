@@ -1,35 +1,35 @@
 <div id="{{ node.id }}" class="tree-item tree-node">
-    {% if node.opened %}
-    <span class="arrow">➖</span>
-    {% else %}
-    <span class="arrow">➕</span>
-    {% endif %}
-    <span class="label">Vertex</span>
-    {{ node.object.attributes }}
-    {% if node.opened %}
+    <a href="#" class="node-toggle">
+        {% if node.opened %}
+        <span class="arrow">➖</span>
+        {% else %}
+        <span class="arrow">➕</span>
+        {% endif %}
+        <span class="label">Vertex</span>
+        {{ node.object.attributes }}
+    </a>
+    <div class="node-children">
+        {% if node.opened %}
         {% for relation in node.children %}
-            <a href="{% url 'alter_tree' id=relation.id %}">
-        <div class="list">
-               <div id="{{ relation.id }}" class="tree-item tree-edge">
-                   {% if relation.opened %}
-                    <span class="arrow">➖</span>
-                    {% else %}
-                    <span class="arrow">➕</span>
-                    {% endif %}
-                       <span class="label">Edge</span>
-                    {{ relation.object }}
-                    {% if relation.opened %}
-                        {% for node in relation.children %}
-                        <div class="list">
-                            <a href="{% url 'alter_tree' id=node.id %}">
-                               {% include 'treeNode.html' %}
-                            </a>
-                        </div>
-                        {% endfor %}
-                    {% endif %}
+        <div id="{{ relation.id }}" class="tree-item tree-edge">
+            <a href="#" class="node-toggle">
+                {% if relation.opened %}
+                <span class="arrow">➖</span>
+                {% else %}
+                <span class="arrow">➕</span>
+                {% endif %}
+                <span class="label">Edge</span>
+                {{ relation.object }}
+                {% if relation.opened %}
+                <div class="node-children">
+                    {% for node in relation.children %}
+                    {% include 'treeNode.html' %}
+                    {% endfor %}
                 </div>
+                {% endif %}
             </a>
         </div>
         {% endfor %}
-    {% endif %}
+        {% endif %}
+    </div>
 </div>

@@ -16,29 +16,35 @@
     <div id="navbar">
         <div class="topnav">
             <span id="title">Graph Visualizer</span>
-                <a class="left-plugins" href="javascript:{}" onclick="document.getElementById('loader').value = 'XmlLoader'; document.getElementById('loader_form').submit();">XML Parser</a>
-                <a class="left-plugins" href="javascript:{}" onclick="document.getElementById('loader').value = 'JsonLoader'; document.getElementById('loader_form').submit();">JSON Parser</a>
-                <a class="left-plugins" href="javascript:{}" onclick="document.getElementById('loader').value = 'RDFLoader'; document.getElementById('loader_form').submit();">RDF Parser</a>
+            <a class="left-plugins" href="javascript:{}"
+                onclick="document.getElementById('loader').value = 'XmlLoader'; document.getElementById('loader_form').submit();">XML
+                Parser</a>
+            <a class="left-plugins" href="javascript:{}"
+                onclick="document.getElementById('loader').value = 'JsonLoader'; document.getElementById('loader_form').submit();">JSON
+                Parser</a>
+            <a class="left-plugins" href="javascript:{}"
+                onclick="document.getElementById('loader').value = 'RDFLoader'; document.getElementById('loader_form').submit();">RDF
+                Parser</a>
 
-                <a class="right-plugins" href="{% url 'simple_visualizer' %}">Simple View</a>
-                <a class="right-plugins" href="{% url 'complex_visualizer' %}">Complex View</a>
-            </div>
-
-            <div class="choose-file">
-                <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
-                    <input required type="file" name="file" id="file"/>
-                    {% if file_missing %}
-                        <small class="error">Upload file is required</small>
-                    {% endif %}
-                    <input type="hidden" id="loader" name="loader" />
-                    {% if stepper == 1 %}
-                        <p class="stepper">1. Please choose a file and then a parser</p>
-                    {% else %}
-                        <p class="stepper">2. Please choose a view</p>
-                    {% endif %}
-                </form>
-            </div>
+            <a class="right-plugins" href="{% url 'simple_visualizer' %}">Simple View</a>
+            <a class="right-plugins" href="{% url 'complex_visualizer' %}">Complex View</a>
         </div>
+
+        <div class="choose-file">
+            <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
+                <input required type="file" name="file" id="file" />
+                {% if file_missing %}
+                <small class="error">Upload file is required</small>
+                {% endif %}
+                <input type="hidden" id="loader" name="loader" />
+                {% if stepper == 1 %}
+                <p class="stepper">1. Please choose a file and then a parser</p>
+                {% else %}
+                <p class="stepper">2. Please choose a view</p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
 
 
     </div>
@@ -63,12 +69,62 @@
         }
         container.scrollLeft = element.offsetLeft - 10;
     }
+
     if (document.getElementById('last-opened-node') != null) {
-        lastOpenedNode = document.getElementById('last-opened-node').innerHTML;
+        const lastOpenedNode = document.getElementById('last-opened-node').innerHTML;
         element = document.getElementById(lastOpenedNode);
         if (element) {
             scrollIfNeeded(element, document.getElementById('tree'));
             element.classList.add("selected-item");
+        }
+    }
+
+    const nodeToggles = document.querySelectorAll('.node-toggle');
+    nodeToggles.forEach(toggle => {
+        toggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            const node = this.parentNode;
+            toggleNode(node);
+        });
+    });
+
+    function toggleNode(node) {
+        const nodeId = node.id;
+        const childrenContainer = node.querySelector('.node-children');
+        const dynamicTreeContainer = document.getElementById('dynamic-tree');
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `/${nodeId}`, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                console.log(xhr.responseText)
+                dynamicTreeContainer.innerHTML = xhr.responseText;
+
+                const newToggles = dynamicTreeContainer.querySelectorAll('.node-toggle');
+                newToggles.forEach(toggle => {
+                    toggle.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        const newNode = this.parentNode;
+                        toggleNode(newNode);
+                    });
+                });
+                document.getElementById('last-opened-node').innerHTML = node.id
+                element = document.getElementById(node.id);
+                if (element) {
+                    scrollIfNeeded(element, document.getElementById('tree'));
+                    element.classList.add("selected-item");
+                }
+            }
+        };
+        xhr.send();
+
+        const arrow = node.querySelector('.arrow');
+        const isClosed = arrow.textContent === '➕';
+        arrow.textContent = isClosed ? '➖' : '➕';
+
+        if (childrenContainer) {
+            childrenContainer.style.display = isClosed ? 'block' : 'none';
         }
     }
 </script>

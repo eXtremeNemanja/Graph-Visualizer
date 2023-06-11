@@ -117,11 +117,13 @@ class Graph(object):
 
     def check_if_true(self, vertex, connected):
         for edge in vertex.edges:
-            if connected[edge.source]:
-                return True
-            elif connected[edge.destination]:
-                return True
-
+            try:
+                if connected[edge.source]:
+                    return True
+                elif connected[edge.destination]:
+                    return True
+            except KeyError:
+                pass
         return False
 
     def check_as_true(self, edges, connected):

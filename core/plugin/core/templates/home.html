@@ -97,10 +97,10 @@
             const node = this.parentNode;
             let newSelected = node.querySelector("#object-id").innerHTML;
             if (current != null) {
-                complexView(current, "#003B73")
+                nodeView(current, "#003B73")
             }
             current = nodesGraph[newSelected];
-            complexView(current, "red");
+            nodeView(current, "red");
         });
     });
 
@@ -132,10 +132,10 @@
                         const node = this.parentNode;
                         let newSelected = node.querySelector("#object-id").innerHTML;
                         if (current != null) {
-                            complexView(current, "#003B73")
+                            nodeView(current, "#003B73")
                         }
                         current = nodesGraph[newSelected];
-                        complexView(current, "red");
+                        nodeView(current, "red");
                     });
                 });
                 document.getElementById('last-opened-node').innerHTML = node.id

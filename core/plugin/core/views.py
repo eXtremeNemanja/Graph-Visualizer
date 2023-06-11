@@ -414,3 +414,5 @@ def load_relationships_of_vertex(request, id):
             os.path.dirname(__file__), "templates", "treeView.html")), {'tree': tree})
 
         return HttpResponse(tree_view_html)
+    else:
+        return redirect("index")

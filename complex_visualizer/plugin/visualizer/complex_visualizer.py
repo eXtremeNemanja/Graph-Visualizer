@@ -47,8 +47,6 @@ class ComplexVisualizer(BaseVisualizer):
 
                     var nodesGraph = JSON.parse("{{nodes |escapejs}}");
                     var linksGraph = JSON.parse("{{links |escapejs}}");
-                    var selected = document.getElementById('last-opened-node').innerHTML;
-                    alert(selected);
 
                     linksGraph.forEach(function(link) {
                     link.source = nodesGraph[link.source];
@@ -70,10 +68,10 @@ class ComplexVisualizer(BaseVisualizer):
                         for(var i=0;i<node.attributes.length;i++) {
                             text += node.attributes[i] + "\\n";
                         }
-                        alert(text);
-                        var url = "{% url 'alter_tree' id=123 %}";
+                        var url = "{% url 'select_tree_node' id=123 %}";
                         var id = el.id.replace("ID_", "");
                         document.location.href = url.replace('123', id);
+                        alert(text);
                     }
 
                         var force = d3.layout.force() //kreiranje force layout-a
@@ -109,8 +107,6 @@ class ComplexVisualizer(BaseVisualizer):
                         d3.selectAll('.node').each(function(d){complexView(d, '#003B73');});
 
                         function complexView(d, color) {
-                            if (d.id == selected || d.id.replace("ID_", "")==selected) 
-                                color = "red";
                             var length = 10;
                             for(var i=0;i<d.attributes.length;i++) {
                                 if(length<d.attributes[i].length) length = d.attributes[i].length
@@ -160,8 +156,6 @@ class ComplexVisualizer(BaseVisualizer):
                         }
 
                     </script>
-
-                    <script  src="static/birdView.js"></script>
                     """
 
 

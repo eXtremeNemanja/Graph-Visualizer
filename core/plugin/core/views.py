@@ -406,3 +406,28 @@ def load_relationships_of_vertex(request, id):
     # if id == "complex_visualizer":
     #     return redirect("complex_visualizer")
     return redirect(id)
+
+def select_tree_node(request, id):
+    graph = apps.get_app_config('core').current_graph
+    tree = apps.get_app_config('core').tree
+    if (id.isnumeric()):
+        id = int(id)
+    node = tree.find_node_by_vertex_id(id)
+    if node.opened:
+        node.close()
+        if (node.parent):
+            tree.last_opened = node.parent.id
+    else:
+        node.open_parents()
+        tree.last_opened = node.id
+    graph = apps.get_app_config('core').base_graph
+    tree = apps.get_app_config('core').tree
+    visualizers = []
+    for v in apps.get_app_config('core').visualizers:
+        visualizers.append(
+            {"name": v.name(), "identifier": v.identifier()})
+    loaders = []
+    for l in apps.get_app_config('core').loaders:
+        loaders.append({"name": l.name(), "identifier": l.identifier()})
+    return render(request, "index.html", {"stepper": 1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+

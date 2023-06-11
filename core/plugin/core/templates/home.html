@@ -42,11 +42,8 @@
                         <small class="error">Upload file is required</small>
                     {% endif %}
                     <input type="hidden" id="loader" name="loader" />
-                    {% if stepper == 1 %}
-                        <p class="stepper">1. Please choose a file and then a parser</p>
-                    {% else %}
-                        <p class="stepper">2. Please choose a view</p>
-                    {% endif %}
+                    <p class="stepper">Please choose a file, then a parser and then choose a view</p>
+
                 </form>
                 <form id="simple_vis" enctype="multipart/form-data" method="post" action="{% url 'simple_visualizer' %}">
                     <input required type="hidden" name="simple" id="simple"/>

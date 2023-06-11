@@ -1,6 +1,8 @@
 import os
+import time
 from datetime import datetime, date
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.apps.registry import apps
 from .models import Edge, Graph, Vertex
 from django.template import engines
@@ -11,7 +13,7 @@ from django.http import HttpResponse
 
 def index(request, file_missing=False):
     print("Log",  "Logging")
-    graph = apps.get_app_config('core').base_graph
+    graph = apps.get_app_config('core').current_graph
     tree = apps.get_app_config('core').tree
     visualizers = []
     for v in apps.get_app_config('core').visualizers:
@@ -342,6 +344,9 @@ def complex_visualization(request):
             with open(path, 'w') as file:
                 file.write(v.visualize(graph, request))
 
+    # reload_url = reverse('index') + '?reload=true'
+    # return redirect(reload_url)
+    time.sleep(2)
     return redirect('index')
 
 
@@ -357,18 +362,20 @@ def simple_visualization(request):
             with open(path, 'w') as file:
                 file.write(v.visualize(graph, request))
 
-                graph = apps.get_app_config('core').base_graph
-                tree = apps.get_app_config('core').tree
-                visualizers = []
-                for v in apps.get_app_config('core').visualizers:
-                    visualizers.append(
-                        {"name": v.name(), "identifier": v.identifier()})
-                loaders = []
-                for l in apps.get_app_config('core').loaders:
-                    loaders.append(
-                        {"name": l.name(), "identifier": l.identifier()})
-                return redirect("index")
-                # return render(request, "index.html", {"stepper":1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+    graph = apps.get_app_config('core').current_graph
+    tree = apps.get_app_config('core').tree
+    visualizers = []
+    for v in apps.get_app_config('core').visualizers:
+        visualizers.append(
+            {"name": v.name(), "identifier": v.identifier()})
+    loaders = []
+    for l in apps.get_app_config('core').loaders:
+        loaders.append(
+            {"name": l.name(), "identifier": l.identifier()})
+    
+    time.sleep(2)
+    return redirect("index")
+    # return render(request, "index.html", {"stepper":1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
 
 
 def load_relationships_of_vertex(request, id):

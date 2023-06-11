@@ -12,7 +12,7 @@ h2 {
     text-align: center;
     margin-right: 33%;
     font-weight: bold;
-    color: white;
+    color: black;
 }
 
 #file {
@@ -69,7 +69,7 @@ h2 {
 
 .topnav {
     height: fit-content;
-    background-color: #BFD7ED;
+    background-color: #60A3D9;
 }
 
 #title {
@@ -79,7 +79,6 @@ h2 {
     margin-left: 20px;
     margin-right: 50px;
 }
-
 
 .left-plugins {
     font-size: medium !important;
@@ -109,7 +108,7 @@ h2 {
 
 .choose-file {
     height: fit-content;
-    background-color: #60A3D9;
+    background-color: #BFD7ED;
 }
 
 ::-webkit-file-upload-button {

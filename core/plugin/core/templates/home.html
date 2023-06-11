@@ -16,37 +16,49 @@
     <div id="navbar">
         <div class="topnav">
             <span id="title">Graph Visualizer</span>
-            <a class="left-plugins" href="javascript:{}"
-                onclick="document.getElementById('loader').value = 'XmlLoader'; document.getElementById('loader_form').submit();">XML
-                Parser</a>
-            <a class="left-plugins" href="javascript:{}"
-                onclick="document.getElementById('loader').value = 'JsonLoader'; document.getElementById('loader_form').submit();">JSON
-                Parser</a>
-            <a class="left-plugins" href="javascript:{}"
-                onclick="document.getElementById('loader').value = 'RDFLoader'; document.getElementById('loader_form').submit();">RDF
-                Parser</a>
-
-            <a class="right-plugins" href="{% url 'simple_visualizer' %}">Simple View</a>
-            <a class="right-plugins" href="{% url 'complex_visualizer' %}">Complex View</a>
-        </div>
-
-        <div class="choose-file">
-            <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
-                <input required type="file" name="file" id="file" />
-                {% if file_missing %}
-                <small class="error">Upload file is required</small>
+            {% for l in loaders %}
+            <a class="left-plugins" role="button"
+                onclick="document.getElementById('loader').value = '{{ l.identifier }}'; document.getElementById('loader_form').submit();">
+                {{ l.name }}</a>
+            {% endfor %}
+            {% for v in visualizers %}
+                {% if v.identifier == 'simple-visualizer' %}
+                    <a class="right-plugins" role="button"
+                        onclick="document.getElementById('simple').value = '{{ v.identifier }}'; document.getElementById('simple_vis').submit();">
+                        {{ v.name }}</a>
                 {% endif %}
-                <input type="hidden" id="loader" name="loader" />
-                {% if stepper == 1 %}
-                <p class="stepper">1. Please choose a file and then a parser</p>
-                {% else %}
-                <p class="stepper">2. Please choose a view</p>
+                {% if v.identifier == 'complex-visualizer' %}
+                    <a class="right-plugins" role="button"
+                        onclick="document.getElementById('complex').value = '{{ v.identifier }}'; document.getElementById('complex_vis').submit();">
+                        {{ v.name }}</a>
                 {% endif %}
-            </form>
+            {% endfor %}
+            </div>
+
+            <div class="choose-file">
+                <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
+                    <input required type="file" name="file" id="file"/>
+                    {% if file_missing %}
+                        <small class="error">Upload file is required</small>
+                    {% endif %}
+                    <input type="hidden" id="loader" name="loader" />
+                    <p class="stepper">Please choose a file, then a parser and then choose a view</p>
+
+                </form>
+                <form id="simple_vis" enctype="multipart/form-data" method="post" action="{% url 'simple_visualizer' %}">
+                    <input required type="hidden" name="simple" id="simple"/>
+                    {% if file_missing %}
+                        <small class="error">Upload file is required</small>
+                    {% endif %}
+                </form>
+                <form id="complex_vis" enctype="multipart/form-data" method="post" action="{% url 'complex_visualizer' %}">
+                    <input required type="hidden" name="complex" id="complex"/>
+                    {% if file_missing %}
+                        <small class="error">Upload file is required</small>
+                    {% endif %}
+                </form>
+            </div>
         </div>
-    </div>
-
-
     </div>
 
     {% block index %}{% endblock %}

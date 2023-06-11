@@ -23,10 +23,8 @@ def index(request, file_missing=False):
     loaders = []
     for l in apps.get_app_config('core').loaders:
         loaders.append({"name": l.name(), "identifier": l.identifier()})
-    stepper = 1
-    if (graph is not None):
-        stepper = 2
-    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders, 'stepper': stepper})
+    
+    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
 
 
 def reset(request):
@@ -40,9 +38,9 @@ def reset(request):
         return complex_visualization(request)
     else:
         if (apps.get_app_config('core').base_graph is None):
-            return render(request, "index.html", {"stepper": 1})
+            return render(request, "index.html")
         else:
-            return render(request, "index.html", {"stepper": 2})
+            return render(request, "index.html")
 
 
 def new_data(request):
@@ -62,7 +60,7 @@ def load(request):
     unique_key = request.POST.get("key")
     # loader = apps.get_app_config('core').get_loader(request.POST.get('loader'))
     if not chosen_file:
-        return render(request, "index.html", {"stepper": 1, "file_missing": True})
+        return render(request, "index.html", {"file_missing": True})
     else:
         # file = request.FILES['file']
         print(chosen_file)
@@ -78,11 +76,19 @@ def load(request):
                     'core').base_graph
                 apps.get_app_config('core').load_tree()
 
-    # graph = apps.get_app_config('core').base_graph
-    # tree = apps.get_app_config('core').tree
-    # visualizers = []
-    # return render(request, "index.html", {"stepper":2, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
-    return redirect("index")
+    visualizers = apps.get_app_config('core').visualizers
+    loaders = apps.get_app_config('core').loaders
+    visualizers = []
+    for v in apps.get_app_config('core').visualizers:
+        visualizers.append({"name": v.name(), "identifier": v.identifier()})
+    loaders = []
+    for l in apps.get_app_config('core').loaders:
+        loaders.append({"name": l.name(), "identifier": l.identifier()})
+    graph = apps.get_app_config('core').current_graph
+    tree = apps.get_app_config('core').tree
+    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+
+    # return redirect("index")
 
 
 def visualize(request, type):
@@ -101,7 +107,7 @@ def visualize(request, type):
     loaders = []
     for l in apps.get_app_config('core').loaders:
         loaders.append({"name": l.name(), "identifier": l.identifier()})
-    return render(request, "index.html", {"stepper": 1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
 
     return redirect('index')
 
@@ -111,9 +117,9 @@ def search(request, *args, **kwargs):
     query = request.GET.get("query", 'nema')
     if not apps.get_app_config('core').current_visualizer:
         if apps.get_app_config('core').base_graph is None:
-            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph, 'stepper': 1})
+            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph})
         else:
-            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph, 'stepper': 2})
+            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph})
     old_graph = apps.get_app_config('core').current_graph
     graph = Graph()
     for vertex in old_graph.vertices:
@@ -180,7 +186,7 @@ def add_vertex(graph, vertex):
 def filter_vertex(graph, vertex, attribute, operator, value):
     for attr in vertex.attributes:
         if attr == attribute:
-            attribute_value = vertex.attributes[attr]
+            attribute_value = vertex.attributes[attr].strip()
             if isinstance(value, date):
                 try:
                     attribute_value = datetime.strptime(

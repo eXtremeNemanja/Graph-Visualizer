@@ -1,9 +1,10 @@
-import json;
+import json
 
 from plugin.core.services.visualizer import BaseVisualizer
 from plugin.core.models import Vertex, Edge, Graph
 
 from django.template import engines
+
 
 class ComplexVisualizer(BaseVisualizer):
     def identifier(self):
@@ -17,7 +18,8 @@ class ComplexVisualizer(BaseVisualizer):
         for v in graph.vertices:
             attributes = []
             for attribute_key in v.attributes.keys():
-                attributes.append(attribute_key + ": " + str(v.attributes[attribute_key]))
+                attributes.append(attribute_key + ": " +
+                                  str(v.attributes[attribute_key]))
             nodes[v.id] = {
                 "id": "ID_" + str(v.id),
                 "attributes": attributes
@@ -43,8 +45,9 @@ class ComplexVisualizer(BaseVisualizer):
                     </style>
 
                     <script>
-                    var current = null;
 
+                    var current = null;
+                    
                     var nodesGraph = JSON.parse("{{nodes |escapejs}}");
                     var linksGraph = JSON.parse("{{links |escapejs}}");
 
@@ -62,8 +65,8 @@ class ComplexVisualizer(BaseVisualizer):
                             complexView(nodesGraph[current.id.replace("ID_", "")], '#003B73');
                         }
                         
-                        current = el;
                         var node = nodesGraph[el.id.replace("ID_", "")];
+                        current = node;
                         complexView(node, "red");
                         for(var i=0;i<node.attributes.length;i++) {
                             text += node.attributes[i] + "\\n";
@@ -221,11 +224,12 @@ class ComplexVisualizer(BaseVisualizer):
                             d3.select("#birdView").select('g').attr("transform", "translate ("+[-x*scale, -y*scale]+") scale("+ scale +")");
                         }
 
+                
                     </script>
                     """
 
-
         django_engine = engines['django']
         view_html = django_engine.from_string(view)
-        template_html = view_html.render({"nodes": json.dumps(nodes), "links": json.dumps(links)}, request)
+        template_html = view_html.render(
+            {"nodes": json.dumps(nodes), "links": json.dumps(links)}, request)
         return template_html

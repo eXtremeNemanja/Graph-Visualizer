@@ -1,0 +1,37 @@
+<div id="{{ node.id }}" class="tree-item tree-node">
+    <a href="#" class="node-toggle">
+        {% if node.opened %}
+        <span class="arrow">➖</span>
+        {% else %}
+        <span class="arrow">➕</span>
+        {% endif %}
+        <span class="label">Vertex</span>
+        <span id="object-id" hidden>{{ node.object.id }}</span>
+        {{ node.object.attributes }}
+    </a>
+    <div class="node-children">
+        {% if node.opened %}
+        {% for relation in node.children %}
+        <div id="{{ relation.id }}" class="tree-item tree-edge">
+            <a href="#" class="node-toggle">
+                {% if relation.opened %}
+                <span class="arrow">➖</span>
+                {% else %}
+                <span class="arrow">➕</span>
+                {% endif %}
+                <span class="label">Edge</span>
+                <span id="object-id" hidden>{{ relation.object }}</span>
+                {{ relation.object }}
+                {% if relation.opened %}
+                <div class="node-children">
+                    {% for node in relation.children %}
+                    {% include 'treeNode.html' %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </a>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>

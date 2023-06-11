@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Graph visualization</title>
+    {% load static %}
+    <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div id="navbar">
+        <div class="topnav">
+            <span id="title">Graph Visualizer</span>
+            {% for l in loaders %}
+            <a class="left-plugins" role="button"
+                onclick="document.getElementById('loader').value = '{{ l.identifier }}'; document.getElementById('loader_form').submit();">
+                {{ l.name }}</a>
+            {% endfor %}
+            {% for v in visualizers %}
+                {% if v.identifier == 'simple-visualizer' %}
+                    <a class="right-plugins" role="button"
+                        onclick="document.getElementById('simple').value = '{{ v.identifier }}'; document.getElementById('simple_vis').submit();">
+                        {{ v.name }}</a>
+                {% endif %}
+                {% if v.identifier == 'complex-visualizer' %}
+                    <a class="right-plugins" role="button"
+                        onclick="document.getElementById('complex').value = '{{ v.identifier }}'; document.getElementById('complex_vis').submit();">
+                        {{ v.name }}</a>
+                {% endif %}
+            {% endfor %}
+            </div>
+
+            <div class="choose-file">
+                <form id="loader_form" enctype="multipart/form-data" method="post" action="{% url 'load' %}">
+                    <input required type="file" name="file" id="file"/>
+                    {% if file_missing %}
+                        <small class="error">Upload file is required</small>
+                    {% endif %}
+                    {% if extension_missmatch %}
+                        <small class="error">Uploaded file cannot be parsed with selected loader</small>
+                    {% endif %}
+                    <input type="hidden" id="loader" name="loader" />
+                    <p class="stepper">Please choose a file, then a parser and then choose a view</p>
+
+                </form>
+                <form id="simple_vis" enctype="multipart/form-data" method="post" action="{% url 'simple_visualizer' %}">
+                    <input required type="hidden" name="simple" id="simple"/>
+                    {% if graph_missing %}
+                        <small class="error">First make a graph</small>
+                    {% endif %}
+                </form>
+                <form id="complex_vis" enctype="multipart/form-data" method="post" action="{% url 'complex_visualizer' %}">
+                    <input required type="hidden" name="complex" id="complex"/>
+                    <!-- {% if file_missing %}
+                        <small class="error">Upload file is required</small>
+                    {% endif %} -->
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% block index %}{% endblock %}
+
+</body>
+
+<script>
+
+
+    function scrollIfNeeded(element, container) {
+        if (element == null)
+            return
+        if (element.offsetTop < container.scrollTop) {
+            container.scrollTop = element.offsetTop;
+        }
+        else {
+            const offsetBottom = element.offsetTop + element.offsetHeight;
+            const scrollBottom = container.scrollTop + container.offsetHeight;
+            if (offsetBottom > scrollBottom) {
+                container.scrollTop = offsetBottom - container.offsetHeight;
+            }
+        }
+        container.scrollLeft = element.offsetLeft - 10;
+    }
+
+    if (document.getElementById('last-opened-node') != null) {
+        const lastOpenedNode = document.getElementById('last-opened-node').innerHTML;
+        element = document.getElementById(lastOpenedNode);
+        if (element) {
+            scrollIfNeeded(element, document.getElementById('tree'));
+            element.classList.add("selected-item");
+        }
+    }
+
+    const nodeToggles = document.querySelectorAll('.node-toggle');
+    nodeToggles.forEach(toggle => {
+        toggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            const node = this.parentNode;
+            toggleNode(node);
+        });
+    });
+
+    let nodesTree = document.querySelectorAll('.node-toggle');
+    nodesTree.forEach(toggle => {
+        toggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            const node = this.parentNode;
+            let newSelected = node.querySelector("#object-id").innerHTML;
+            if (current != null) {
+                nodeView(current, "#003B73")
+            }
+            current = nodesGraph[newSelected];
+            nodeView(current, "red");
+        });
+    });
+
+    function toggleNode(node) {
+
+        const nodeId = node.id;
+        const childrenContainer = node.querySelector('.node-children');
+        const dynamicTreeContainer = document.getElementById('dynamic-tree');
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `/${nodeId};open`, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                dynamicTreeContainer.innerHTML = xhr.responseText;
+
+                const newToggles = dynamicTreeContainer.querySelectorAll('.node-toggle');
+                newToggles.forEach(toggle => {
+                    toggle.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        const newNode = this.parentNode;
+                        toggleNode(newNode);
+                    });
+                });
+                let nodesTree = document.querySelectorAll('.node-toggle');
+                nodesTree.forEach(toggle => {
+                    toggle.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        const node = this.parentNode;
+                        let newSelected = node.querySelector("#object-id").innerHTML;
+                        if (current != null) {
+                            nodeView(current, "#003B73")
+                        }
+                        current = nodesGraph[newSelected];
+                        nodeView(current, "red");
+                    });
+                });
+                document.getElementById('last-opened-node').innerHTML = node.id
+                element = document.getElementById(node.id);
+                if (element) {
+                    scrollIfNeeded(element, document.getElementById('tree'));
+                    element.classList.add("selected-item");
+                }
+            }
+        };
+        xhr.send();
+
+        const arrow = node.querySelector('.arrow');
+        const isClosed = arrow.textContent === '➕';
+        arrow.textContent = isClosed ? '➖' : '➕';
+
+        if (childrenContainer) {
+            childrenContainer.style.display = isClosed ? 'block' : 'none';
+        }
+    }
+</script>
+
+</html>

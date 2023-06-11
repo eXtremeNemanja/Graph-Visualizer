@@ -1,0 +1,23 @@
+<h2>Tools</h2>
+<div class="tools">
+    <div id="search">
+        <form action="{% url 'search' %}" id="search_form">
+            <input type="text" name="query" placeholder="Search here...">
+                <button type="submit">Search</button>
+            <br>
+            {% if search_error %}
+                <small class="error">No graph</small>
+            {% endif %}
+        </form>
+    </div>
+    <div id="filter">
+        <form action="{% url 'filter' %}" id="filter_form">
+            <input type="text" name="query" placeholder="Filter here...">
+                <button type="submit">Filter</button>
+            <p style="color: rgb(0, 111, 145); font-weight: bold; margin-top: 0px; font-size: 10px;" class="example">Filter examples: price>5 , name=Something , value&#60;=9</p>
+        </form>
+    </div>
+        <div id="reset">
+            <a style="cursor: pointer;" href="{% url 'reset' %}">Reset</a> 
+        </div>
+</div>

@@ -60,7 +60,7 @@ def load(request):
     unique_key = request.POST.get("key")
     # loader = apps.get_app_config('core').get_loader(request.POST.get('loader'))
     if not chosen_file:
-        return render(request, "index.html", {"stepper": 1, "file_missing": True})
+        return render(request, "index.html", {"file_missing": True})
     else:
         # file = request.FILES['file']
         print(chosen_file)
@@ -76,11 +76,10 @@ def load(request):
                     'core').base_graph
                 apps.get_app_config('core').load_tree()
 
-    # graph = apps.get_app_config('core').base_graph
-    # tree = apps.get_app_config('core').tree
-    # visualizers = []
-    # return render(request, "index.html", {"stepper":2, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
-    return redirect("index")
+    visualizers = apps.get_app_config('core').visualizers
+    loaders = apps.get_app_config('core').loaders
+    return render(request, "index.html", {'visualizers': visualizers, 'loaders': loaders})
+    # return redirect("index")
 
 
 def visualize(request, type):

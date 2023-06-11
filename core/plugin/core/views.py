@@ -5,7 +5,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.apps.registry import apps
 from .models import Edge, Graph, Vertex
-from django.template import engines
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+
 
 # Create your views here.
 from django.http import HttpResponse
@@ -340,7 +342,8 @@ def complex_visualization(request):
 
     for v in visualizers:
         if v.identifier() == "complex-visualizer":
-            apps.get_app_config('core').current_visualizer = "ComplexVisualizer"
+            apps.get_app_config(
+                'core').current_visualizer = "ComplexVisualizer"
             with open(path, 'w') as file:
                 file.write(v.visualize(graph, request))
 
@@ -379,30 +382,19 @@ def simple_visualization(request):
 
 
 def load_relationships_of_vertex(request, id):
-    graph = apps.get_app_config('core').current_graph
     tree = apps.get_app_config('core').tree
-    if (id.isnumeric()):
-        node = tree.find_tree_node(int(id))
-        if node.opened:
-            node.close()
-            if (node.parent):
-                tree.last_opened = node.parent.id
-        else:
-            node.open()
-            tree.last_opened = node.id
-        graph = apps.get_app_config('core').base_graph
-        tree = apps.get_app_config('core').tree
-        visualizers = []
-        for v in apps.get_app_config('core').visualizers:
-            visualizers.append(
-                {"name": v.name(), "identifier": v.identifier()})
-        loaders = []
-        for l in apps.get_app_config('core').loaders:
-            loaders.append({"name": l.name(), "identifier": l.identifier()})
-        return render(request, "index.html", {"stepper": 1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
-    # print(id)
-    # if id == "simple_visualizer":
-    #     return redirect("simple_visualizer")
-    # if id == "complex_visualizer":
-    #     return redirect("complex_visualizer")
-    return redirect(id)
+    node = tree.find_tree_node(int(id))
+    
+    if node.opened:
+        node.close()
+        if node.parent:
+            tree.last_opened = node.parent.id
+    else:
+        node.open()
+        tree.last_opened = node.id
+
+    tree_view_html = render_to_string(os.path.abspath(os.path.join(
+                os.path.dirname(__file__), "templates", "treeView.html")), {'tree': tree})
+
+    return HttpResponse(tree_view_html)
+

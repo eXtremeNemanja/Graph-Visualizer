@@ -7,7 +7,7 @@ h2 {
     margin: 10px 0 0 15px;
 }
 
-.stepper{
+.stepper {
     float: right;
     text-align: center;
     margin-right: 33%;
@@ -15,11 +15,11 @@ h2 {
     color: white;
 }
 
-#file{
+#file {
     float: left;
 }
 
-.view{
+.view {
     min-width: 100vw;
     min-height: 85vh;
     display: flex;
@@ -46,19 +46,19 @@ h2 {
     height: 70%;
 }
 
-.bottom{
+.bottom {
     height: fit-content;
     display: flex;
     height: 30%;
     flex-direction: row;
 }
 
-.bottom-left{
+.bottom-left {
     width: 70%;
     border-right: solid black 1px;
 }
 
-.bottom-right{
+.bottom-right {
     width: 30%;
 }
 
@@ -121,7 +121,7 @@ h2 {
     font-weight: bolder;
 }
 
-.tools{
+.tools {
     margin-left: 125px;
 }
 
@@ -207,31 +207,38 @@ a {
 }
 
 .tree-node {
-    background-color: #d0e5f8;
-    font-weight: bold;
+    /* background-color: #d0e5f8; */
+    /* font-weight: bold; */
+    background-color: white;
 }
 
 .tree-node:hover {
-    background-color: #c5e0fa;
+    /* background-color: #c5e0fa; */
 }
 
 .tree-edge {
-    background-color: #ededed;
+    /* background-color: #ededed; */
+
+    background-color: white;
 }
 
 .tree-edge:hover {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
 }
 
 .selected-node {
-    background-color: black;
-    color: white;
+    background-color: rgb(201, 201, 201);
+    /* color: black; */
+    /* font-weight: 1000; */
+    /* text-decoration: underline; */
 }
 
 .selected-item,
 .selected-item:hover {
-    background-color: black;
-    color: white;
+     background-color: rgb(201, 201, 201);
+    /* color: black; */ 
+    /* text-decoration: underline; */
+    /* font-weight: 1000; */
 }
 
 .list {
@@ -280,6 +287,7 @@ a {
 ::-webkit-scrollbar-thumb:hover {
     background: #d0e5f8ab;
 }
+
 #hidden {
     visibility: hidden;
 }

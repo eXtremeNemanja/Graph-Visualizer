@@ -4,6 +4,8 @@
 
 <div class="view">
     <div id=tree class="left">
+        <h2>Tree view</h2>
+        <div hidden id="last-opened-node">{{ tree.last_opened }}</div>
         {% include 'treeView.html' %}
     </div>
     <div class="right">

@@ -39,9 +39,9 @@ def reset(request):
         return complex_visualization(request)
     else:
         if (apps.get_app_config('core').base_graph is None):
-            return render(request, "index.html", {"stepper": 1})
+            return render(request, "index.html")
         else:
-            return render(request, "index.html", {"stepper": 2})
+            return render(request, "index.html")
 
 
 def new_data(request):
@@ -88,7 +88,7 @@ def load(request):
     stepper = 1
     graph = apps.get_app_config('core').current_graph
     tree = apps.get_app_config('core').tree
-    return render(request, "index.html", {"stepper": 1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
 
     # return redirect("index")
 
@@ -109,7 +109,7 @@ def visualize(request, type):
     loaders = []
     for l in apps.get_app_config('core').loaders:
         loaders.append({"name": l.name(), "identifier": l.identifier()})
-    return render(request, "index.html", {"stepper": 1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
 
     return redirect('index')
 
@@ -119,9 +119,9 @@ def search(request, *args, **kwargs):
     query = request.GET.get("query", 'nema')
     if not apps.get_app_config('core').current_visualizer:
         if apps.get_app_config('core').base_graph is None:
-            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph, 'stepper': 1})
+            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph})
         else:
-            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph, 'stepper': 2})
+            return render(request, 'index.html', {'search_error': True, 'graph': apps.get_app_config('core').base_graph})
     old_graph = apps.get_app_config('core').current_graph
     graph = Graph()
     for vertex in old_graph.vertices:
@@ -409,7 +409,7 @@ def load_relationships_of_vertex(request, id):
         loaders = []
         for l in apps.get_app_config('core').loaders:
             loaders.append({"name": l.name(), "identifier": l.identifier()})
-        return render(request, "index.html", {"stepper": 1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+        return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
     # print(id)
     # if id == "simple_visualizer":
     #     return redirect("simple_visualizer")

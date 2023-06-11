@@ -127,6 +127,9 @@ class SimpleVisualizer(BaseVisualizer):
             for(var i=0;i<node.attributes.length;i++) {
                 text += node.attributes[i] + "\\n";
             }
+            var url = "{% url 'select_tree_node' id=123 %}";
+                        var id = el.id.replace("ID_", "");
+                        document.location.href = url.replace('123', id);
             alert(text);
         }
 

@@ -383,18 +383,38 @@ def simple_visualization(request):
 
 def load_relationships_of_vertex(request, id):
     tree = apps.get_app_config('core').tree
-    node = tree.find_tree_node(int(id))
-    
-    if node.opened:
-        node.close()
-        if node.parent:
-            tree.last_opened = node.parent.id
-    else:
-        node.open()
-        tree.last_opened = node.id
+    if (id == "favicon.ico"):
+        return
+    id, option = id.split(";")
 
-    tree_view_html = render_to_string(os.path.abspath(os.path.join(
-                os.path.dirname(__file__), "templates", "treeView.html")), {'tree': tree})
+    if option == "select": 
+        if (id.isnumeric()):
+            id = int(id)
+        node = tree.find_node_by_vertex_id(id) 
+        if node.opened:
+            node.close()
+            if node.parent:
+                tree.last_opened = node.parent.id
+        else:
+            node.open_parents()
+            tree.last_opened = node.id
 
-    return HttpResponse(tree_view_html)
+        tree_view_html = render_to_string(os.path.abspath(os.path.join(
+                    os.path.dirname(__file__), "templates", "treeView.html")), {'tree': tree})
 
+        return HttpResponse(tree_view_html)
+        
+    elif option == "open": 
+        node = tree.find_tree_node(int(id))
+        if node.opened:
+            node.close()
+            if node.parent:
+                tree.last_opened = node.parent.id
+        else:
+            node.open()
+            tree.last_opened = node.id
+
+        tree_view_html = render_to_string(os.path.abspath(os.path.join(
+                    os.path.dirname(__file__), "templates", "treeView.html")), {'tree': tree})
+
+        return HttpResponse(tree_view_html)

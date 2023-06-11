@@ -58,14 +58,6 @@ pip list
 
 ### Running 
 
-To run the app, run followind commands inside venv after installation of plugins:
-
-```bash
-chmod +x install.sh && ./install.sh  # for macOS and Linux
-call   install.bat                   # for Windows
-```
-Note that, if you have Windows, you need to run these commands from cmd, not integrated terminal.
-
 To check if packages are installed, run following command:
 
 ```bash

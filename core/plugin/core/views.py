@@ -188,7 +188,7 @@ def add_vertex(graph, vertex):
 def filter_vertex(graph, vertex, attribute, operator, value):
     for attr in vertex.attributes:
         if attr == attribute:
-            attribute_value = vertex.attributes[attr]
+            attribute_value = vertex.attributes[attr].strip()
             if isinstance(value, date):
                 try:
                     attribute_value = datetime.strptime(

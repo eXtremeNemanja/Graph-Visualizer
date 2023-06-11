@@ -41,21 +41,24 @@
                     {% if file_missing %}
                         <small class="error">Upload file is required</small>
                     {% endif %}
+                    {% if extension_missmatch %}
+                        <small class="error">Uploaded file cannot be parsed with selected loader</small>
+                    {% endif %}
                     <input type="hidden" id="loader" name="loader" />
                     <p class="stepper">Please choose a file, then a parser and then choose a view</p>
 
                 </form>
                 <form id="simple_vis" enctype="multipart/form-data" method="post" action="{% url 'simple_visualizer' %}">
                     <input required type="hidden" name="simple" id="simple"/>
-                    {% if file_missing %}
-                        <small class="error">Upload file is required</small>
+                    {% if graph_missing %}
+                        <small class="error">First make a graph</small>
                     {% endif %}
                 </form>
                 <form id="complex_vis" enctype="multipart/form-data" method="post" action="{% url 'complex_visualizer' %}">
                     <input required type="hidden" name="complex" id="complex"/>
-                    {% if file_missing %}
+                    <!-- {% if file_missing %}
                         <small class="error">Upload file is required</small>
-                    {% endif %}
+                    {% endif %} -->
                 </form>
             </div>
         </div>

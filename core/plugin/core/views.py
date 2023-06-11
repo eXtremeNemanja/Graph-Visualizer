@@ -24,7 +24,7 @@ def index(request, file_missing=False):
     for l in apps.get_app_config('core').loaders:
         loaders.append({"name": l.name(), "identifier": l.identifier()})
     
-    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders, 'file_missing': file_missing})
 
 
 def reset(request):
@@ -54,27 +54,39 @@ def load(request):
     plugini = apps.get_app_config('core').loaders
     chosen_file = None
     loader = None
-    if request.method == 'POST' and request.FILES['file']:
+    file_missing = False
+    extension_missmatch = False
+    if request.method == 'POST':
         loader = request.POST.get('loader', 'nema')
-        chosen_file = request.FILES['file']
+        chosen_file = request.FILES.get('file', None)
     unique_key = request.POST.get("key")
     # loader = apps.get_app_config('core').get_loader(request.POST.get('loader'))
     if not chosen_file:
-        return render(request, "index.html", {"file_missing": True})
+        file_missing = True
     else:
         # file = request.FILES['file']
-        print(chosen_file)
+        # print(chosen_file)
         for p in plugini:
-            print(p.identifier())
-            print(loader)
+            # print(p.identifier())
+            # print(loader)
             if p.identifier() == loader:
-                root = p.load_file(chosen_file)
-                print(root)
-                apps.get_app_config('core').base_graph = p.make_graph(root)
-                print(apps.get_app_config('core').base_graph)
-                apps.get_app_config('core').current_graph = apps.get_app_config(
-                    'core').base_graph
-                apps.get_app_config('core').load_tree()
+                if check_extension(loader, chosen_file):
+                    root = p.load_file(chosen_file)
+                    print(root)
+                    apps.get_app_config('core').base_graph = p.make_graph(root)
+                    print(apps.get_app_config('core').base_graph)
+                    apps.get_app_config('core').current_graph = apps.get_app_config(
+                        'core').base_graph
+                    apps.get_app_config('core').load_tree()
+                    path = os.path.abspath(os.path.dirname(__file__)) + \
+                        "\\templates\\mainView.html"
+                    with open(path, 'w+') as file:
+                        file.write("")
+                    time.sleep(2)
+                else:
+                    extension_missmatch = True
+
+
 
     visualizers = apps.get_app_config('core').visualizers
     loaders = apps.get_app_config('core').loaders
@@ -86,9 +98,21 @@ def load(request):
         loaders.append({"name": l.name(), "identifier": l.identifier()})
     graph = apps.get_app_config('core').current_graph
     tree = apps.get_app_config('core').tree
-    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders, "file_missing": file_missing, "extension_missmatch": extension_missmatch})
 
     # return redirect("index")
+
+def check_extension(loader, file):
+    print(loader)
+    print(file)
+    match loader:
+        case "XmlLoader":
+            return file.name.endswith('.xml')
+        case "RDFLoader":
+            return file.name.endswith('.nt')
+        case "JsonLoader":
+            return file.name.endswith('.json')        
+    return False
 
 
 def visualize(request, type):
@@ -343,33 +367,56 @@ def complex_visualization(request):
     visualizers = apps.get_app_config('core').visualizers
     graph = apps.get_app_config('core').current_graph
 
-    path = os.path.abspath(os.path.join(
-        os.path.dirname(__file__), "templates", "mainView.html"))
+    graph_missing = False
+    if graph is None:
+        graph_missing = True
+    else:
+        path = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), "templates", "mainView.html"))
 
-    for v in visualizers:
-        if v.identifier() == "complex-visualizer":
-            apps.get_app_config(
-                'core').current_visualizer = "ComplexVisualizer"
-            with open(path, 'w') as file:
-                file.write(v.visualize(graph, request))
+        for v in visualizers:
+            if v.identifier() == "complex-visualizer":
+                apps.get_app_config(
+                    'core').current_visualizer = "ComplexVisualizer"
+                with open(path, 'w') as file:
+                    file.write(v.visualize(graph, request))
 
     # reload_url = reverse('index') + '?reload=true'
     # return redirect(reload_url)
-    time.sleep(2)
+        time.sleep(2)
+    
+    visualizers = apps.get_app_config('core').visualizers
+    loaders = apps.get_app_config('core').loaders
+    visualizers = []
+    for v in apps.get_app_config('core').visualizers:
+        visualizers.append({"name": v.name(), "identifier": v.identifier()})
+    loaders = []
+    for l in apps.get_app_config('core').loaders:
+        loaders.append({"name": l.name(), "identifier": l.identifier()})
+    graph = apps.get_app_config('core').current_graph
+    tree = apps.get_app_config('core').tree
+    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders, "graph_missing": graph_missing})
+
     return redirect('index')
 
 
 def simple_visualization(request):
     visualizers = apps.get_app_config('core').visualizers
     graph = apps.get_app_config('core').current_graph
-    for v in visualizers:
-        if v.identifier() == "simple-visualizer":
-            apps.get_app_config('core').current_visualizer = "SimpleVisualizer"
+    
+    graph_missing = False
+    if graph is None:
+        graph_missing = True
+    else:
+        for v in visualizers:
+            if v.identifier() == "simple-visualizer":
+                apps.get_app_config('core').current_visualizer = "SimpleVisualizer"
 
-            path = os.path.abspath(os.path.join(
-                os.path.dirname(__file__), "templates", "mainView.html"))
-            with open(path, 'w') as file:
-                file.write(v.visualize(graph, request))
+                path = os.path.abspath(os.path.join(
+                    os.path.dirname(__file__), "templates", "mainView.html"))
+                with open(path, 'w') as file:
+                    file.write(v.visualize(graph, request))
+        time.sleep(2)
 
     graph = apps.get_app_config('core').current_graph
     tree = apps.get_app_config('core').tree
@@ -382,9 +429,7 @@ def simple_visualization(request):
         loaders.append(
             {"name": l.name(), "identifier": l.identifier()})
     
-    time.sleep(2)
-    return redirect("index")
-    # return render(request, "index.html", {"stepper":1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+    return render(request, "index.html", {"stepper":1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders, 'graph_missing': graph_missing})
 
 
 def load_relationships_of_vertex(request, id):

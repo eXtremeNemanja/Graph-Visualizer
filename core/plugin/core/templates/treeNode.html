@@ -6,6 +6,7 @@
         <span class="arrow">➕</span>
         {% endif %}
         <span class="label">Vertex</span>
+        <span id="object-id" hidden>{{ node.object.id }}</span>
         {{ node.object.attributes }}
     </a>
     <div class="node-children">
@@ -19,6 +20,7 @@
                 <span class="arrow">➕</span>
                 {% endif %}
                 <span class="label">Edge</span>
+                <span id="object-id" hidden>{{ relation.object }}</span>
                 {{ relation.object }}
                 {% if relation.opened %}
                 <div class="node-children">

@@ -1,9 +1,10 @@
-import json;
+import json
 
 from plugin.core.services.visualizer import BaseVisualizer
 from plugin.core.models import Vertex, Edge, Graph
 
 from django.template import engines
+
 
 class ComplexVisualizer(BaseVisualizer):
     def identifier(self):
@@ -17,7 +18,8 @@ class ComplexVisualizer(BaseVisualizer):
         for v in graph.vertices:
             attributes = []
             for attribute_key in v.attributes.keys():
-                attributes.append(attribute_key + ": " + str(v.attributes[attribute_key]))
+                attributes.append(attribute_key + ": " +
+                                  str(v.attributes[attribute_key]))
             nodes[v.id] = {
                 "id": "ID_" + str(v.id),
                 "attributes": attributes
@@ -43,8 +45,9 @@ class ComplexVisualizer(BaseVisualizer):
                     </style>
 
                     <script>
-                    var current = null;
 
+                    var current = null;
+                    
                     var nodesGraph = JSON.parse("{{nodes |escapejs}}");
                     var linksGraph = JSON.parse("{{links |escapejs}}");
 
@@ -58,12 +61,12 @@ class ComplexVisualizer(BaseVisualizer):
                         var text = "";
                         text += "ID:" + el.id + "\\n";
                         if(current != null) {
-                            complexView(nodesGraph[current.id.replace("ID_", "")], '#003B73');
+                            nodeView(nodesGraph[current.id.replace("ID_", "")], '#003B73');
                         }
                         
-                        current = el;
                         var node = nodesGraph[el.id.replace("ID_", "")];
-                        complexView(node, "red");
+                        current = node;
+                        nodeView(node, "red");
                         for(var i=0;i<node.attributes.length;i++) {
                             text += node.attributes[i] + "\\n";
                         }
@@ -82,6 +85,19 @@ class ComplexVisualizer(BaseVisualizer):
                                         event.preventDefault();
                                         const newNode = this.parentNode;
                                         toggleNode(newNode);
+                                    });
+                                });
+                                let nodesTree = document.querySelectorAll('.node-toggle');
+                                nodesTree.forEach(toggle => {
+                                    toggle.addEventListener('click', function (event) {
+                                        event.preventDefault();
+                                        const node = this.parentNode;
+                                        let newSelected = node.querySelector("#object-id").innerHTML;
+                                        if (current != null) {
+                                            nodeView(current, "#003B73")
+                                        }
+                                        current = nodesGraph[newSelected];
+                                        nodeView(current, "red");
                                     });
                                 });
                                 if (document.getElementById('last-opened-node') != null) {
@@ -104,7 +120,7 @@ class ComplexVisualizer(BaseVisualizer):
                             .nodes(d3.values(nodesGraph)) //dodaj nodove
                             .links(linksGraph) //dodaj linkove
                             .on("tick", tick) //sta treba da se desi kada su izracunate nove pozicija elemenata
-                            .linkDistance(150) //razmak izmedju elemenata
+                            .linkDistance(350) //razmak izmedju elemenata
                             .charge(-1500)//koliko da se elementi odbijaju
                             .gravity(0.75)
                             .start(); //pokreni izracunavanje pozicija
@@ -129,9 +145,9 @@ class ComplexVisualizer(BaseVisualizer):
                             .on('click',function(){
                             nodeClick(this);
                             });
-                        d3.selectAll('.node').each(function(d){complexView(d, '#003B73');});
+                        d3.selectAll('.node').each(function(d){nodeView(d, '#003B73');});
 
-                        function complexView(d, color) {
+                        function nodeView(d, color) {
                             var length = 10;
                             for(var i=0;i<d.attributes.length;i++) {
                                 if(length<d.attributes[i].length) length = d.attributes[i].length
@@ -143,6 +159,8 @@ class ComplexVisualizer(BaseVisualizer):
                             var high = 30;
                             high += (attributesNum == 0) ? textSize: attributesNum*textSize;
                             var width = length * textSize/2 + 2*textSize + 5;
+                            if (width > 265)
+                                width = 265;
 
                             // add rectangle
                             d3.select("g#"+d.id).append('rect').
@@ -162,11 +180,14 @@ class ComplexVisualizer(BaseVisualizer):
 
                             // add attributes
                             for(var i=0;i<attributesNum;i++)
-                            {
+                            {   
+                                let slice_attr = d.attributes[i].length;
+                                if (slice_attr > 40)
+                                    slice_attr = 40;
                                 d3.select("g#"+d.id).append('text').attr('x',0).attr('y',20+i*textSize)
                                 .attr('text-anchor','start')
                                 .attr('font-size',textSize).attr('font-family','Poppins')
-                                .attr('fill','white').text(d.attributes[i]);
+                                .attr('fill','white').text(d.attributes[i].slice(0, slice_attr));
                             }
                         }
 
@@ -179,52 +200,12 @@ class ComplexVisualizer(BaseVisualizer):
                                 .attr('x2', function(d) { return d.target.x; })
                                 .attr('y2', function(d) { return d.target.y; });
                         }
-
-                        init();
-                
-                        function init() {
-                            let main = d3.select("#mainView").node();
-
-                            let observer = new MutationObserver(observer_callback);
-
-                            observer.observe(main, {
-                                subtree: true,
-                                attributes: true,
-                                childList: true,
-                                characterData: true
-                            });
-                        }
-
-                        function observer_callback() {
-                            let main = d3.select("#mainView").html();
-                            d3.select("#birdView").html(main);
-
-                            let mainWidth = d3.select("#mainView").select("g").node().getBBox().width;
-                            let mainHeight = d3.select("#mainView").select("g").node().getBBox().height;
-
-                            let birdWidth = $("#birdView")[0].clientWidth;
-                            let birdHeight = $("#birdView")[0].clientHeight;
-
-                            let scaleWidth = birdWidth / mainWidth;
-                            let scaleHeight = birdHeight / mainHeight;
-
-                            let scale = 0;
-                            if(scaleWidth < scaleHeight){
-                                scale = scaleWidth;
-                            }else{
-                                scale = scaleHeight;
-                            }
-                            
-                            let x = d3.select("#birdView").select("g").node().getBBox().x;
-                            let y = d3.select("#birdView").select("g").node().getBBox().y;
-                            d3.select("#birdView").select('g').attr("transform", "translate ("+[-x*scale, -y*scale]+") scale("+ scale +")");
-                        }
-
                     </script>
+                    <script  src="static/birdView.js"></script>
                     """
-
 
         django_engine = engines['django']
         view_html = django_engine.from_string(view)
-        template_html = view_html.render({"nodes": json.dumps(nodes), "links": json.dumps(links)}, request)
+        template_html = view_html.render(
+            {"nodes": json.dumps(nodes), "links": json.dumps(links)}, request)
         return template_html

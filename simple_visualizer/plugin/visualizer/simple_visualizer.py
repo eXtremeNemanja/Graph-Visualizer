@@ -48,22 +48,22 @@ class SimpleVisualizer(BaseVisualizer):
 
         var current = null;
 
-        var vertices = JSON.parse("{{vertices |escapejs}}");                
+        var nodesGraph = JSON.parse("{{vertices |escapejs}}");                
         var links= JSON.parse("{{links |escapejs}}");
 
         links.forEach(function(link) {
-            link.source = vertices[link.source];
-            link.target = vertices[link.target];
+            link.source = nodesGraph[link.source];
+            link.target = nodesGraph[link.target];
         });
 
         var force = d3.layout.force() //kreiranje force layout-a
             .size([1000, 450]) //raspoloziv prostor za iscrtavanje
-            .nodes(d3.values(vertices)) //dodaj nodove
+            .nodes(d3.values(nodesGraph)) //dodaj nodove
             .links(links) //dodaj linkove
             .on("tick", tick) //sta treba da se desi kada su izracunate nove pozicija elemenata
-            .linkDistance(25) //razmak izmedju elemenata
+            .linkDistance(325) //razmak izmedju elemenata
             .charge(-450)//koliko da se elementi odbijaju
-            .gravity(1)
+            .gravity(0.5)
             .start(); //pokreni izracunavanje pozicija
               
         var svg = d3.select('#mainView').call(d3.behavior.zoom().on("zoom", function () {
@@ -85,11 +85,11 @@ class SimpleVisualizer(BaseVisualizer):
             .on('click',function(){
             nodeClick(this);
             });
-        d3.selectAll('.node').each(function(d){simpleView(d, '#003B73');});
+        d3.selectAll('.node').each(function(d){nodeView(d, '#003B73');});
 
-        function simpleView(d, color){
-            var width=12;
-            var textSize=6;
+        function nodeView(d, color){
+            var width=30;
+            var textSize=12;
 
             //Ubacivanje kruga
             d3.select("g#"+d.id).append('circle').
@@ -117,11 +117,11 @@ class SimpleVisualizer(BaseVisualizer):
             var text = "";
             text += "ID:" + el.id + "\\n";
             if(current != null) {
-                simpleView(vertices[current.id.replace("ID_", "")], '#003B73')
+                nodeView(nodesGraph[current.id.replace("ID_", "")], '#003B73')
             }
-            current = el;
-            var node = vertices[el.id.replace("ID_", "")];
-            simpleView(node, "red")
+            var node = nodesGraph[el.id.replace("ID_", "")];
+            current = node;
+            nodeView(current, "red")
             for(var i=0;i<node.attributes.length;i++) {
                 text += node.attributes[i] + "\\n";
             }
@@ -142,6 +142,19 @@ class SimpleVisualizer(BaseVisualizer):
                             toggleNode(newNode);
                         });
                     });
+                    let nodesTree = document.querySelectorAll('.node-toggle');
+                    nodesTree.forEach(toggle => {
+                        toggle.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            const node = this.parentNode;
+                            let newSelected = node.querySelector("#object-id").innerHTML;
+                            if (current != null) {
+                                nodeView(current, "#003B73")
+                            }
+                            current = nodesGraph[newSelected];
+                            nodeView(current, "red");
+                        });
+                    });
                     if (document.getElementById('last-opened-node') != null) {
                         const lastOpenedNode = document.getElementById('last-opened-node').innerHTML;
                         element = document.getElementById(lastOpenedNode);
@@ -157,48 +170,8 @@ class SimpleVisualizer(BaseVisualizer):
             alert(text);
         }
 
-        init();
-                
-        function init() {
-            let main = d3.select("#mainView").node();
-
-            let observer = new MutationObserver(observer_callback);
-
-            observer.observe(main, {
-                subtree: true,
-                attributes: true,
-                childList: true,
-                characterData: true
-            });
-        }
-
-
-        function observer_callback() {
-            let main = d3.select("#mainView").html();
-            d3.select("#birdView").html(main);
-
-            let mainWidth = d3.select("#mainView").select("g").node().getBBox().width;
-            let mainHeight = d3.select("#mainView").select("g").node().getBBox().height;
-
-            let birdWidth = $("#birdView")[0].clientWidth;
-            let birdHeight = $("#birdView")[0].clientHeight;
-
-            let scaleWidth = birdWidth / mainWidth;
-            let scaleHeight = birdHeight / mainHeight;
-
-            let scale = 0;
-            if(scaleWidth < scaleHeight){
-                scale = scaleWidth;
-            }else{
-                scale = scaleHeight;
-            }
-            
-            let x = d3.select("#birdView").select("g").node().getBBox().x;
-            let y = d3.select("#birdView").select("g").node().getBBox().y;
-            d3.select("#birdView").select('g').attr("transform", "translate ("+[-x*scale, -y*scale]+") scale("+ scale +")");
-        }
-
         </script>
+        <script  src="static/birdView.js"></script>
         """
 
         django_engine = engines['django']

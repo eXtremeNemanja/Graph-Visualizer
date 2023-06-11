@@ -69,6 +69,8 @@
 </body>
 
 <script>
+
+
     function scrollIfNeeded(element, container) {
         if (element == null)
             return
@@ -103,7 +105,22 @@
         });
     });
 
+    let nodesTree = document.querySelectorAll('.node-toggle');
+    nodesTree.forEach(toggle => {
+        toggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            const node = this.parentNode;
+            let newSelected = node.querySelector("#object-id").innerHTML;
+            if (current != null) {
+                nodeView(current, "#003B73")
+            }
+            current = nodesGraph[newSelected];
+            nodeView(current, "red");
+        });
+    });
+
     function toggleNode(node) {
+
         const nodeId = node.id;
         const childrenContainer = node.querySelector('.node-children');
         const dynamicTreeContainer = document.getElementById('dynamic-tree');
@@ -121,6 +138,19 @@
                         event.preventDefault();
                         const newNode = this.parentNode;
                         toggleNode(newNode);
+                    });
+                });
+                let nodesTree = document.querySelectorAll('.node-toggle');
+                nodesTree.forEach(toggle => {
+                    toggle.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        const node = this.parentNode;
+                        let newSelected = node.querySelector("#object-id").innerHTML;
+                        if (current != null) {
+                            nodeView(current, "#003B73")
+                        }
+                        current = nodesGraph[newSelected];
+                        nodeView(current, "red");
                     });
                 });
                 document.getElementById('last-opened-node').innerHTML = node.id

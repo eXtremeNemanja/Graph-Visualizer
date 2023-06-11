@@ -22,9 +22,10 @@ def index(request, file_missing=False):
     for l in apps.get_app_config('core').loaders:
         loaders.append({"name": l.name(), "identifier": l.identifier()})
     stepper = 1
-    if (graph is not None):
+    if graph is not None:
         stepper = 2
-    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders, 'stepper': stepper})
+    
+    return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
 
 
 def reset(request):
@@ -78,7 +79,17 @@ def load(request):
 
     visualizers = apps.get_app_config('core').visualizers
     loaders = apps.get_app_config('core').loaders
-    return render(request, "index.html", {'visualizers': visualizers, 'loaders': loaders})
+    visualizers = []
+    for v in apps.get_app_config('core').visualizers:
+        visualizers.append({"name": v.name(), "identifier": v.identifier()})
+    loaders = []
+    for l in apps.get_app_config('core').loaders:
+        loaders.append({"name": l.name(), "identifier": l.identifier()})
+    stepper = 1
+    graph = apps.get_app_config('core').current_graph
+    tree = apps.get_app_config('core').tree
+    return render(request, "index.html", {"stepper": 1, 'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
+
     # return redirect("index")
 
 
@@ -405,3 +416,5 @@ def load_relationships_of_vertex(request, id):
     # if id == "complex_visualizer":
     #     return redirect("complex_visualizer")
     return redirect(id)
+
+

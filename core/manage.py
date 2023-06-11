@@ -5,6 +5,10 @@ import sys
 
 
 def main():
+    path = os.path.abspath(os.path.dirname(__file__)) + \
+        "\\plugin\\core\\templates\\mainView.html"
+    with open(path, 'w+') as file:
+        file.write("")
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                           'plugin.django_config.settings')

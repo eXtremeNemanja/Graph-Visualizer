@@ -21,9 +21,6 @@ def index(request, file_missing=False):
     loaders = []
     for l in apps.get_app_config('core').loaders:
         loaders.append({"name": l.name(), "identifier": l.identifier()})
-    stepper = 1
-    if graph is not None:
-        stepper = 2
     
     return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
 
@@ -85,7 +82,6 @@ def load(request):
     loaders = []
     for l in apps.get_app_config('core').loaders:
         loaders.append({"name": l.name(), "identifier": l.identifier()})
-    stepper = 1
     graph = apps.get_app_config('core').current_graph
     tree = apps.get_app_config('core').tree
     return render(request, "index.html", {'graph': graph, 'tree': tree, 'visualizers': visualizers, 'loaders': loaders})
